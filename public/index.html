@@ -83,12 +83,22 @@
     }
 
     .mainValue {
-      font-size: 40px;
-      line-height: 0.98;
-      font-weight: 850;
-      letter-spacing: -0.06em;
+      line-height: 1.05;
       word-break: keep-all;
       overflow-wrap: anywhere;
+    }
+
+    .mainValue.ownerValue {
+      font-size: 32px;
+      font-weight: 750;
+      letter-spacing: -0.04em;
+    }
+
+    .mainValue.serialValue {
+      font-size: 54px;
+      line-height: 0.95;
+      font-weight: 900;
+      letter-spacing: -0.06em;
     }
 
     .titleLine {
@@ -302,8 +312,12 @@
         padding: 22px;
       }
 
-      .mainValue {
-        font-size: 36px;
+      .mainValue.ownerValue {
+        font-size: 30px;
+      }
+
+      .mainValue.serialValue {
+        font-size: 50px;
       }
 
       .title {
@@ -403,10 +417,13 @@
 
       const mainLabel = isPersonal ? "소유자" : "일련번호";
       const mainValue = isPersonal ? item.owner : item.serial;
+      const mainValueClass = isPersonal ? "ownerValue" : "serialValue";
       const sectionTitle = isPersonal ? "장비 정보" : "활 정보";
 
       const titleText = `${item.brand || "-"} ${item.size || ""}`.trim();
-      const poundText = item.pound ? `${escapeHtml(item.pound)}<span class="topPoundUnit">lb</span>` : `-<span class="topPoundUnit">lb</span>`;
+      const poundText = item.pound
+        ? `${escapeHtml(item.pound)}<span class="topPoundUnit">lb</span>`
+        : `-<span class="topPoundUnit">lb</span>`;
 
       document.title = isPersonal
         ? `${item.code || ""} 장비`
@@ -416,7 +433,7 @@
         <div class="topCard">
           <div class="mainBlock">
             <div class="smallLabel">${mainLabel}</div>
-            <div class="mainValue">${escapeHtml(mainValue || "-")}</div>
+            <div class="mainValue ${mainValueClass}">${escapeHtml(mainValue || "-")}</div>
           </div>
 
           <div class="titleLine">
