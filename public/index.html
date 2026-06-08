@@ -474,12 +474,7 @@
             ${renderInfoCards(item)}
           </div>
 
-          ${!isPersonal ? `
-            <div class="fullItem">
-              <div class="fullLabel">기타</div>
-              <div class="fullValue">${escapeHtml(item.etc || "-")}</div>
-            </div>
-          ` : ""}
+          
 
           <div class="fullItem">
             <div class="fullLabel">점검 내역</div>
@@ -524,12 +519,13 @@
       }
 
       return `
-        ${miniCard("일련번호", item.serial)}
-        ${miniCard("상태", item.status, true, "statusView")}
-        ${miniCard("브랜드", item.brand)}
-        ${miniCard("사이즈", item.size)}
-        ${miniCard("파운드", item.pound ? item.pound + " lb" : "-")}
-      `;
+  ${miniCard("일련번호", item.serial)}
+  ${miniCard("상태", item.status, true, "statusView")}
+  ${miniCard("브랜드", item.brand)}
+  ${miniCard("사이즈", item.size)}
+  ${miniCard("파운드", item.pound ? item.pound + " lb" : "-")}
+  ${miniCard("기타", item.etc, true)}
+`;
     }
 
     function miniCard(label, value, small = false, id = "") {
