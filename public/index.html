@@ -1,11 +1,602 @@
 <!doctype html>
-<html>
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>NFC 활 정보</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NFC 장비 정보</title>
+
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #0f172a;
+
+      --green-bg: #dcfce7;
+      --green-text: #166534;
+
+      --red-bg: #fee2e2;
+      --red-text: #991b1b;
+
+      --yellow-bg: #fef3c7;
+      --yellow-text: #92400e;
+
+      --gray-bg: #e5e7eb;
+      --gray-text: #374151;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 14px;
+      background:
+        radial-gradient(circle at top left, #e0f2fe 0, transparent 34%),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .wrap {
+      max-width: 480px;
+      margin: 0 auto;
+      padding-bottom: 28px;
+    }
+
+    .loading,
+    .errorBox {
+      background: white;
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      font-weight: 850;
+      line-height: 1.5;
+    }
+
+    .errorBox {
+      color: #991b1b;
+      background: #fff7f7;
+      border: 1px solid #fecaca;
+    }
+
+    .topCard {
+      background: linear-gradient(135deg, #111827, #334155);
+      color: white;
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.22);
+      margin-bottom: 14px;
+    }
+
+    .mainBlock {
+      margin-bottom: 22px;
+    }
+
+    .smallLabel {
+      font-size: 13px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.66);
+      margin-bottom: 4px;
+    }
+
+    .mainValue {
+      font-size: 48px;
+      line-height: 0.98;
+      font-weight: 950;
+      letter-spacing: -0.06em;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .titleLine {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .title {
+      font-size: 33px;
+      line-height: 1.12;
+      font-weight: 900;
+      letter-spacing: -0.045em;
+      word-break: keep-all;
+    }
+
+    .topPound {
+      flex: 0 0 auto;
+      font-size: 33px;
+      line-height: 1.12;
+      font-weight: 900;
+      letter-spacing: -0.045em;
+      white-space: nowrap;
+      color: rgba(255,255,255,0.96);
+    }
+
+    .topPoundUnit {
+      font-size: 18px;
+      font-weight: 850;
+      color: rgba(255,255,255,0.72);
+      margin-left: 3px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 15px;
+    }
+
+    .badge.normal {
+      background: var(--green-bg);
+      color: var(--green-text);
+    }
+
+    .badge.repair {
+      background: var(--red-bg);
+      color: var(--red-text);
+    }
+
+    .badge.bad {
+      background: var(--yellow-bg);
+      color: var(--yellow-text);
+    }
+
+    .badge.deleted {
+      background: var(--gray-bg);
+      color: var(--gray-text);
+    }
+
+    .section {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      margin-bottom: 14px;
+    }
+
+    .sectionTitle {
+      font-size: 19px;
+      font-weight: 900;
+      margin-bottom: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    .infoGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .miniCard {
+      background: #f8fafc;
+      border: 1px solid #eef2f7;
+      border-radius: 18px;
+      padding: 14px;
+      min-height: 82px;
+    }
+
+    .miniLabel {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .miniValue {
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .miniValue.small {
+      font-size: 18px;
+      line-height: 1.35;
+    }
+
+    .fullItem {
+      background: #f8fafc;
+      border: 1px solid #eef2f7;
+      border-radius: 18px;
+      padding: 15px;
+      margin-top: 10px;
+    }
+
+    .fullLabel {
+      color: var(--muted);
+      font-weight: 850;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .fullValue {
+      font-size: 18px;
+      font-weight: 850;
+      line-height: 1.45;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 850;
+      margin: 14px 0 7px;
+    }
+
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 16px;
+      padding: 14px 15px;
+      font-size: 17px;
+      font-family: inherit;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 18px;
+      border: 0;
+      border-radius: 18px;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: 950;
+      color: white;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.18);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .result {
+      margin-top: 13px;
+      font-size: 15px;
+      font-weight: 850;
+      min-height: 22px;
+      color: var(--muted);
+    }
+
+    .hint {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 10px;
+      }
+
+      .topCard {
+        border-radius: 24px;
+        padding: 22px;
+      }
+
+      .mainValue {
+        font-size: 42px;
+      }
+
+      .title {
+        font-size: 31px;
+      }
+
+      .topPound {
+        font-size: 31px;
+      }
+
+      .topPoundUnit {
+        font-size: 17px;
+      }
+
+      .section {
+        border-radius: 22px;
+        padding: 18px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <h1>NFC 활 정보 사이트</h1>
-  <p>Cloudflare Pages 테스트 성공</p>
+  <div class="wrap" id="app">
+    <div class="loading">장비 정보를 불러오는 중...</div>
+  </div>
+
+  <script>
+    const app = document.getElementById("app");
+
+    let currentItem = null;
+    let currentMode = "bow";
+    let currentKey = "";
+
+    init();
+
+    async function init() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+
+        currentMode = getMode(params);
+        currentKey =
+          params.get("id") ||
+          params.get("c") ||
+          params.get("code") ||
+          params.get("serial") ||
+          "";
+
+        if (!currentKey) {
+          showError("조회 코드가 없습니다. URL 뒤에 ?id=3 또는 ?t=p&c=KDJ 처럼 붙여주세요.");
+          return;
+        }
+
+        const apiUrl = buildApiUrl(currentMode, currentKey);
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+          const error = await response.json().catch(() => null);
+          showError(error?.message || error?.error || "장비 정보를 찾을 수 없습니다.");
+          return;
+        }
+
+        currentItem = await response.json();
+        renderPage(currentItem);
+      } catch (error) {
+        showError("불러오기 실패: " + error.message);
+      }
+    }
+
+    function getMode(params) {
+      const raw = String(
+        params.get("t") ||
+        params.get("type") ||
+        params.get("mode") ||
+        "bow"
+      ).trim().toLowerCase();
+
+      if (raw === "p" || raw === "personal" || raw === "item" || raw === "private") {
+        return "personal";
+      }
+
+      return "bow";
+    }
+
+    function buildApiUrl(mode, key) {
+      if (mode === "personal") {
+        return "/api/bow?t=p&c=" + encodeURIComponent(key);
+      }
+
+      return "/api/bow?id=" + encodeURIComponent(key);
+    }
+
+    function renderPage(item) {
+      const isPersonal = item.mode === "personal";
+      const status = item.status || "-";
+      const badgeClass = getBadgeClass(status);
+
+      const mainLabel = isPersonal ? "소유자" : "일련번호";
+      const mainValue = isPersonal ? item.owner : item.serial;
+      const sectionTitle = isPersonal ? "장비 정보" : "활 정보";
+
+      const titleText = `${item.brand || "-"} ${item.size || ""}`.trim();
+      const poundText = item.pound ? `${escapeHtml(item.pound)}<span class="topPoundUnit">lb</span>` : `-<span class="topPoundUnit">lb</span>`;
+
+      document.title = isPersonal
+        ? `${item.code || ""} 장비`
+        : `${item.serial || ""}번 활`;
+
+      app.innerHTML = `
+        <div class="topCard">
+          <div class="mainBlock">
+            <div class="smallLabel">${mainLabel}</div>
+            <div class="mainValue">${escapeHtml(mainValue || "-")}</div>
+          </div>
+
+          <div class="titleLine">
+            <div class="title">${escapeHtml(titleText)}</div>
+            <div class="topPound">${poundText}</div>
+          </div>
+
+          <div id="statusBadge" class="badge ${badgeClass}">
+            ${escapeHtml(status)}
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="sectionTitle">${sectionTitle}</div>
+
+          <div class="infoGrid">
+            ${renderInfoCards(item)}
+          </div>
+
+          ${!isPersonal ? `
+            <div class="fullItem">
+              <div class="fullLabel">기타</div>
+              <div class="fullValue">${escapeHtml(item.etc || "-")}</div>
+            </div>
+          ` : ""}
+
+          <div class="fullItem">
+            <div class="fullLabel">점검 내역</div>
+            <div id="checkView" class="fullValue">${escapeHtml(item.check || "-")}</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="sectionTitle">정보 수정</div>
+
+          <label for="status">상태</label>
+          <select id="status">
+            <option value="정상" ${status === "정상" ? "selected" : ""}>정상</option>
+            <option value="수리 필요" ${status === "수리 필요" ? "selected" : ""}>수리 필요</option>
+            <option value="불량" ${status === "불량" ? "selected" : ""}>불량</option>
+            <option value="말소" ${status === "말소" ? "selected" : ""}>말소</option>
+          </select>
+
+          <label for="check">점검 내역</label>
+          <textarea id="check">${escapeTextarea(item.check || "")}</textarea>
+
+          <button id="saveBtn" onclick="save()">저장</button>
+          <div id="result" class="result"></div>
+        </div>
+
+        <div class="hint">
+          NFC 태그로 조회된 ${isPersonal ? "장비" : "활"} 정보입니다.
+        </div>
+      `;
+    }
+
+    function renderInfoCards(item) {
+      if (item.mode === "personal") {
+        return `
+          ${miniCard("식별 코드", item.code)}
+          ${miniCard("소유자", item.owner)}
+          ${miniCard("브랜드", item.brand)}
+          ${miniCard("사이즈", item.size)}
+          ${miniCard("파운드", item.pound ? item.pound + " lb" : "-")}
+          ${miniCard("상태", item.status, true, "statusView")}
+        `;
+      }
+
+      return `
+        ${miniCard("일련번호", item.serial)}
+        ${miniCard("상태", item.status, true, "statusView")}
+        ${miniCard("브랜드", item.brand)}
+        ${miniCard("사이즈", item.size)}
+        ${miniCard("파운드", item.pound ? item.pound + " lb" : "-")}
+      `;
+    }
+
+    function miniCard(label, value, small = false, id = "") {
+      return `
+        <div class="miniCard">
+          <div class="miniLabel">${escapeHtml(label)}</div>
+          <div ${id ? `id="${id}"` : ""} class="miniValue ${small ? "small" : ""}">
+            ${escapeHtml(value || "-")}
+          </div>
+        </div>
+      `;
+    }
+
+    async function save() {
+      const btn = document.getElementById("saveBtn");
+      const result = document.getElementById("result");
+
+      const status = document.getElementById("status").value;
+      const check = document.getElementById("check").value;
+
+      btn.disabled = true;
+      result.textContent = "저장 중...";
+
+      try {
+        const body = {
+          type: currentMode,
+          status,
+          check
+        };
+
+        if (currentMode === "personal") {
+          body.code = currentKey;
+        } else {
+          body.id = currentKey;
+        }
+
+        const response = await fetch("/api/bow", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(body)
+        });
+
+        const data = await response.json().catch(() => null);
+
+        if (!response.ok) {
+          throw new Error(data?.message || data?.error || "저장 실패");
+        }
+
+        result.textContent = `${data.message || "저장 완료"} · ${data.updatedAt || ""}`;
+        updatePageAfterSave(status, check);
+      } catch (error) {
+        result.textContent = "저장 실패: " + error.message;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function updatePageAfterSave(status, check) {
+      const badge = document.getElementById("statusBadge");
+      badge.textContent = status || "-";
+      badge.className = "badge " + getBadgeClass(status);
+
+      const statusView = document.getElementById("statusView");
+      if (statusView) {
+        statusView.textContent = status || "-";
+      }
+
+      const checkView = document.getElementById("checkView");
+      if (checkView) {
+        checkView.textContent = check || "-";
+      }
+    }
+
+    function getBadgeClass(status) {
+      if (status === "수리 필요") return "repair";
+      if (status === "불량") return "bad";
+      if (status === "말소") return "deleted";
+      return "normal";
+    }
+
+    function showError(message) {
+      app.innerHTML = `
+        <div class="errorBox">
+          ${escapeHtml(message)}
+        </div>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function escapeTextarea(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+  </script>
 </body>
 </html>
