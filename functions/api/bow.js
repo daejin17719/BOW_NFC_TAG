@@ -1,6 +1,6 @@
 const SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets";
 const TOKEN_URL = "https://oauth2.googleapis.com/token";
-const TOKEN_CACHE_SECONDS = 3600;
+const TOKEN_CACHE_SECONDS = 3000;
 
 export async function onRequestOptions() {
   return new Response(null, {
