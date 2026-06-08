@@ -11,17 +11,29 @@ export async function onRequestOptions() {
 export async function onRequestGet(context) {
   try {
     const url = new URL(context.request.url);
-    const id = url.searchParams.get("id") || url.searchParams.get("c") || url.searchParams.get("code");
 
-    if (!id) {
+    const mode = getMode(url.searchParams);
+    const key =
+      url.searchParams.get("id") ||
+      url.searchParams.get("c") ||
+      url.searchParams.get("code") ||
+      url.searchParams.get("serial");
+
+    if (!key) {
       return jsonResponse({ error: "조회 코드가 없습니다." }, 400);
     }
 
-    const env = context.env;
-    const item = await getBowById(env, id);
+    const item = await getItemByKey(context.env, mode, key);
 
     if (!item) {
-      return jsonResponse({ error: "A열에서 해당 값을 찾을 수 없습니다.", id }, 404);
+      return jsonResponse(
+        {
+          error: "A열에서 해당 값을 찾을 수 없습니다.",
+          mode,
+          key,
+        },
+        404
+      );
     }
 
     return jsonResponse(item);
@@ -38,18 +50,25 @@ export async function onRequestGet(context) {
 
 export async function onRequestPost(context) {
   try {
-    const env = context.env;
+    const url = new URL(context.request.url);
     const body = await context.request.json();
 
-    const id = body.id || body.serial || body.c || body.code;
+    const mode = body.t || body.type || body.mode || getMode(url.searchParams);
+
+    const key =
+      body.id ||
+      body.c ||
+      body.code ||
+      body.serial;
+
     const status = body.status || "";
     const check = body.check || "";
 
-    if (!id) {
+    if (!key) {
       return jsonResponse({ error: "조회 코드가 없습니다." }, 400);
     }
 
-    const result = await updateBowData(env, id, status, check);
+    const result = await updateItemData(context.env, mode, key, status, check);
     return jsonResponse(result);
   } catch (error) {
     return jsonResponse(
@@ -62,13 +81,67 @@ export async function onRequestPost(context) {
   }
 }
 
-async function getBowById(env, id) {
-  const sheetName = env.SHEET_NAME;
-  const startRow = Number(env.DATA_START_ROW || 2);
+/*
+mode:
+- bow / b / 기본값: 활 장부
+- personal / p / item: 개인 장비
+*/
+function getMode(searchParams) {
+  const raw =
+    searchParams.get("t") ||
+    searchParams.get("type") ||
+    searchParams.get("mode") ||
+    "bow";
 
+  const mode = String(raw || "").trim().toLowerCase();
+
+  if (mode === "p" || mode === "personal" || mode === "item" || mode === "private") {
+    return "personal";
+  }
+
+  return "bow";
+}
+
+function getConfig(env, mode) {
+  if (mode === "personal") {
+    return {
+      mode: "personal",
+      sheetName:
+        env.PERSONAL_SHEET_NAME ||
+        env.ITEM_SHEET_NAME ||
+        "개인 장비",
+      startRow: Number(
+        env.PERSONAL_DATA_START_ROW ||
+        env.ITEM_DATA_START_ROW ||
+        2
+      ),
+      statusColumn: 6,
+      checkColumn: 7,
+    };
+  }
+
+  return {
+    mode: "bow",
+    sheetName:
+      env.BOW_SHEET_NAME ||
+      env.SHEET_NAME ||
+      "장비",
+    startRow: Number(
+      env.BOW_DATA_START_ROW ||
+      env.DATA_START_ROW ||
+      28
+    ),
+    statusColumn: 5,
+    checkColumn: 7,
+  };
+}
+
+async function getItemByKey(env, mode, key) {
+  const config = getConfig(env, mode);
   const accessToken = await getAccessToken(env);
 
-  const range = `'${sheetName}'!A${startRow}:G`;
+  const range = `'${config.sheetName}'!A${config.startRow}:G`;
+
   const url =
     `https://sheets.googleapis.com/v4/spreadsheets/${env.SPREADSHEET_ID}/values/` +
     encodeURIComponent(range);
@@ -86,14 +159,31 @@ async function getBowById(env, id) {
 
   const data = await response.json();
   const rows = data.values || [];
-  const target = normalizeKey(id);
+  const target = normalizeKey(key);
 
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i];
 
     if (normalizeKey(row[0]) === target) {
+      const rowNumber = config.startRow + i;
+
+      if (config.mode === "personal") {
+        return {
+          mode: "personal",
+          rowNumber,
+          code: row[0] || "",
+          owner: row[1] || "",
+          brand: row[2] || "",
+          size: row[3] || "",
+          pound: row[4] || "",
+          status: row[5] || "",
+          check: row[6] || "",
+        };
+      }
+
       return {
-        rowNumber: startRow + i,
+        mode: "bow",
+        rowNumber,
         serial: row[0] || "",
         brand: row[1] || "",
         size: row[2] || "",
@@ -108,16 +198,16 @@ async function getBowById(env, id) {
   return null;
 }
 
-async function updateBowData(env, id, status, check) {
-  const item = await getBowById(env, id);
+async function updateItemData(env, mode, key, status, check) {
+  const config = getConfig(env, mode);
+  const item = await getItemByKey(env, config.mode, key);
 
   if (!item) {
     throw new Error("A열에서 해당 값을 찾을 수 없습니다.");
   }
 
-  const sheetName = env.SHEET_NAME;
-  const rowNumber = item.rowNumber;
   const accessToken = await getAccessToken(env);
+  const rowNumber = item.rowNumber;
 
   const url =
     `https://sheets.googleapis.com/v4/spreadsheets/${env.SPREADSHEET_ID}/values:batchUpdate`;
@@ -126,11 +216,11 @@ async function updateBowData(env, id, status, check) {
     valueInputOption: "USER_ENTERED",
     data: [
       {
-        range: `'${sheetName}'!E${rowNumber}`,
+        range: `'${config.sheetName}'!${columnToLetter(config.statusColumn)}${rowNumber}`,
         values: [[status]],
       },
       {
-        range: `'${sheetName}'!G${rowNumber}`,
+        range: `'${config.sheetName}'!${columnToLetter(config.checkColumn)}${rowNumber}`,
         values: [[check]],
       },
     ],
@@ -150,13 +240,12 @@ async function updateBowData(env, id, status, check) {
     throw new Error(`Sheets 저장 실패: ${response.status} ${text}`);
   }
 
-  const now = new Date();
-
   return {
     message: "저장 완료",
-    updatedAt: formatDateTime(now),
+    updatedAt: formatDateTime(new Date()),
+    mode: config.mode,
     rowNumber,
-    serial: item.serial,
+    key,
     status,
     check,
   };
@@ -274,6 +363,19 @@ function arrayBufferToBase64Url(buffer) {
 
 function normalizeKey(value) {
   return String(value || "").trim().toUpperCase();
+}
+
+function columnToLetter(columnNumber) {
+  let letter = "";
+  let number = columnNumber;
+
+  while (number > 0) {
+    const mod = (number - 1) % 26;
+    letter = String.fromCharCode(65 + mod) + letter;
+    number = Math.floor((number - mod) / 26);
+  }
+
+  return letter;
 }
 
 function formatDateTime(date) {
