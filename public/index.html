@@ -74,18 +74,6 @@
       margin-bottom: 14px;
     }
 
-    .clubLogo {
-      position: absolute;
-      top: 18px;
-      right: -16px;
-      width: 250px;
-      height: 250px;
-      object-fit: contain;
-      opacity: 0.14;
-      z-index: 1;
-      pointer-events: none;
-    }
-
     .mainBlock,
     .titleLine,
     .badge {
@@ -336,14 +324,6 @@
         padding: 26px 28px;
       }
 
-      .clubLogo {
-        width: 250px;
-        height: 250px;
-        top: 18px;
-        right: -24px;
-        opacity: 0.14;
-      }
-
       .mainValue.ownerValue {
         font-size: 31px;
         max-width: 68%;
@@ -469,8 +449,6 @@
 
       app.innerHTML = `
         <div class="topCard">
-          <img class="clubLogo" src="/logo.png" alt="동아리 로고">
-
           <div class="mainBlock">
             <div class="smallLabel">${mainLabel}</div>
             <div class="mainValue ${mainValueClass}">${escapeHtml(mainValue || "-")}</div>
@@ -650,7 +628,7 @@
 
     function escapeTextarea(value) {
       return String(value ?? "")
-       .replace(/&/g, "&amp;")
+        .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
     }
