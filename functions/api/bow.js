@@ -142,62 +142,22 @@ function getConfig(env, mode) {
   };
 }
 
+/*
+속도 개선:
+기존 방식:
+1. A열만 읽기
+2. 찾은 행 A:G 다시 읽기
+
+수정 방식:
+1. A:G를 한 번에 읽기
+2. 서버 코드에서 A열 검색
+3. 찾은 행 데이터를 바로 사용
+*/
 async function getItemByKey(env, mode, key) {
   const config = getConfig(env, mode);
   const accessToken = await getAccessToken(env);
 
-  const rowNumber = await findRowNumberByColumnA(
-    env,
-    accessToken,
-    config,
-    key
-  );
-
-  if (rowNumber === -1) {
-    return null;
-  }
-
-  const row = await readRowAtoG(
-    env,
-    accessToken,
-    config.sheetName,
-    rowNumber
-  );
-
-  if (config.mode === "personal") {
-    return {
-      mode: "personal",
-      rowNumber,
-      code: row[0] || "",
-      owner: row[1] || "",
-      brand: row[2] || "",
-      size: row[3] || "",
-      pound: row[4] || "",
-      status: row[5] || "",
-      check: row[6] || "",
-    };
-  }
-
-  return {
-    mode: "bow",
-    rowNumber,
-    serial: row[0] || "",
-    brand: row[1] || "",
-    size: row[2] || "",
-    pound: row[3] || "",
-    status: row[4] || "",
-    etc: row[5] || "",
-    check: row[6] || "",
-  };
-}
-
-/*
-속도 개선:
-A:G 전체를 한 번에 읽지 않고,
-A열만 먼저 읽어서 행 번호를 찾는다.
-*/
-async function findRowNumberByColumnA(env, accessToken, config, key) {
-  const range = `'${config.sheetName}'!A${config.startRow}:A`;
+  const range = `'${config.sheetName}'!A${config.startRow}:G`;
 
   const url =
     `https://sheets.googleapis.com/v4/spreadsheets/${env.SPREADSHEET_ID}/values/` +
@@ -211,7 +171,7 @@ async function findRowNumberByColumnA(env, accessToken, config, key) {
 
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(`Sheets A열 읽기 실패: ${response.status} ${text}`);
+    throw new Error(`Sheets 읽기 실패: ${response.status} ${text}`);
   }
 
   const data = await response.json();
@@ -219,37 +179,40 @@ async function findRowNumberByColumnA(env, accessToken, config, key) {
   const target = normalizeKey(key);
 
   for (let i = 0; i < rows.length; i++) {
-    if (normalizeKey(rows[i][0]) === target) {
-      return config.startRow + i;
+    const row = rows[i];
+
+    if (normalizeKey(row[0]) === target) {
+      const rowNumber = config.startRow + i;
+
+      if (config.mode === "personal") {
+        return {
+          mode: "personal",
+          rowNumber,
+          code: row[0] || "",
+          owner: row[1] || "",
+          brand: row[2] || "",
+          size: row[3] || "",
+          pound: row[4] || "",
+          status: row[5] || "",
+          check: row[6] || "",
+        };
+      }
+
+      return {
+        mode: "bow",
+        rowNumber,
+        serial: row[0] || "",
+        brand: row[1] || "",
+        size: row[2] || "",
+        pound: row[3] || "",
+        status: row[4] || "",
+        etc: row[5] || "",
+        check: row[6] || "",
+      };
     }
   }
 
-  return -1;
-}
-
-/*
-A열에서 찾은 행만 A:G로 읽는다.
-*/
-async function readRowAtoG(env, accessToken, sheetName, rowNumber) {
-  const range = `'${sheetName}'!A${rowNumber}:G${rowNumber}`;
-
-  const url =
-    `https://sheets.googleapis.com/v4/spreadsheets/${env.SPREADSHEET_ID}/values/` +
-    encodeURIComponent(range);
-
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Sheets 행 읽기 실패: ${response.status} ${text}`);
-  }
-
-  const data = await response.json();
-  return (data.values && data.values[0]) || [];
+  return null;
 }
 
 async function updateItemData(env, mode, key, status, check) {
@@ -307,7 +270,7 @@ async function updateItemData(env, mode, key, status, check) {
 
 /*
 Google access token 캐시:
-- Cloudflare Cache API에 60분 저장
+- Cloudflare Cache API에 저장
 - 같은 서비스 계정이면 다음 요청부터 토큰 발급 과정을 생략
 */
 async function getAccessToken(env) {
