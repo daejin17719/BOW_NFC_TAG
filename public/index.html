@@ -63,6 +63,7 @@
     }
 
     .topCard {
+      position: relative;
       background: linear-gradient(135deg, #111827, #334155);
       color: white;
       border-radius: 28px;
@@ -70,6 +71,15 @@
       box-shadow: 0 16px 36px rgba(15, 23, 42, 0.22);
       margin-bottom: 14px;
     }
+    .clubLogo {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  opacity: 0.95;
+}
 
     .mainBlock {
       margin-bottom: 22px;
@@ -306,6 +316,12 @@
       body {
         padding: 10px;
       }
+      .clubLogo {
+  width: 44px;
+  height: 44px;
+  top: 16px;
+  right: 16px;
+}
 
       .topCard {
         border-radius: 24px;
@@ -431,7 +447,9 @@
 
       app.innerHTML = `
         <div class="topCard">
-          <div class="mainBlock">
+  <img class="clubLogo" src="/logo.png" alt="동아리 로고">
+
+  <div class="mainBlock">
             <div class="smallLabel">${mainLabel}</div>
             <div class="mainValue ${mainValueClass}">${escapeHtml(mainValue || "-")}</div>
           </div>
