@@ -55,6 +55,34 @@
       font-weight: 850;
       line-height: 1.5;
     }
+    .loadingLogoWrap {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingLogo {
+  width: 96px;
+  height: auto;
+  opacity: 0.9;
+  animation: logoPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes logoPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.65;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.65;
+  }
+}
 
     .errorBox {
       color: #991b1b;
@@ -363,9 +391,10 @@
 
 <body>
   <div class="wrap" id="app">
-    <div class="loading">장비 정보를 불러오는 중...</div>
+    <div class="loadingLogoWrap">
+      <img class="loadingLogo" src="/logo.png" alt="로딩 중">
+    </div>
   </div>
-
   <script>
     const app = document.getElementById("app");
 
