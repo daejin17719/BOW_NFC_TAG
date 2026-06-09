@@ -57,11 +57,12 @@
     }
 
     .loadingLogoWrap {
-  min-height: calc(100dvh - 28px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+      min-height: calc(100dvh - 28px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .loadingLogo {
       width: 180px;
       height: auto;
@@ -89,7 +90,8 @@
 
     .mainBlock,
     .titleLine,
-    .badge {
+    .badge,
+    .repairNotice {
       position: relative;
       z-index: 2;
     }
@@ -192,6 +194,30 @@
       color: var(--gray-text);
     }
 
+    .statusRow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .repairNotice {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 7px 13px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 900;
+      background: rgba(255, 255, 255, 0.14);
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .repairNotice.hidden {
+      display: none;
+    }
+
     .section {
       background: var(--card);
       border-radius: 24px;
@@ -292,16 +318,18 @@
       resize: vertical;
       line-height: 1.5;
     }
-#repairRequest {
-  font-size: 17px;
-  color: #f8fafc;
-}
 
-#repairRequest::placeholder {
-  font-size: 16px;
-  color: #7b8798;
-  font-weight: 500;
-}
+    #repairRequest {
+      font-size: 17px;
+      color: var(--text);
+    }
+
+    #repairRequest::placeholder {
+      font-size: 16px;
+      color: #7b8798;
+      font-weight: 500;
+    }
+
     button {
       width: 100%;
       margin-top: 18px;
@@ -322,12 +350,31 @@
       box-shadow: none;
     }
 
+    .completeBtn {
+      margin-top: 10px;
+      background: #475569;
+    }
+
+    .completeBtn.hidden {
+      display: none;
+    }
+
     .result {
       margin-top: 13px;
       font-size: 15px;
       font-weight: 850;
       min-height: 22px;
       color: var(--muted);
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .result.success {
+      color: #166534;
+    }
+
+    .result.error {
+      color: #991b1b;
     }
 
     .hint {
@@ -403,57 +450,84 @@
       }
 
       body {
-    background: #0b1020;
-    color: var(--text);
-  }
+        background: #0b1020;
+        color: var(--text);
+      }
 
-  .section {
-  background: #111827;
-  border: none;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22);
-}
+      .section {
+        background: #111827;
+        border: none;
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22);
+      }
 
-.miniCard,
-.fullItem {
-  background: #172033;
-  border: none;
-}
+      .miniCard,
+      .fullItem {
+        background: #172033;
+        border: none;
+      }
 
-  .miniLabel,
-  .fullLabel,
-  label {
-    color: #9aa8bc;
-  }
+      .miniLabel,
+      .fullLabel,
+      label {
+        color: #9aa8bc;
+      }
 
-  .miniValue,
-  .fullValue,
-  .sectionTitle {
-    color: #f8fafc;
-  }
+      .miniValue,
+      .fullValue,
+      .sectionTitle {
+        color: #f8fafc;
+      }
 
       select,
-textarea {
-  background: #172033;
-  color: #f8fafc;
-  border: none;
-  box-shadow: none;
-}
+      textarea {
+        background: #172033;
+        color: #f8fafc;
+        border: none;
+        box-shadow: none;
+      }
 
-select:focus,
-textarea:focus {
-  border: none;
-  box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.14);
-}
-     button {
-  background: #334155;
-  box-shadow: none;
-}
+      select:focus,
+      textarea:focus {
+        border: none;
+        box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.14);
+      }
+
+      #repairRequest {
+        color: #f8fafc;
+      }
+
+      #repairRequest::placeholder {
+        color: #7b8798;
+      }
+
+      button {
+        background: #334155;
+        box-shadow: none;
+      }
+
       button:active {
-  background: #475569;
-}
+        background: #475569;
+      }
+
+      .completeBtn {
+        background: #263449;
+      }
+
+      .completeBtn:active {
+        background: #334155;
+      }
+
       .result,
       .hint {
         color: #94a3b8;
+      }
+
+      .result.success {
+        color: #86efac;
+      }
+
+      .result.error {
+        color: #fca5a5;
       }
 
       .loading,
@@ -474,52 +548,59 @@ textarea:focus {
         color: #fecaca;
         border-color: #7f1d1d;
       }
-    .topCard {
-  background: linear-gradient(135deg, #f8fafc 0%, #e8f1fb 100%);
-  color: #0f172a;
-  box-shadow:
-    0 18px 38px rgba(0, 0, 0, 0.30),
-    inset 0 1px 0 rgba(255, 255, 255, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-}
 
-.smallLabel {
-  color: rgba(15, 23, 42, 0.62);
-}
+      .topCard {
+        background: linear-gradient(135deg, #f8fafc 0%, #e8f1fb 100%);
+        color: #0f172a;
+        box-shadow:
+          0 18px 38px rgba(0, 0, 0, 0.30),
+          inset 0 1px 0 rgba(255, 255, 255, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.28);
+      }
 
-.title,
-.mainValue,
-.topPound {
-  color: #0b1220;
-}
+      .smallLabel {
+        color: rgba(15, 23, 42, 0.62);
+      }
 
-.topPoundUnit {
-  color: rgba(15, 23, 42, 0.58);
-}
-.topCard .badge {
-  border: none;
-  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
-}
+      .title,
+      .mainValue,
+      .topPound {
+        color: #0b1220;
+      }
 
-.topCard .badge.normal {
-  background: #bbf7d0;
-  color: #14532d;
-}
+      .topPoundUnit {
+        color: rgba(15, 23, 42, 0.58);
+      }
 
-.topCard .badge.repair {
-  background: #fecaca;
-  color: #991b1b;
-}
+      .repairNotice {
+        background: rgba(15, 23, 42, 0.08);
+        color: #991b1b;
+      }
 
-.topCard .badge.bad {
-  background: #fde68a;
-  color: #78350f;
-}
+      .topCard .badge {
+        border: none;
+        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+      }
 
-.topCard .badge.deleted {
-  background: #cbd5e1;
-  color: #1e293b;
-}
+      .topCard .badge.normal {
+        background: #bbf7d0;
+        color: #14532d;
+      }
+
+      .topCard .badge.repair {
+        background: #fecaca;
+        color: #991b1b;
+      }
+
+      .topCard .badge.bad {
+        background: #fde68a;
+        color: #78350f;
+      }
+
+      .topCard .badge.deleted {
+        background: #cbd5e1;
+        color: #1e293b;
+      }
     }
   </style>
 </head>
@@ -600,6 +681,7 @@ textarea:focus {
       const isPersonal = item.mode === "personal";
       const status = item.status || "-";
       const badgeClass = getBadgeClass(status);
+      const isRepairNeeded = status === "수리 필요";
 
       const mainLabel = isPersonal ? "소유자" : "일련번호";
       const mainValue = isPersonal ? item.owner : item.serial;
@@ -627,8 +709,13 @@ textarea:focus {
             <div class="topPound">${poundText}</div>
           </div>
 
-          <div id="statusBadge" class="badge ${badgeClass}">
-            ${escapeHtml(status)}
+          <div class="statusRow">
+            <div id="statusBadge" class="badge ${badgeClass}">
+              ${escapeHtml(status)}
+            </div>
+            <div id="repairNotice" class="repairNotice ${isRepairNeeded ? "" : "hidden"}">
+              사용 전 확인 필요
+            </div>
           </div>
         </div>
 
@@ -645,14 +732,16 @@ textarea:focus {
           </div>
         </div>
 
-      <div class="section">
-  <div class="sectionTitle">수리 요청</div>
+        <div class="section">
+          <div class="sectionTitle">수리 요청</div>
 
-  <textarea id="repairRequest" placeholder="수리가 필요한 내용을 입력하세요."></textarea>
+          <textarea id="repairRequest" placeholder="수리가 필요한 내용을 입력하세요."></textarea>
 
-  <button id="saveBtn" onclick="save()">제출</button>
-  <div id="result" class="result"></div>
-</div>
+          <button id="saveBtn" onclick="submitRepairRequest()">제출</button>
+          <button id="completeBtn" class="completeBtn ${isRepairNeeded ? "" : "hidden"}" onclick="completeRepair()">수리 완료</button>
+
+          <div id="result" class="result"></div>
+        </div>
 
         <div class="hint">
           서울대학교 국궁부 ${isPersonal ? "개인 장비" : "공용 장비"} 관리 시스템<br>
@@ -694,56 +783,104 @@ textarea:focus {
       `;
     }
 
-    async function save() {
-  const btn = document.getElementById("saveBtn");
-  const result = document.getElementById("result");
+    async function submitRepairRequest() {
+      const btn = document.getElementById("saveBtn");
+      const completeBtn = document.getElementById("completeBtn");
+      const result = document.getElementById("result");
+      const textarea = document.getElementById("repairRequest");
 
-  const status = "수리 필요";
-  const check = document.getElementById("repairRequest").value.trim();
+      const status = "수리 필요";
+      const check = textarea.value.trim();
 
-  if (!check) {
-    result.textContent = "수리 요청 내용을 입력해주세요.";
-    return;
-  }
+      result.className = "result";
 
-  btn.disabled = true;
-  result.textContent = "제출 중...";
+      if (!check) {
+        result.textContent = "수리 요청 내용을 입력해주세요.";
+        result.classList.add("error");
+        return;
+      }
 
-  try {
-    const body = {
-      type: currentMode,
-      status,
-      check
-    };
+      btn.disabled = true;
+      if (completeBtn) completeBtn.disabled = true;
+      result.textContent = "제출 중...";
 
-    if (currentMode === "personal") {
-      body.code = currentKey;
-    } else {
-      body.id = currentKey;
+      try {
+        await saveStatusAndCheck(status, check, "제출 실패");
+
+        textarea.value = "";
+        result.textContent = "수리 요청이 접수되었습니다.\n상태가 ‘수리 필요’로 변경되었습니다.";
+        result.classList.add("success");
+
+        updatePageAfterSave(status, check);
+      } catch (error) {
+        result.textContent = "제출 실패: " + error.message;
+        result.classList.add("error");
+      } finally {
+        btn.disabled = false;
+        if (completeBtn) completeBtn.disabled = false;
+      }
     }
 
-    const response = await fetch("/api/bow", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
-    });
+    async function completeRepair() {
+      const btn = document.getElementById("saveBtn");
+      const completeBtn = document.getElementById("completeBtn");
+      const result = document.getElementById("result");
+      const textarea = document.getElementById("repairRequest");
 
-    const data = await response.json().catch(() => null);
+      const status = "정상";
+      const check = "수리 완료";
 
-    if (!response.ok) {
-      throw new Error(data?.message || data?.error || "제출 실패");
+      result.className = "result";
+      btn.disabled = true;
+      if (completeBtn) completeBtn.disabled = true;
+      result.textContent = "처리 중...";
+
+      try {
+        await saveStatusAndCheck(status, check, "수리 완료 처리 실패");
+
+        if (textarea) textarea.value = "";
+        result.textContent = "수리 완료 처리되었습니다.\n상태가 ‘정상’으로 변경되었습니다.";
+        result.classList.add("success");
+
+        updatePageAfterSave(status, check);
+      } catch (error) {
+        result.textContent = "수리 완료 처리 실패: " + error.message;
+        result.classList.add("error");
+      } finally {
+        btn.disabled = false;
+        if (completeBtn) completeBtn.disabled = false;
+      }
     }
 
-    result.textContent = `${data.message || "제출 완료"} · ${data.updatedAt || ""}`;
-    updatePageAfterSave(status, check);
-  } catch (error) {
-    result.textContent = "제출 실패: " + error.message;
-  } finally {
-    btn.disabled = false;
-  }
-}
+    async function saveStatusAndCheck(status, check, fallbackMessage) {
+      const body = {
+        type: currentMode,
+        status,
+        check
+      };
+
+      if (currentMode === "personal") {
+        body.code = currentKey;
+      } else {
+        body.id = currentKey;
+      }
+
+      const response = await fetch("/api/bow", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(data?.message || data?.error || fallbackMessage);
+      }
+
+      return data;
+    }
 
     function updatePageAfterSave(status, check) {
       const badge = document.getElementById("statusBadge");
@@ -758,6 +895,24 @@ textarea:focus {
       const checkView = document.getElementById("checkView");
       if (checkView) {
         checkView.textContent = check || "-";
+      }
+
+      const repairNotice = document.getElementById("repairNotice");
+      if (repairNotice) {
+        if (status === "수리 필요") {
+          repairNotice.classList.remove("hidden");
+        } else {
+          repairNotice.classList.add("hidden");
+        }
+      }
+
+      const completeBtn = document.getElementById("completeBtn");
+      if (completeBtn) {
+        if (status === "수리 필요") {
+          completeBtn.classList.remove("hidden");
+        } else {
+          completeBtn.classList.add("hidden");
+        }
       }
     }
 
