@@ -218,6 +218,11 @@
       display: none;
     }
 
+    .banNotice {
+      background: rgba(127, 29, 29, 0.12);
+      color: #991b1b;
+    }
+
     .section {
       background: var(--card);
       border-radius: 24px;
@@ -577,6 +582,11 @@
         color: #991b1b;
       }
 
+      .banNotice {
+        background: rgba(127, 29, 29, 0.13);
+        color: #7f1d1d;
+      }
+
       .topCard .badge {
         border: none;
         box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
@@ -681,7 +691,14 @@
       const isPersonal = item.mode === "personal";
       const status = item.status || "-";
       const badgeClass = getBadgeClass(status);
+
       const isRepairNeeded = status === "수리 필요";
+      const isBadStatus = status === "불량";
+      const noticeText = isBadStatus
+        ? "사용 금지"
+        : isRepairNeeded
+          ? "사용 전 확인 필요"
+          : "";
 
       const mainLabel = isPersonal ? "소유자" : "일련번호";
       const mainValue = isPersonal ? item.owner : item.serial;
@@ -713,8 +730,8 @@
             <div id="statusBadge" class="badge ${badgeClass}">
               ${escapeHtml(status)}
             </div>
-            <div id="repairNotice" class="repairNotice ${isRepairNeeded ? "" : "hidden"}">
-              사용 전 확인 필요
+            <div id="repairNotice" class="repairNotice ${isRepairNeeded || isBadStatus ? "" : "hidden"} ${isBadStatus ? "banNotice" : ""}">
+              ${escapeHtml(noticeText)}
             </div>
           </div>
         </div>
@@ -808,7 +825,7 @@
         await saveStatusAndCheck(status, check, "제출 실패");
 
         textarea.value = "";
-        result.textContent = "수리 요청이 접수되었습니다.\n상태가 ‘수리 필요’로 변경되었습니다.";
+        result.textContent = "수리 요청이 접수되었습니다.";
         result.classList.add("success");
 
         updatePageAfterSave(status, check);
@@ -839,7 +856,7 @@
         await saveStatusAndCheck(status, check, "수리 완료 처리 실패");
 
         if (textarea) textarea.value = "";
-        result.textContent = "수리 완료 처리되었습니다.\n상태가 ‘정상’으로 변경되었습니다.";
+        result.textContent = "수리 완료 처리되었습니다.";
         result.classList.add("success");
 
         updatePageAfterSave(status, check);
@@ -899,9 +916,17 @@
 
       const repairNotice = document.getElementById("repairNotice");
       if (repairNotice) {
+        repairNotice.classList.remove("banNotice");
+
         if (status === "수리 필요") {
+          repairNotice.textContent = "사용 전 확인 필요";
+          repairNotice.classList.remove("hidden");
+        } else if (status === "불량") {
+          repairNotice.textContent = "사용 금지";
+          repairNotice.classList.add("banNotice");
           repairNotice.classList.remove("hidden");
         } else {
+          repairNotice.textContent = "";
           repairNotice.classList.add("hidden");
         }
       }
