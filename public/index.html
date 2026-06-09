@@ -687,50 +687,55 @@ textarea:focus {
     }
 
     async function save() {
-      const btn = document.getElementById("saveBtn");
-      const result = document.getElementById("result");
+  const btn = document.getElementById("saveBtn");
+  const result = document.getElementById("result");
 
-      const status = document.getElementById("status").value;
-      const check = document.getElementById("check").value;
+  const status = "수리 필요";
+  const check = document.getElementById("repairRequest").value.trim();
 
-      btn.disabled = true;
-      result.textContent = "저장 중...";
+  if (!check) {
+    result.textContent = "수리 요청 내용을 입력해주세요.";
+    return;
+  }
 
-      try {
-        const body = {
-          type: currentMode,
-          status,
-          check
-        };
+  btn.disabled = true;
+  result.textContent = "제출 중...";
 
-        if (currentMode === "personal") {
-          body.code = currentKey;
-        } else {
-          body.id = currentKey;
-        }
+  try {
+    const body = {
+      type: currentMode,
+      status,
+      check
+    };
 
-        const response = await fetch("/api/bow", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(body)
-        });
-
-        const data = await response.json().catch(() => null);
-
-        if (!response.ok) {
-          throw new Error(data?.message || data?.error || "저장 실패");
-        }
-
-        result.textContent = `${data.message || "저장 완료"} · ${data.updatedAt || ""}`;
-        updatePageAfterSave(status, check);
-      } catch (error) {
-        result.textContent = "저장 실패: " + error.message;
-      } finally {
-        btn.disabled = false;
-      }
+    if (currentMode === "personal") {
+      body.code = currentKey;
+    } else {
+      body.id = currentKey;
     }
+
+    const response = await fetch("/api/bow", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      throw new Error(data?.message || data?.error || "제출 실패");
+    }
+
+    result.textContent = `${data.message || "제출 완료"} · ${data.updatedAt || ""}`;
+    updatePageAfterSave(status, check);
+  } catch (error) {
+    result.textContent = "제출 실패: " + error.message;
+  } finally {
+    btn.disabled = false;
+  }
+}
 
     function updatePageAfterSave(status, check) {
       const badge = document.getElementById("statusBadge");
