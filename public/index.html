@@ -636,21 +636,15 @@ textarea:focus {
           </div>
         </div>
 
-        <div class="section">
-          <div class="sectionTitle">정보 수정</div>
+      <div class="section">
+  <div class="sectionTitle">수리 요청</div>
 
-          <label for="status">상태</label>
-          <select id="status">
-            <option value="정상" ${status === "정상" ? "selected" : ""}>정상</option>
-            <option value="수리 필요" ${status === "수리 필요" ? "selected" : ""}>수리 필요</option>
-          </select>
+  <label for="repairRequest">수리 요청 내용</label>
+  <textarea id="repairRequest" placeholder="수리가 필요한 내용을 입력하세요."></textarea>
 
-          <label for="check">점검 내역</label>
-          <textarea id="check">${escapeTextarea(item.check || "")}</textarea>
-
-          <button id="saveBtn" onclick="save()">저장</button>
-          <div id="result" class="result"></div>
-        </div>
+  <button id="saveBtn" onclick="save()">제출</button>
+  <div id="result" class="result"></div>
+</div>
 
         <div class="hint">
           서울대학교 국궁부 장비 관리 시스템<br>
