@@ -375,6 +375,76 @@
         padding: 18px;
       }
     }
+    @media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f172a;
+    --card: #111827;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --line: #1e293b;
+    --accent: #60a5fa;
+    --danger: #f87171;
+    --ok: #4ade80;
+    --repair: #fbbf24;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .section {
+    background: #111827;
+    border-color: #1e293b;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+  }
+
+  .infoCard,
+  .fullItem {
+    background: #172033;
+    border-color: #263449;
+  }
+
+  .cardLabel,
+  .fullLabel,
+  label {
+    color: #93a4bd;
+  }
+
+  .cardValue,
+  .fullValue,
+  .sectionTitle {
+    color: #f8fafc;
+  }
+
+  select,
+  textarea {
+    background: #172033;
+    color: #f8fafc;
+    border-color: #334155;
+  }
+
+  select:focus,
+  textarea:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+  }
+
+  .loading {
+    color: #cbd5e1;
+  }
+
+  .loadingLogo {
+    filter: brightness(0) invert(1);
+    opacity: 0.85;
+  }
+
+  .error {
+    background: #2b1111;
+    color: #fecaca;
+    border-color: #7f1d1d;
+  }
+}
   </style>
 </head>
 
