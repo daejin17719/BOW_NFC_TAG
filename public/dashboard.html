@@ -161,16 +161,6 @@
       color: var(--red-text);
     }
 
-    .badge.bad {
-      background: var(--yellow-bg);
-      color: var(--yellow-text);
-    }
-
-    .badge.deleted {
-      background: var(--gray-bg);
-      color: var(--gray-text);
-    }
-
     .section {
       background: var(--card);
       border-radius: 24px;
@@ -214,20 +204,8 @@
       letter-spacing: -0.04em;
     }
 
-    .statCard.normal .statValue {
-      color: #166534;
-    }
-
     .statCard.repair .statValue {
       color: #991b1b;
-    }
-
-    .statCard.bad .statValue {
-      color: #92400e;
-    }
-
-    .statCard.deleted .statValue {
-      color: #374151;
     }
 
     .list {
@@ -280,8 +258,8 @@
       margin-top: 12px;
       padding-top: 11px;
       border-top: 1px solid #e5e7eb;
-      font-size: 16px;
-      font-weight: 850;
+      font-size: 17px;
+      font-weight: 900;
       color: #334155;
       line-height: 1.55;
       white-space: pre-wrap;
@@ -473,6 +451,7 @@
       .statValue,
       .itemSerial,
       .itemPound,
+      .itemCheck,
       .badge,
       .arrowCategoryValue,
       .arrowControlBtn,
@@ -484,7 +463,6 @@
       .topDesc,
       .statLabel,
       .itemMeta,
-      .itemCheck,
       .emptyBox,
       .hint,
       .arrowCategoryLabel,
@@ -561,7 +539,6 @@
 
       .statLabel,
       .itemMeta,
-      .itemCheck,
       .emptyBox,
       .hint,
       .arrowCategoryLabel,
@@ -571,6 +548,7 @@
       }
 
       .itemCheck {
+        color: #f8fafc;
         border-top-color: rgba(148, 163, 184, 0.16);
       }
 
@@ -631,6 +609,7 @@
   <script>
     const app = document.getElementById("app");
 
+    let currentData = null;
     let arrowCategories = [];
 
     init();
@@ -664,6 +643,8 @@
     }
 
     function renderDashboard(data) {
+      currentData = data;
+
       const summary = data.summary || {};
       const repairBows = data.repairBows || [];
       const arrowSummary = data.arrowSummary || {};
@@ -679,15 +660,15 @@
             <div class="mainStat">
               <div class="mainStatLabel">공용 활</div>
               <div class="mainStatValue">
-                <div class="mainNumber">${escapeHtml(summary.total || 0)}</div>
+                <div class="mainNumber">${escapeHtml(summary.topBowValue || summary.total || 0)}</div>
                 <div class="mainUnit">개</div>
               </div>
             </div>
 
             <div class="mainStat">
-              <div class="mainStatLabel">가용 화살</div>
+              <div class="mainStatLabel">공용 화살</div>
               <div class="mainStatValue">
-                <div class="mainNumber">${escapeHtml(arrowSummary.available || 0)}</div>
+                <div class="mainNumber">${escapeHtml(arrowSummary.total || 0)}</div>
                 <div class="mainUnit">개</div>
               </div>
             </div>
@@ -700,9 +681,6 @@
           <div class="badgeLine">
             <span class="badge normal">정상 ${escapeHtml(summary.normal || 0)}</span>
             <span class="badge repair">수리 필요 ${escapeHtml(summary.repair || 0)}</span>
-            <span class="badge bad">불량 ${escapeHtml(summary.bad || 0)}</span>
-            <span class="badge deleted">말소 ${escapeHtml(summary.deleted || 0)}</span>
-            <span class="badge repair">화살 수리 ${escapeHtml(arrowSummary.repairNeeded || 0)}</span>
           </div>
         </div>
 
@@ -711,19 +689,8 @@
           ${renderBowList(repairBows, "현재 수리가 필요한 활이 없습니다.")}
         </div>
 
-        <div class="section">
-          <div class="sectionTitle">화살 현황</div>
-          ${renderArrowSummary()}
-
-          <button id="arrowSaveBtn" class="saveBtn" onclick="saveArrowCategories()">
-            화살 현황 저장
-          </button>
-
-          <div id="arrowSaveResult" class="saveResult"></div>
-
-          <div class="arrowHelp">
-            부러진 화살은 해당 분류에서 -를 누르고, 수리 필요에서 +를 누른 뒤 저장하세요.
-          </div>
+        <div class="section" id="arrowSection">
+          ${renderArrowSectionContent()}
         </div>
 
         <div class="hint">
@@ -763,10 +730,27 @@
       return categories;
     }
 
+    function renderArrowSectionContent() {
+      return `
+        <div class="sectionTitle">화살 현황</div>
+        ${renderArrowSummary()}
+
+        <button id="arrowSaveBtn" class="saveBtn" onclick="saveArrowCategories()">
+          화살 현황 저장
+        </button>
+
+        <div id="arrowSaveResult" class="saveResult"></div>
+
+        <div class="arrowHelp">
+          부러진 화살은 해당 분류에서 -를 누르고, 수리 필요에서 +를 누른 뒤 저장하세요.
+        </div>
+      `;
+    }
+
     function renderArrowSummary() {
       return `
         <div class="statGrid">
-          ${statCard("가용 화살", getArrowQuantity("총량"))}
+          ${statCard("공용 화살", getArrowQuantity("총량"))}
           ${statCard("수리 필요", getArrowQuantity("수리 필요"), "repair")}
           ${statCard("총량", getArrowQuantity("총량"))}
           ${statCard("분류 수", getEditableCategoryCount())}
@@ -845,23 +829,10 @@
     }
 
     function refreshArrowSection() {
-      const section = document.querySelector(".section:nth-of-type(2)");
+      const section = document.getElementById("arrowSection");
       if (!section) return;
 
-      section.innerHTML = `
-        <div class="sectionTitle">화살 현황</div>
-        ${renderArrowSummary()}
-
-        <button id="arrowSaveBtn" class="saveBtn" onclick="saveArrowCategories()">
-          화살 현황 저장
-        </button>
-
-        <div id="arrowSaveResult" class="saveResult"></div>
-
-        <div class="arrowHelp">
-          부러진 화살은 해당 분류에서 -를 누르고, 수리 필요에서 +를 누른 뒤 저장하세요.
-        </div>
-      `;
+      section.innerHTML = renderArrowSectionContent();
     }
 
     async function saveArrowCategories() {
@@ -898,12 +869,13 @@
           throw new Error(data?.message || data?.error || "저장 실패");
         }
 
-        arrowCategories = normalizeCategories(data.arrowSummary?.categories || arrowCategories);
-
-        result.textContent = data.message || "화살 현황이 저장되었습니다.";
-        result.classList.add("success");
-
         renderDashboard(data);
+
+        const newResult = document.getElementById("arrowSaveResult");
+        if (newResult) {
+          newResult.textContent = data.message || "화살 현황이 저장되었습니다.";
+          newResult.classList.add("success");
+        }
       } catch (error) {
         result.textContent = "저장 실패: " + error.message;
         result.classList.add("error");
