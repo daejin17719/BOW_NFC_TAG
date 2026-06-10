@@ -72,6 +72,10 @@ async function buildSummary(env) {
     .filter((item) => item.status === "수리 필요")
     .sort(sortBySerial);
 
+  const topBowValueRange = `${sheetName}!L46`;
+  const topBowValueRows = await readSheetValues(spreadsheetId, topBowValueRange, accessToken);
+  const topBowValue = clean(topBowValueRows?.[0]?.[0]) || String(summary.total || 0);
+
   const arrowCategoryRange = `${sheetName}!J28:K33`;
   const arrowCategoryValues = await readSheetValues(
     spreadsheetId,
@@ -82,7 +86,10 @@ async function buildSummary(env) {
   const arrowSummary = normalizeArrowSummary(arrowCategoryValues);
 
   return {
-    summary,
+    summary: {
+      ...summary,
+      topBowValue
+    },
     repairBows,
     arrowSummary,
     updatedAt: new Date().toISOString()
@@ -121,13 +128,33 @@ async function updateArrowCategories(env, postedCategories) {
     }
   }
 
+  const recalculatedMap = recalculateArrowTotal(sheetLabels, postedMap);
+
   const values = sheetLabels.map((label) => {
-    const quantity = postedMap.has(label) ? postedMap.get(label) : 0;
+    const quantity = recalculatedMap.has(label) ? recalculatedMap.get(label) : 0;
     return [quantity];
   });
 
   const quantityRange = `${sheetName}!K28:K${27 + values.length}`;
   await writeSheetValues(spreadsheetId, quantityRange, values, accessToken);
+}
+
+function recalculateArrowTotal(sheetLabels, postedMap) {
+  const result = new Map(postedMap);
+  let total = 0;
+
+  for (const label of sheetLabels) {
+    if (label === "총량") continue;
+    if (label === "수리 필요") continue;
+
+    total += Math.max(toNumber(result.get(label)), 0);
+  }
+
+  if (sheetLabels.includes("총량")) {
+    result.set("총량", total);
+  }
+
+  return result;
 }
 
 function normalizeBow(row) {
@@ -202,7 +229,6 @@ function normalizeArrowSummary(categoryRows) {
 
   return {
     total,
-    available: total,
     repairNeeded,
     categories
   };
