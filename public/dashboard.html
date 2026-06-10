@@ -229,21 +229,28 @@
       padding: 16px;
     }
 
-    .itemSimpleTitle {
-      font-size: 25px;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      margin-bottom: 12px;
+    .repairItem {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 18px;
+      min-height: 54px;
     }
 
-    .itemCheck {
-      padding-top: 12px;
-      border-top: 1px solid #e5e7eb;
-      font-size: 17px;
+    .repairTitle {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      white-space: nowrap;
+    }
+
+    .repairCheck {
+      justify-self: end;
+      text-align: right;
+      font-size: 18px;
       font-weight: 900;
       color: #334155;
-      line-height: 1.55;
-      white-space: pre-wrap;
+      line-height: 1.4;
       word-break: keep-all;
       overflow-wrap: anywhere;
     }
@@ -425,13 +432,25 @@
         padding: 18px;
       }
 
+      .repairItem {
+        gap: 14px;
+      }
+
+      .repairTitle {
+        font-size: 23px;
+      }
+
+      .repairCheck {
+        font-size: 17px;
+      }
+
       .smallLabel,
       .mainTitle,
       .mainNumber,
       .sectionTitle,
       .statValue,
-      .itemSimpleTitle,
-      .itemCheck,
+      .repairTitle,
+      .repairCheck,
       .badge,
       .arrowCategoryValue,
       .arrowControlBtn,
@@ -522,9 +541,8 @@
         color: #94a3b8;
       }
 
-      .itemCheck {
+      .repairCheck {
         color: #f8fafc;
-        border-top-color: rgba(148, 163, 184, 0.16);
       }
 
       .arrowCategoryValue {
@@ -900,12 +918,14 @@
 
       return `
         <a class="item" href="/?id=${encodeURIComponent(serial)}">
-          <div class="itemSimpleTitle">
-            ${escapeHtml(serial)}번 활
-          </div>
+          <div class="repairItem">
+            <div class="repairTitle">
+              ${escapeHtml(serial)}번 활
+            </div>
 
-          <div class="itemCheck">
-            ${escapeHtml(check)}
+            <div class="repairCheck">
+              ${escapeHtml(check)}
+            </div>
           </div>
         </a>
       `;
