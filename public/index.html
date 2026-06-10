@@ -91,26 +91,29 @@
     .mainBlock,
     .titleLine,
     .badge,
-    .repairNotice,
-    .typeBadge {
+    .repairNotice {
       position: relative;
       z-index: 2;
     }
 
     .typeBadge {
       position: absolute;
-      top: 22px;
-      right: 24px;
+      top: 18px;
+      right: -34px;
       z-index: 3;
-      min-height: 26px;
-      padding: 5px 10px;
-      border-radius: 999px;
+      width: 120px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(38deg);
+      transform-origin: center;
       font-size: 12px;
       line-height: 1;
-      font-weight: 900;
+      font-weight: 950;
       letter-spacing: -0.02em;
-      background: rgba(255, 255, 255, 0.13);
-      color: rgba(255, 255, 255, 0.78);
+      background: rgba(255, 255, 255, 0.16);
+      color: rgba(255, 255, 255, 0.86);
       box-shadow: none;
     }
 
@@ -416,8 +419,8 @@
       }
 
       .typeBadge {
-        top: 20px;
-        right: 22px;
+        top: 17px;
+        right: -36px;
       }
 
       .mainValue.ownerValue {
@@ -604,7 +607,7 @@
 
       .typeBadge {
         background: rgba(15, 23, 42, 0.08);
-        color: rgba(15, 23, 42, 0.62);
+        color: rgba(15, 23, 42, 0.64);
       }
 
       .repairNotice,
@@ -614,7 +617,6 @@
       }
 
       .topCard .badge,
-      .topCard .typeBadge,
       .topCard .repairNotice {
         border: none;
         box-shadow: none;
