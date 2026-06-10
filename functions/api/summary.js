@@ -85,13 +85,28 @@ async function buildSummary(env) {
 
   const arrowSummary = normalizeArrowSummary(arrowCategoryValues);
 
+  const arrowBadgeRange = `${sheetName}!K69:K70`;
+  const arrowBadgeValues = await readSheetValues(
+    spreadsheetId,
+    arrowBadgeRange,
+    accessToken
+  );
+
+  const arrowBadges = {
+    under65: toNumber(arrowBadgeValues?.[0]?.[0]),
+    over7: toNumber(arrowBadgeValues?.[1]?.[0])
+  };
+
   return {
     summary: {
       ...summary,
       topBowValue
     },
     repairBows,
-    arrowSummary,
+    arrowSummary: {
+      ...arrowSummary,
+      badges: arrowBadges
+    },
     updatedAt: new Date().toISOString()
   };
 }
