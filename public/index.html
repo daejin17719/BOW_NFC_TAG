@@ -91,7 +91,8 @@
     .mainBlock,
     .titleLine,
     .badge,
-    .repairNotice {
+    .repairNotice,
+    .typeBadge {
       position: relative;
       z-index: 2;
     }
@@ -163,7 +164,9 @@
       margin-left: 2px;
     }
 
-    .badge {
+    .badge,
+    .typeBadge,
+    .repairNotice {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -172,6 +175,7 @@
       border-radius: 999px;
       font-weight: 900;
       font-size: 15px;
+      box-shadow: none;
     }
 
     .badge.normal {
@@ -194,6 +198,13 @@
       color: var(--gray-text);
     }
 
+    .typeBadge {
+      background: rgba(255, 255, 255, 0.14);
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 14px;
+      padding: 7px 13px;
+    }
+
     .statusRow {
       display: flex;
       align-items: center;
@@ -202,14 +213,8 @@
     }
 
     .repairNotice {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 34px;
-      padding: 7px 13px;
-      border-radius: 999px;
       font-size: 14px;
-      font-weight: 900;
+      padding: 7px 13px;
       background: rgba(255, 255, 255, 0.14);
       color: rgba(255, 255, 255, 0.92);
     }
@@ -219,8 +224,8 @@
     }
 
     .banNotice {
-      background: rgba(127, 29, 29, 0.12);
-      color: #991b1b;
+      background: rgba(255, 255, 255, 0.14);
+      color: rgba(255, 255, 255, 0.92);
     }
 
     .section {
@@ -556,12 +561,12 @@
 
       .topCard {
         background: linear-gradient(
-      135deg,
-      rgba(248, 250, 252, 0.95) 0%,
-      rgba(232, 241, 251, 0.95) 100%
-    );
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+          135deg,
+          rgba(248, 250, 252, 0.95) 0%,
+          rgba(232, 241, 251, 0.95) 100%
+        );
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         color: #0f172a;
         box-shadow:
           0 18px 38px rgba(0, 0, 0, 0.30),
@@ -583,19 +588,22 @@
         color: rgba(15, 23, 42, 0.58);
       }
 
-      .repairNotice {
+      .typeBadge {
+        background: rgba(15, 23, 42, 0.08);
+        color: #334155;
+      }
+
+      .repairNotice,
+      .banNotice {
         background: rgba(15, 23, 42, 0.08);
         color: #991b1b;
       }
 
-      .banNotice {
-        background: rgba(127, 29, 29, 0.13);
-        color: #7f1d1d;
-      }
-
-      .topCard .badge {
+      .topCard .badge,
+      .topCard .typeBadge,
+      .topCard .repairNotice {
         border: none;
-        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+        box-shadow: none;
       }
 
       .topCard .badge.normal {
@@ -706,6 +714,7 @@
           ? "사용 전 확인 필요"
           : "";
 
+      const typeLabel = isPersonal ? "개인" : "공용";
       const mainLabel = isPersonal ? "소유자" : "일련번호";
       const mainValue = isPersonal ? item.owner : item.serial;
       const mainValueClass = isPersonal ? "ownerValue" : "serialValue";
@@ -733,9 +742,12 @@
           </div>
 
           <div class="statusRow">
+            <div class="typeBadge">${escapeHtml(typeLabel)}</div>
+
             <div id="statusBadge" class="badge ${badgeClass}">
               ${escapeHtml(status)}
             </div>
+
             <div id="repairNotice" class="repairNotice ${isRepairNeeded || isBadStatus ? "" : "hidden"} ${isBadStatus ? "banNotice" : ""}">
               ${escapeHtml(noticeText)}
             </div>
@@ -851,7 +863,7 @@
       const textarea = document.getElementById("repairRequest");
 
       const status = "정상";
-      const check = "수리 완료";
+      const check = formatDate(new Date());
 
       result.className = "result";
       btn.disabled = true;
@@ -862,7 +874,7 @@
         await saveStatusAndCheck(status, check, "수리 완료 처리 실패");
 
         if (textarea) textarea.value = "";
-        result.textContent = "수리 완료 처리되었습니다.";
+        result.textContent = `수리 완료 처리되었습니다.\n점검 내역에 ${check} 날짜가 기록되었습니다.`;
         result.classList.add("success");
 
         updatePageAfterSave(status, check);
@@ -952,6 +964,13 @@
       if (status === "불량") return "bad";
       if (status === "말소") return "deleted";
       return "normal";
+    }
+
+    function formatDate(date) {
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const dd = String(date.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
     }
 
     function showError(message) {
