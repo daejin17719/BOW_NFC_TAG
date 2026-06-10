@@ -63,7 +63,7 @@
     .topCard {
       position: relative;
       overflow: hidden;
-      min-height: 210px;
+      min-height: 230px;
       background: linear-gradient(135deg, #121c2d 0%, #2d3e54 100%);
       color: white;
       border-radius: 28px;
@@ -87,28 +87,45 @@
       margin-bottom: 18px;
     }
 
-    .mainCount {
+    .mainStatRow {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .mainStat {
+      min-width: 0;
+    }
+
+    .mainStatLabel {
+      font-size: 13px;
+      font-weight: 850;
+      color: rgba(255,255,255,0.64);
+      margin-bottom: 7px;
+    }
+
+    .mainStatValue {
       display: flex;
       align-items: baseline;
-      gap: 6px;
-      margin-top: 20px;
+      gap: 4px;
     }
 
     .mainNumber {
-      font-size: 62px;
+      font-size: 54px;
       line-height: 0.95;
       font-weight: 900;
       letter-spacing: -0.05em;
     }
 
     .mainUnit {
-      font-size: 22px;
+      font-size: 19px;
       font-weight: 850;
       color: rgba(255,255,255,0.78);
     }
 
     .topDesc {
-      margin-top: 12px;
+      margin-top: 14px;
       font-size: 15px;
       font-weight: 800;
       line-height: 1.45;
@@ -260,11 +277,13 @@
     }
 
     .itemCheck {
-      margin-top: 9px;
-      font-size: 14px;
-      font-weight: 800;
-      color: #475569;
-      line-height: 1.45;
+      margin-top: 12px;
+      padding-top: 11px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 16px;
+      font-weight: 850;
+      color: #334155;
+      line-height: 1.55;
       white-space: pre-wrap;
       word-break: keep-all;
       overflow-wrap: anywhere;
@@ -289,10 +308,10 @@
     }
 
     .arrowCategoryItem {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: 1fr auto;
       gap: 12px;
+      align-items: center;
       background: #f8fafc;
       border: 1px solid #eef2f7;
       border-radius: 16px;
@@ -307,8 +326,33 @@
       overflow-wrap: anywhere;
     }
 
+    .arrowControl {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .arrowControlBtn {
+      width: 32px;
+      height: 32px;
+      border: 0;
+      border-radius: 999px;
+      background: #e2e8f0;
+      color: #0f172a;
+      font-size: 18px;
+      line-height: 1;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .arrowControlBtn:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+
     .arrowCategoryValue {
-      flex: 0 0 auto;
+      min-width: 34px;
+      text-align: center;
       font-size: 20px;
       font-weight: 900;
       color: #0f172a;
@@ -328,18 +372,50 @@
       color: #1e3a8a;
     }
 
-    .backBtn {
-      display: block;
+    .saveBtn {
       width: 100%;
-      margin: 0 0 14px;
-      padding: 15px 16px;
+      margin-top: 16px;
+      border: 0;
       border-radius: 18px;
-      text-align: center;
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: 900;
-      background: #e2e8f0;
-      color: #0f172a;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: 950;
+      color: white;
+      background: #0f172a;
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.18);
+    }
+
+    .saveBtn:disabled {
+      opacity: 0.55;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .saveResult {
+      margin-top: 12px;
+      min-height: 22px;
+      font-size: 15px;
+      font-weight: 850;
+      line-height: 1.5;
+      color: var(--muted);
+      white-space: pre-line;
+    }
+
+    .saveResult.success {
+      color: #166534;
+    }
+
+    .saveResult.error {
+      color: #991b1b;
+    }
+
+    .arrowHelp {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 850;
+      line-height: 1.5;
     }
 
     .hint {
@@ -368,7 +444,7 @@
       }
 
       .topCard {
-        min-height: 190px;
+        min-height: 210px;
         border-radius: 24px;
         padding: 24px 26px;
       }
@@ -378,7 +454,11 @@
       }
 
       .mainNumber {
-        font-size: 58px;
+        font-size: 50px;
+      }
+
+      .mainUnit {
+        font-size: 18px;
       }
 
       .section {
@@ -394,8 +474,9 @@
       .itemSerial,
       .itemPound,
       .badge,
-      .backBtn,
-      .arrowCategoryValue {
+      .arrowCategoryValue,
+      .arrowControlBtn,
+      .saveBtn {
         font-weight: 900;
       }
 
@@ -406,7 +487,9 @@
       .itemCheck,
       .emptyBox,
       .hint,
-      .arrowCategoryLabel {
+      .arrowCategoryLabel,
+      .arrowHelp,
+      .saveResult {
         font-weight: 850;
       }
     }
@@ -452,6 +535,7 @@
         color: rgba(15, 23, 42, 0.62);
       }
 
+      .mainStatLabel,
       .mainUnit,
       .topDesc {
         color: rgba(15, 23, 42, 0.62);
@@ -480,12 +564,23 @@
       .itemCheck,
       .emptyBox,
       .hint,
-      .arrowCategoryLabel {
+      .arrowCategoryLabel,
+      .arrowHelp,
+      .saveResult {
         color: #94a3b8;
+      }
+
+      .itemCheck {
+        border-top-color: rgba(148, 163, 184, 0.16);
       }
 
       .itemPound,
       .arrowCategoryValue {
+        color: #f8fafc;
+      }
+
+      .arrowControlBtn {
+        background: #263449;
         color: #f8fafc;
       }
 
@@ -503,9 +598,17 @@
         color: #bfdbfe;
       }
 
-      .backBtn {
-        background: #1e293b;
-        color: #f8fafc;
+      .saveBtn {
+        background: #334155;
+        box-shadow: none;
+      }
+
+      .saveResult.success {
+        color: #86efac;
+      }
+
+      .saveResult.error {
+        color: #fca5a5;
       }
 
       .errorBox {
@@ -527,6 +630,8 @@
 
   <script>
     const app = document.getElementById("app");
+
+    let arrowCategories = [];
 
     init();
 
@@ -563,14 +668,29 @@
       const repairBows = data.repairBows || [];
       const arrowSummary = data.arrowSummary || {};
 
+      arrowCategories = normalizeCategories(arrowSummary.categories || []);
+
       app.innerHTML = `
         <div class="topCard">
           <div class="smallLabel">서울대학교 국궁부</div>
           <div class="mainTitle">종합 관리 체계</div>
 
-          <div class="mainCount">
-            <div class="mainNumber">${escapeHtml(summary.total || 0)}</div>
-            <div class="mainUnit">개 공용 활</div>
+          <div class="mainStatRow">
+            <div class="mainStat">
+              <div class="mainStatLabel">공용 활</div>
+              <div class="mainStatValue">
+                <div class="mainNumber">${escapeHtml(summary.total || 0)}</div>
+                <div class="mainUnit">개</div>
+              </div>
+            </div>
+
+            <div class="mainStat">
+              <div class="mainStatLabel">가용 화살</div>
+              <div class="mainStatValue">
+                <div class="mainNumber">${escapeHtml(arrowSummary.available || 0)}</div>
+                <div class="mainUnit">개</div>
+              </div>
+            </div>
           </div>
 
           <div class="topDesc">
@@ -582,6 +702,7 @@
             <span class="badge repair">수리 필요 ${escapeHtml(summary.repair || 0)}</span>
             <span class="badge bad">불량 ${escapeHtml(summary.bad || 0)}</span>
             <span class="badge deleted">말소 ${escapeHtml(summary.deleted || 0)}</span>
+            <span class="badge repair">화살 수리 ${escapeHtml(arrowSummary.repairNeeded || 0)}</span>
           </div>
         </div>
 
@@ -592,12 +713,18 @@
 
         <div class="section">
           <div class="sectionTitle">화살 현황</div>
-          ${renderArrowSummary(arrowSummary)}
-        </div>
+          ${renderArrowSummary()}
 
-        <a class="backBtn" href="/">
-          장비 조회 화면으로 돌아가기
-        </a>
+          <button id="arrowSaveBtn" class="saveBtn" onclick="saveArrowCategories()">
+            화살 현황 저장
+          </button>
+
+          <div id="arrowSaveResult" class="saveResult"></div>
+
+          <div class="arrowHelp">
+            부러진 화살은 해당 분류에서 -를 누르고, 수리 필요에서 +를 누른 뒤 저장하세요.
+          </div>
+        </div>
 
         <div class="hint">
           서울대학교 국궁부 공용 장비 관리 체계<br>
@@ -606,23 +733,60 @@
       `;
     }
 
-    function renderArrowSummary(summary) {
-      const categories = summary.categories || [];
+    function normalizeCategories(categories) {
+      const cleanCategories = categories.map((item) => ({
+        label: String(item.label || "").trim(),
+        quantity: Math.max(Number(item.quantity || 0), 0)
+      })).filter((item) => item.label);
 
+      return recalculateTotal(cleanCategories);
+    }
+
+    function recalculateTotal(categories) {
+      const total = categories.reduce((sum, item) => {
+        if (item.label === "총량") return sum;
+        if (item.label === "수리 필요") return sum;
+        return sum + Number(item.quantity || 0);
+      }, 0);
+
+      const totalItem = categories.find((item) => item.label === "총량");
+
+      if (totalItem) {
+        totalItem.quantity = total;
+      } else {
+        categories.push({
+          label: "총량",
+          quantity: total
+        });
+      }
+
+      return categories;
+    }
+
+    function renderArrowSummary() {
       return `
         <div class="statGrid">
-          ${statCard("가용 화살", summary.available || 0)}
-          ${statCard("수리 필요", summary.repairNeeded || 0, "repair")}
-          ${statCard("총량", summary.total || 0)}
-          ${statCard("분류 수", categories.length || 0)}
+          ${statCard("가용 화살", getArrowQuantity("총량"))}
+          ${statCard("수리 필요", getArrowQuantity("수리 필요"), "repair")}
+          ${statCard("총량", getArrowQuantity("총량"))}
+          ${statCard("분류 수", getEditableCategoryCount())}
         </div>
 
-        ${renderArrowCategoryList(categories)}
+        ${renderArrowCategoryList()}
       `;
     }
 
-    function renderArrowCategoryList(categories) {
-      if (!categories.length) {
+    function getArrowQuantity(label) {
+      const item = arrowCategories.find((category) => category.label === label);
+      return item ? item.quantity : 0;
+    }
+
+    function getEditableCategoryCount() {
+      return arrowCategories.filter((item) => item.label !== "총량").length;
+    }
+
+    function renderArrowCategoryList() {
+      if (!arrowCategories.length) {
         return `
           <div class="emptyBox" style="margin-top: 14px;">
             화살 분류 정보가 없습니다.
@@ -632,21 +796,128 @@
 
       return `
         <div class="arrowCategoryList">
-          ${categories.map(item => arrowCategoryItem(item)).join("")}
+          ${arrowCategories.map((item, index) => arrowCategoryItem(item, index)).join("")}
         </div>
       `;
     }
 
-    function arrowCategoryItem(item) {
+    function arrowCategoryItem(item, index) {
       const isTotal = item.label === "총량";
       const isRepair = item.label === "수리 필요";
 
       return `
         <div class="arrowCategoryItem ${isTotal ? "total" : ""} ${isRepair ? "repair" : ""}">
           <div class="arrowCategoryLabel">${escapeHtml(item.label)}</div>
-          <div class="arrowCategoryValue">${escapeHtml(item.quantity)}</div>
+
+          <div class="arrowControl">
+            <button
+              class="arrowControlBtn"
+              onclick="changeArrowQuantity(${index}, -1)"
+              ${isTotal ? "disabled" : ""}
+              aria-label="${escapeHtml(item.label)} 감소"
+            >-</button>
+
+            <div class="arrowCategoryValue" id="arrowValue-${index}">
+              ${escapeHtml(item.quantity)}
+            </div>
+
+            <button
+              class="arrowControlBtn"
+              onclick="changeArrowQuantity(${index}, 1)"
+              ${isTotal ? "disabled" : ""}
+              aria-label="${escapeHtml(item.label)} 증가"
+            >+</button>
+          </div>
         </div>
       `;
+    }
+
+    function changeArrowQuantity(index, delta) {
+      if (!arrowCategories[index]) return;
+      if (arrowCategories[index].label === "총량") return;
+
+      const nextValue = Math.max(Number(arrowCategories[index].quantity || 0) + delta, 0);
+      arrowCategories[index].quantity = nextValue;
+      arrowCategories = recalculateTotal(arrowCategories);
+
+      refreshArrowSection();
+      clearSaveResult();
+    }
+
+    function refreshArrowSection() {
+      const section = document.querySelector(".section:nth-of-type(2)");
+      if (!section) return;
+
+      section.innerHTML = `
+        <div class="sectionTitle">화살 현황</div>
+        ${renderArrowSummary()}
+
+        <button id="arrowSaveBtn" class="saveBtn" onclick="saveArrowCategories()">
+          화살 현황 저장
+        </button>
+
+        <div id="arrowSaveResult" class="saveResult"></div>
+
+        <div class="arrowHelp">
+          부러진 화살은 해당 분류에서 -를 누르고, 수리 필요에서 +를 누른 뒤 저장하세요.
+        </div>
+      `;
+    }
+
+    async function saveArrowCategories() {
+      const btn = document.getElementById("arrowSaveBtn");
+      const result = document.getElementById("arrowSaveResult");
+
+      if (!btn || !result) return;
+
+      btn.disabled = true;
+      result.className = "saveResult";
+      result.textContent = "저장 중...";
+
+      try {
+        const response = await fetch("/api/summary", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            categories: arrowCategories
+          })
+        });
+
+        const text = await response.text();
+        let data;
+
+        try {
+          data = JSON.parse(text);
+        } catch (error) {
+          throw new Error("서버가 JSON이 아닌 응답을 반환했습니다.");
+        }
+
+        if (!response.ok) {
+          throw new Error(data?.message || data?.error || "저장 실패");
+        }
+
+        arrowCategories = normalizeCategories(data.arrowSummary?.categories || arrowCategories);
+
+        result.textContent = data.message || "화살 현황이 저장되었습니다.";
+        result.classList.add("success");
+
+        renderDashboard(data);
+      } catch (error) {
+        result.textContent = "저장 실패: " + error.message;
+        result.classList.add("error");
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function clearSaveResult() {
+      const result = document.getElementById("arrowSaveResult");
+      if (result) {
+        result.className = "saveResult";
+        result.textContent = "";
+      }
     }
 
     function statCard(label, value, className = "") {
