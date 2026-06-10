@@ -2,50 +2,8 @@ const TOKEN_CACHE_SECONDS = 3000;
 
 export async function onRequestGet({ env }) {
   try {
-    const spreadsheetId = env.SPREADSHEET_ID;
-    const sheetName = env.BOW_SHEET_NAME || "장비";
-    const startRow = Number(env.BOW_DATA_START_ROW || 28);
-
-    if (!spreadsheetId) {
-      return json(
-        {
-          error: "missing_spreadsheet_id",
-          message: "SPREADSHEET_ID가 설정되지 않았습니다."
-        },
-        500
-      );
-    }
-
-    const accessToken = await getAccessToken(env);
-
-    const bowRange = `${sheetName}!A${startRow}:G`;
-    const bowValues = await readSheetValues(spreadsheetId, bowRange, accessToken);
-
-    const bows = bowValues
-      .map((row) => normalizeBow(row))
-      .filter((item) => item.serial);
-
-    const summary = createSummary(bows);
-
-    const repairBows = bows
-      .filter((item) => item.status === "수리 필요")
-      .sort(sortBySerial);
-
-    const arrowCategoryRange = `${sheetName}!J28:K33`;
-    const arrowCategoryValues = await readSheetValues(
-      spreadsheetId,
-      arrowCategoryRange,
-      accessToken
-    );
-
-    const arrowSummary = normalizeArrowSummary(arrowCategoryValues);
-
-    return json({
-      summary,
-      repairBows,
-      arrowSummary,
-      updatedAt: new Date().toISOString()
-    });
+    const data = await buildSummary(env);
+    return json(data);
   } catch (error) {
     return json(
       {
@@ -55,6 +13,121 @@ export async function onRequestGet({ env }) {
       500
     );
   }
+}
+
+export async function onRequestPost({ env, request }) {
+  try {
+    const body = await request.json().catch(() => null);
+
+    if (!body || !Array.isArray(body.categories)) {
+      return json(
+        {
+          error: "invalid_body",
+          message: "categories 배열이 필요합니다."
+        },
+        400
+      );
+    }
+
+    await updateArrowCategories(env, body.categories);
+
+    const data = await buildSummary(env);
+
+    return json({
+      ...data,
+      message: "화살 현황이 저장되었습니다."
+    });
+  } catch (error) {
+    return json(
+      {
+        error: "save_failed",
+        message: error.message
+      },
+      500
+    );
+  }
+}
+
+async function buildSummary(env) {
+  const spreadsheetId = env.SPREADSHEET_ID;
+  const sheetName = env.BOW_SHEET_NAME || "장비";
+  const startRow = Number(env.BOW_DATA_START_ROW || 28);
+
+  if (!spreadsheetId) {
+    throw new Error("SPREADSHEET_ID가 설정되지 않았습니다.");
+  }
+
+  const accessToken = await getAccessToken(env);
+
+  const bowRange = `${sheetName}!A${startRow}:G`;
+  const bowValues = await readSheetValues(spreadsheetId, bowRange, accessToken);
+
+  const bows = bowValues
+    .map((row) => normalizeBow(row))
+    .filter((item) => item.serial);
+
+  const summary = createSummary(bows);
+
+  const repairBows = bows
+    .filter((item) => item.status === "수리 필요")
+    .sort(sortBySerial);
+
+  const arrowCategoryRange = `${sheetName}!J28:K33`;
+  const arrowCategoryValues = await readSheetValues(
+    spreadsheetId,
+    arrowCategoryRange,
+    accessToken
+  );
+
+  const arrowSummary = normalizeArrowSummary(arrowCategoryValues);
+
+  return {
+    summary,
+    repairBows,
+    arrowSummary,
+    updatedAt: new Date().toISOString()
+  };
+}
+
+async function updateArrowCategories(env, postedCategories) {
+  const spreadsheetId = env.SPREADSHEET_ID;
+  const sheetName = env.BOW_SHEET_NAME || "장비";
+
+  if (!spreadsheetId) {
+    throw new Error("SPREADSHEET_ID가 설정되지 않았습니다.");
+  }
+
+  const accessToken = await getAccessToken(env);
+
+  const labelRange = `${sheetName}!J28:J33`;
+  const labelValues = await readSheetValues(spreadsheetId, labelRange, accessToken);
+
+  const sheetLabels = labelValues
+    .map((row) => clean(row[0]))
+    .filter(Boolean);
+
+  if (!sheetLabels.length) {
+    throw new Error("화살 분류 라벨을 찾지 못했습니다. J28:J33 범위를 확인하세요.");
+  }
+
+  const postedMap = new Map();
+
+  for (const item of postedCategories) {
+    const label = clean(item.label);
+    const quantity = Math.max(toNumber(item.quantity), 0);
+
+    if (label) {
+      postedMap.set(label, quantity);
+    }
+  }
+
+  const values = sheetLabels.map((label) => {
+    const quantity = postedMap.has(label) ? postedMap.get(label) : 0;
+    return [quantity];
+  });
+
+  const quantityRange = `${sheetName}!K28:K${27 + values.length}`;
+  await writeSheetValues(spreadsheetId, quantityRange, values, accessToken);
 }
 
 function normalizeBow(row) {
@@ -115,23 +188,21 @@ function normalizeArrowSummary(categoryRows) {
     }))
     .filter((item) => item.label);
 
-  const totalRow = categories.find((item) => item.label === "총량");
   const repairRow = categories.find((item) => item.label === "수리 필요");
+  const totalRow = categories.find((item) => item.label === "총량");
 
-  const total = totalRow
-    ? totalRow.quantity
-    : categories.reduce((sum, item) => {
-        if (item.label === "총량") return sum;
-        return sum + item.quantity;
-      }, 0);
+  const calculatedTotal = categories.reduce((sum, item) => {
+    if (item.label === "수리 필요") return sum;
+    if (item.label === "총량") return sum;
+    return sum + item.quantity;
+  }, 0);
 
   const repairNeeded = repairRow ? repairRow.quantity : 0;
-
-  const available = Math.max(total - repairNeeded, 0);
+  const total = totalRow ? totalRow.quantity : calculatedTotal;
 
   return {
     total,
-    available,
+    available: total,
     repairNeeded,
     categories
   };
@@ -168,6 +239,31 @@ async function readSheetValues(spreadsheetId, range, accessToken) {
   }
 
   return data.values || [];
+}
+
+async function writeSheetValues(spreadsheetId, range, values, accessToken) {
+  const url =
+    `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}` +
+    `/values/${encodeURIComponent(range)}?valueInputOption=USER_ENTERED`;
+
+  const response = await fetch(url, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      values
+    })
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(data?.error?.message || `${range} 값을 저장하지 못했습니다.`);
+  }
+
+  return data;
 }
 
 async function getAccessToken(env) {
