@@ -161,6 +161,11 @@
       color: var(--red-text);
     }
 
+    .badge.arrow {
+      background: #e0f2fe;
+      color: #075985;
+    }
+
     .section {
       background: var(--card);
       border-radius: 24px;
@@ -221,42 +226,18 @@
       background: #f8fafc;
       border: 1px solid #eef2f7;
       border-radius: 18px;
-      padding: 15px;
+      padding: 16px;
     }
 
-    .itemTop {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-
-    .itemSerial {
+    .itemSimpleTitle {
       font-size: 25px;
       font-weight: 900;
       letter-spacing: -0.04em;
-    }
-
-    .itemPound {
-      flex: 0 0 auto;
-      font-size: 20px;
-      font-weight: 900;
-      color: #0f172a;
-    }
-
-    .itemMeta {
-      font-size: 15px;
-      font-weight: 850;
-      color: var(--muted);
-      line-height: 1.45;
-      word-break: keep-all;
-      overflow-wrap: anywhere;
+      margin-bottom: 12px;
     }
 
     .itemCheck {
-      margin-top: 12px;
-      padding-top: 11px;
+      padding-top: 12px;
       border-top: 1px solid #e5e7eb;
       font-size: 17px;
       font-weight: 900;
@@ -449,8 +430,7 @@
       .mainNumber,
       .sectionTitle,
       .statValue,
-      .itemSerial,
-      .itemPound,
+      .itemSimpleTitle,
       .itemCheck,
       .badge,
       .arrowCategoryValue,
@@ -462,7 +442,6 @@
       .mainUnit,
       .topDesc,
       .statLabel,
-      .itemMeta,
       .emptyBox,
       .hint,
       .arrowCategoryLabel,
@@ -479,9 +458,6 @@
         --text: #f8fafc;
         --muted: #94a3b8;
         --primary: #2563eb;
-
-        --gray-bg: #334155;
-        --gray-text: #e2e8f0;
       }
 
       body {
@@ -538,7 +514,6 @@
       }
 
       .statLabel,
-      .itemMeta,
       .emptyBox,
       .hint,
       .arrowCategoryLabel,
@@ -552,7 +527,6 @@
         border-top-color: rgba(148, 163, 184, 0.16);
       }
 
-      .itemPound,
       .arrowCategoryValue {
         color: #f8fafc;
       }
@@ -648,6 +622,7 @@
       const summary = data.summary || {};
       const repairBows = data.repairBows || [];
       const arrowSummary = data.arrowSummary || {};
+      const arrowBadges = arrowSummary.badges || {};
 
       arrowCategories = normalizeCategories(arrowSummary.categories || []);
 
@@ -681,6 +656,8 @@
           <div class="badgeLine">
             <span class="badge normal">정상 ${escapeHtml(summary.normal || 0)}</span>
             <span class="badge repair">수리 필요 ${escapeHtml(summary.repair || 0)}</span>
+            <span class="badge arrow">6.5치 이하 ${escapeHtml(arrowBadges.under65 || 0)}</span>
+            <span class="badge arrow">7치 이상 ${escapeHtml(arrowBadges.over7 || 0)}</span>
           </div>
         </div>
 
@@ -919,20 +896,12 @@
 
     function bowItem(item) {
       const serial = item.serial || "-";
-      const brand = item.brand || "-";
-      const size = item.size || "";
-      const pound = item.pound ? item.pound + "lb" : "-";
       const check = item.check || "-";
 
       return `
         <a class="item" href="/?id=${encodeURIComponent(serial)}">
-          <div class="itemTop">
-            <div class="itemSerial">${escapeHtml(serial)}번 활</div>
-            <div class="itemPound">${escapeHtml(pound)}</div>
-          </div>
-
-          <div class="itemMeta">
-            ${escapeHtml(`${brand} ${size}`.trim())}
+          <div class="itemSimpleTitle">
+            ${escapeHtml(serial)}번 활
           </div>
 
           <div class="itemCheck">
