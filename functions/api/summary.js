@@ -8,17 +8,20 @@ export async function onRequestGet({ env }) {
 
     if (!spreadsheetId) {
       return json(
-        { error: "missing_spreadsheet_id", message: "SPREADSHEET_ID가 설정되지 않았습니다." },
+        {
+          error: "missing_spreadsheet_id",
+          message: "SPREADSHEET_ID가 설정되지 않았습니다."
+        },
         500
       );
     }
 
     const accessToken = await getAccessToken(env);
 
-    const range = `${sheetName}!A${startRow}:G`;
-    const values = await readSheetValues(spreadsheetId, range, accessToken);
+    const bowRange = `${sheetName}!A${startRow}:G`;
+    const bowValues = await readSheetValues(spreadsheetId, bowRange, accessToken);
 
-    const bows = values
+    const bows = bowValues
       .map((row) => normalizeBow(row))
       .filter((item) => item.serial);
 
@@ -28,14 +31,19 @@ export async function onRequestGet({ env }) {
       .filter((item) => item.status === "수리 필요")
       .sort(sortBySerial);
 
-    const badBows = bows
-      .filter((item) => item.status === "불량")
-      .sort(sortBySerial);
+    const arrowCategoryRange = `${sheetName}!J28:K33`;
+    const arrowCategoryValues = await readSheetValues(
+      spreadsheetId,
+      arrowCategoryRange,
+      accessToken
+    );
+
+    const arrowSummary = normalizeArrowSummary(arrowCategoryValues);
 
     return json({
       summary,
       repairBows,
-      badBows,
+      arrowSummary,
       updatedAt: new Date().toISOString()
     });
   } catch (error) {
@@ -99,6 +107,36 @@ function createSummary(items) {
   return summary;
 }
 
+function normalizeArrowSummary(categoryRows) {
+  const categories = (categoryRows || [])
+    .map((row) => ({
+      label: clean(row[0]),
+      quantity: toNumber(row[1])
+    }))
+    .filter((item) => item.label);
+
+  const totalRow = categories.find((item) => item.label === "총량");
+  const repairRow = categories.find((item) => item.label === "수리 필요");
+
+  const total = totalRow
+    ? totalRow.quantity
+    : categories.reduce((sum, item) => {
+        if (item.label === "총량") return sum;
+        return sum + item.quantity;
+      }, 0);
+
+  const repairNeeded = repairRow ? repairRow.quantity : 0;
+
+  const available = Math.max(total - repairNeeded, 0);
+
+  return {
+    total,
+    available,
+    repairNeeded,
+    categories
+  };
+}
+
 function sortBySerial(a, b) {
   const aNum = Number(a.serial);
   const bNum = Number(b.serial);
@@ -107,7 +145,9 @@ function sortBySerial(a, b) {
     return aNum - bNum;
   }
 
-  return String(a.serial).localeCompare(String(b.serial), "ko");
+  return String(a.serial).localeCompare(String(b.serial), "ko", {
+    numeric: true
+  });
 }
 
 async function readSheetValues(spreadsheetId, range, accessToken) {
@@ -124,7 +164,7 @@ async function readSheetValues(spreadsheetId, range, accessToken) {
   const data = await response.json().catch(() => null);
 
   if (!response.ok) {
-    throw new Error(data?.error?.message || "Google Sheets 값을 읽지 못했습니다.");
+    throw new Error(data?.error?.message || `${range} 값을 읽지 못했습니다.`);
   }
 
   return data.values || [];
@@ -189,7 +229,10 @@ async function getAccessToken(env) {
 async function getCachedToken(env) {
   if (!caches?.default || !env.GOOGLE_CLIENT_EMAIL) return null;
 
-  const cacheKey = new Request(`https://token-cache.local/${encodeURIComponent(env.GOOGLE_CLIENT_EMAIL)}`);
+  const cacheKey = new Request(
+    `https://token-cache.local/${encodeURIComponent(env.GOOGLE_CLIENT_EMAIL)}`
+  );
+
   const cached = await caches.default.match(cacheKey);
 
   if (!cached) return null;
@@ -201,7 +244,9 @@ async function getCachedToken(env) {
 async function setCachedToken(env, accessToken) {
   if (!caches?.default || !env.GOOGLE_CLIENT_EMAIL || !accessToken) return;
 
-  const cacheKey = new Request(`https://token-cache.local/${encodeURIComponent(env.GOOGLE_CLIENT_EMAIL)}`);
+  const cacheKey = new Request(
+    `https://token-cache.local/${encodeURIComponent(env.GOOGLE_CLIENT_EMAIL)}`
+  );
 
   const response = new Response(JSON.stringify({ access_token: accessToken }), {
     headers: {
@@ -253,6 +298,11 @@ function normalizePrivateKey(value) {
 
 function clean(value) {
   return String(value ?? "").trim();
+}
+
+function toNumber(value) {
+  const number = Number(String(value ?? "").replace(/[^0-9.-]/g, ""));
+  return Number.isFinite(number) ? number : 0;
 }
 
 function base64UrlEncode(value) {
