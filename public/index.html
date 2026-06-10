@@ -398,6 +398,25 @@
     .result.error {
       color: #991b1b;
     }
+    .systemBtn {
+  display: block;
+  width: 100%;
+  margin: 0 0 14px;
+  padding: 15px 16px;
+  border-radius: 18px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 900;
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.systemBtn:active {
+  transform: translateY(1px);
+}
+
+
 
     .hint {
       margin-top: 12px;
@@ -591,7 +610,10 @@
       .result.error {
         color: #fca5a5;
       }
-
+.systemBtn {
+    background: #1e293b;
+    color: #f8fafc;
+  }
       .loading,
       .errorBox {
         background: #111827;
@@ -828,7 +850,9 @@
 
           <div id="result" class="result"></div>
         </div>
-
+<a class="systemBtn" href="/dashboard.html">
+  종합 관리 체계
+</a>
         <div class="hint">
           서울대학교 국궁부 ${isPersonal ? "개인 장비" : "공용 장비"} 관리 체계<br>
           Copyright © Seoul National University Korean Archery Club. All Rights Reserved.
