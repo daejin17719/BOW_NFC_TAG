@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>종합 관리 체계</title>
+
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #0f172a;
+
+      --green-bg: #dcfce7;
+      --green-text: #166534;
+
+      --red-bg: #fee2e2;
+      --red-text: #991b1b;
+
+      --yellow-bg: #fef3c7;
+      --yellow-text: #92400e;
+
+      --gray-bg: #e5e7eb;
+      --gray-text: #374151;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 14px;
+      background:
+        radial-gradient(circle at top left, #e0f2fe 0, transparent 34%),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .wrap {
+      max-width: 480px;
+      margin: 0 auto;
+      padding-bottom: 28px;
+    }
+
+    .loadingLogoWrap {
+      min-height: calc(100dvh - 28px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loadingLogo {
+      width: 180px;
+      height: auto;
+      opacity: 0.7;
+      filter: brightness(0);
+    }
+
+    .topCard {
+      position: relative;
+      overflow: hidden;
+      min-height: 210px;
+      background: linear-gradient(135deg, #121c2d 0%, #2d3e54 100%);
+      color: white;
+      border-radius: 28px;
+      padding: 24px 28px;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.22);
+      margin-bottom: 14px;
+    }
+
+    .smallLabel {
+      font-size: 13px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.68);
+      margin-bottom: 8px;
+    }
+
+    .mainTitle {
+      font-size: 38px;
+      line-height: 1.08;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      margin-bottom: 18px;
+    }
+
+    .mainCount {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-top: 20px;
+    }
+
+    .mainNumber {
+      font-size: 62px;
+      line-height: 0.95;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+    }
+
+    .mainUnit {
+      font-size: 22px;
+      font-weight: 850;
+      color: rgba(255,255,255,0.78);
+    }
+
+    .topDesc {
+      margin-top: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.74);
+    }
+
+    .section {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      margin-bottom: 14px;
+    }
+
+    .sectionTitle {
+      font-size: 19px;
+      font-weight: 900;
+      margin-bottom: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    .statGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .statCard {
+      background: #f8fafc;
+      border: 1px solid #eef2f7;
+      border-radius: 18px;
+      padding: 15px;
+      min-height: 96px;
+    }
+
+    .statLabel {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 850;
+      margin-bottom: 10px;
+    }
+
+    .statValue {
+      font-size: 34px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .statCard.normal .statValue {
+      color: #166534;
+    }
+
+    .statCard.repair .statValue {
+      color: #991b1b;
+    }
+
+    .statCard.bad .statValue {
+      color: #92400e;
+    }
+
+    .statCard.deleted .statValue {
+      color: #374151;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .item {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: #f8fafc;
+      border: 1px solid #eef2f7;
+      border-radius: 18px;
+      padding: 15px;
+    }
+
+    .itemTop {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .itemSerial {
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .itemPound {
+      flex: 0 0 auto;
+      font-size: 20px;
+      font-weight: 900;
+      color: #0f172a;
+    }
+
+    .itemMeta {
+      font-size: 15px;
+      font-weight: 850;
+      color: var(--muted);
+      line-height: 1.45;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .itemCheck {
+      margin-top: 9px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #475569;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .emptyBox {
+      background: #f8fafc;
+      border: 1px solid #eef2f7;
+      border-radius: 18px;
+      padding: 18px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 850;
+      line-height: 1.45;
+    }
+
+    .badgeLine {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 900;
+      box-shadow: none;
+    }
+
+    .badge.normal {
+      background: var(--green-bg);
+      color: var(--green-text);
+    }
+
+    .badge.repair {
+      background: var(--red-bg);
+      color: var(--red-text);
+    }
+
+    .badge.bad {
+      background: var(--yellow-bg);
+      color: var(--yellow-text);
+    }
+
+    .badge.deleted {
+      background: var(--gray-bg);
+      color: var(--gray-text);
+    }
+
+    .backBtn {
+      display: block;
+      width: 100%;
+      margin: 0 0 14px;
+      padding: 15px 16px;
+      border-radius: 18px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 900;
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .hint {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .errorBox {
+      background: #fff7f7;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      border-radius: 24px;
+      padding: 22px;
+      font-weight: 850;
+      line-height: 1.5;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 10px;
+      }
+
+      .topCard {
+        min-height: 190px;
+        border-radius: 24px;
+        padding: 24px 26px;
+      }
+
+      .mainTitle {
+        font-size: 34px;
+      }
+
+      .mainNumber {
+        font-size: 58px;
+      }
+
+      .section {
+        border-radius: 22px;
+        padding: 18px;
+      }
+
+      .smallLabel,
+      .mainTitle,
+      .mainNumber,
+      .sectionTitle,
+      .statValue,
+      .itemSerial,
+      .itemPound,
+      .badge,
+      .backBtn {
+        font-weight: 900;
+      }
+
+      .mainUnit,
+      .topDesc,
+      .statLabel,
+      .itemMeta,
+      .itemCheck,
+      .emptyBox,
+      .hint {
+        font-weight: 850;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f172a;
+        --card: #111827;
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --primary: #2563eb;
+
+        --gray-bg: #334155;
+        --gray-text: #e2e8f0;
+      }
+
+      body {
+        background: #0b1020;
+        color: var(--text);
+      }
+
+      .loadingLogo {
+        filter: brightness(0) invert(1);
+        opacity: 0.85;
+      }
+
+      .topCard {
+        background: linear-gradient(
+          135deg,
+          rgba(248, 250, 252, 0.95) 0%,
+          rgba(232, 241, 251, 0.95) 100%
+        );
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        color: #0f172a;
+        box-shadow:
+          0 18px 38px rgba(0, 0, 0, 0.30),
+          inset 0 1px 0 rgba(255, 255, 255, 0.65);
+        border: none;
+      }
+
+      .smallLabel {
+        color: rgba(15, 23, 42, 0.62);
+      }
+
+      .mainUnit,
+      .topDesc {
+        color: rgba(15, 23, 42, 0.62);
+      }
+
+      .section {
+        background: #111827;
+        border: none;
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22);
+      }
+
+      .sectionTitle {
+        color: #f8fafc;
+      }
+
+      .statCard,
+      .item,
+      .emptyBox {
+        background: #172033;
+        border: none;
+      }
+
+      .statLabel,
+      .itemMeta,
+      .itemCheck,
+      .emptyBox,
+      .hint {
+        color: #94a3b8;
+      }
+
+      .itemPound {
+        color: #f8fafc;
+      }
+
+      .backBtn {
+        background: #1e293b;
+        color: #f8fafc;
+      }
+
+      .errorBox {
+        background: #2b1111;
+        color: #fecaca;
+        border-color: #7f1d1d;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap" id="app">
+    <div class="loadingLogoWrap">
+      <img class="loadingLogo" src="/logo.png" alt="로딩 중">
+    </div>
+  </div>
+
+  <script>
+    const app = document.getElementById("app");
+
+    init();
+
+    async function init() {
+      try {
+        const response = await fetch("/api/summary");
+
+        if (!response.ok) {
+          const error = await response.json().catch(() => null);
+          showError(error?.message || error?.error || "종합 관리 정보를 불러오지 못했습니다.");
+          return;
+        }
+
+        const data = await response.json();
+        renderDashboard(data);
+      } catch (error) {
+        showError("불러오기 실패: " + error.message);
+      }
+    }
+
+    function renderDashboard(data) {
+      const summary = data.summary || {};
+      const repairBows = data.repairBows || [];
+      const badBows = data.badBows || [];
+
+      app.innerHTML = `
+        <div class="topCard">
+          <div class="smallLabel">서울대학교 국궁부</div>
+          <div class="mainTitle">종합 관리 체계</div>
+
+          <div class="mainCount">
+            <div class="mainNumber">${escapeHtml(summary.total || 0)}</div>
+            <div class="mainUnit">개 장비</div>
+          </div>
+
+          <div class="topDesc">
+            공용 활의 상태와 수리 필요 장비를 한눈에 확인합니다.
+          </div>
+
+          <div class="badgeLine">
+            <span class="badge normal">정상 ${escapeHtml(summary.normal || 0)}</span>
+            <span class="badge repair">수리 필요 ${escapeHtml(summary.repair || 0)}</span>
+            <span class="badge bad">불량 ${escapeHtml(summary.bad || 0)}</span>
+            <span class="badge deleted">말소 ${escapeHtml(summary.deleted || 0)}</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="sectionTitle">공용 활 통계</div>
+
+          <div class="statGrid">
+            ${statCard("전체", summary.total || 0)}
+            ${statCard("정상", summary.normal || 0, "normal")}
+            ${statCard("수리 필요", summary.repair || 0, "repair")}
+            ${statCard("불량", summary.bad || 0, "bad")}
+            ${statCard("말소", summary.deleted || 0, "deleted")}
+            ${statCard("기타", summary.other || 0)}
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="sectionTitle">수리 필요한 활</div>
+          ${renderBowList(repairBows, "현재 수리가 필요한 활이 없습니다.")}
+        </div>
+
+        <div class="section">
+          <div class="sectionTitle">불량 활</div>
+          ${renderBowList(badBows, "현재 불량으로 등록된 활이 없습니다.")}
+        </div>
+
+        <a class="backBtn" href="/">
+          장비 조회 화면으로 돌아가기
+        </a>
+
+        <div class="hint">
+          서울대학교 국궁부 공용 장비 관리 체계<br>
+          Copyright © Seoul National University Korean Archery Club. All Rights Reserved.
+        </div>
+      `;
+    }
+
+    function statCard(label, value, className = "") {
+      return `
+        <div class="statCard ${className}">
+          <div class="statLabel">${escapeHtml(label)}</div>
+          <div class="statValue">${escapeHtml(value)}</div>
+        </div>
+      `;
+    }
+
+    function renderBowList(items, emptyText) {
+      if (!items.length) {
+        return `
+          <div class="emptyBox">
+            ${escapeHtml(emptyText)}
+          </div>
+        `;
+      }
+
+      return `
+        <div class="list">
+          ${items.map(item => bowItem(item)).join("")}
+        </div>
+      `;
+    }
+
+    function bowItem(item) {
+      const serial = item.serial || "-";
+      const brand = item.brand || "-";
+      const size = item.size || "";
+      const pound = item.pound ? item.pound + "lb" : "-";
+      const check = item.check || "-";
+
+      return `
+        <a class="item" href="/?id=${encodeURIComponent(serial)}">
+          <div class="itemTop">
+            <div class="itemSerial">${escapeHtml(serial)}번 활</div>
+            <div class="itemPound">${escapeHtml(pound)}</div>
+          </div>
+
+          <div class="itemMeta">
+            ${escapeHtml(`${brand} ${size}`.trim())}
+          </div>
+
+          <div class="itemCheck">
+            ${escapeHtml(check)}
+          </div>
+        </a>
+      `;
+    }
+
+    function showError(message) {
+      app.innerHTML = `
+        <div class="errorBox">
+          ${escapeHtml(message)}
+        </div>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
