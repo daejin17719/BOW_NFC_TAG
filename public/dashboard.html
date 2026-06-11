@@ -391,6 +391,56 @@
       line-height: 1.5;
       text-align: center;
     }
+    .lookupBox {
+  display: flex;
+  gap: 10px;
+}
+
+.lookupInput {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid #d1d5db;
+  border-radius: 16px;
+  padding: 14px 15px;
+  font-size: 17px;
+  font-weight: 850;
+  font-family: inherit;
+  background: #fff;
+  color: var(--text);
+  outline: none;
+}
+
+.lookupBtn {
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 16px;
+  padding: 0 18px;
+  font-size: 16px;
+  font-weight: 950;
+  color: white;
+  background: #0f172a;
+  cursor: pointer;
+}
+
+.lookupHint {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 850;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+@media (prefers-color-scheme: dark) {
+  .lookupInput {
+    background: #172033;
+    color: #f8fafc;
+    border: none;
+  }
+
+  .lookupBtn {
+    background: #334155;
+  }
+}
 
     .errorBox {
       background: #fff7f7;
@@ -680,6 +730,28 @@
         <div class="section">
           <div class="sectionTitle">수리 필요한 활</div>
           ${renderBowList(repairBows, "현재 수리가 필요한 활이 없습니다.")}
+        </div>
+                <div class="section">
+          <div class="sectionTitle">활 조회</div>
+
+          <div class="lookupBox">
+            <input
+              id="bowLookupInput"
+              class="lookupInput"
+              type="number"
+              inputmode="numeric"
+              placeholder="일련번호 입력"
+              onkeydown="handleLookupKey(event)"
+            >
+
+            <button class="lookupBtn" onclick="lookupBow()">
+              조회
+            </button>
+          </div>
+
+          <div class="lookupHint">
+            공용 활 일련번호를 입력하면 해당 장비 조회 화면으로 이동합니다.
+          </div>
         </div>
 
         <div class="section" id="arrowSection">
