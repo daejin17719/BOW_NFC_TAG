@@ -740,18 +740,11 @@
       `;
     }
 
-    function renderArrowSummary() {
-      return `
-        <div class="statGrid">
-          ${statCard("공용 화살", getArrowQuantity("총량"))}
-          ${statCard("수리 필요", getArrowQuantity("수리 필요"), "repair")}
-          ${statCard("총량", getArrowQuantity("총량"))}
-          ${statCard("분류 수", getEditableCategoryCount())}
-        </div>
-
-        ${renderArrowCategoryList()}
-      `;
-    }
+   function renderArrowSummary() {
+  return `
+    ${renderArrowCategoryList()}
+  `;
+}
 
     function getArrowQuantity(label) {
       const item = arrowCategories.find((category) => category.label === label);
