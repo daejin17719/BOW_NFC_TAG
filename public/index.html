@@ -453,6 +453,29 @@
       color: #991b1b;
     }
 
+    .repairBlockedBox {
+      background: #f8fafc;
+      border: 1px solid #eef2f7;
+      border-radius: 18px;
+      padding: 16px;
+      line-height: 1.5;
+    }
+
+    .repairBlockedTitle {
+      font-size: 17px;
+      font-weight: 950;
+      color: #991b1b;
+      margin-bottom: 6px;
+    }
+
+    .repairBlockedText {
+      font-size: 14px;
+      font-weight: 850;
+      color: #64748b;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
     .systemBtn {
       display: block;
       width: 100%;
@@ -558,7 +581,8 @@
       label,
       textarea,
       .result,
-      .hint {
+      .hint,
+      .repairBlockedText {
         font-weight: 850;
       }
     }
@@ -596,7 +620,8 @@
       }
 
       .miniCard,
-      .fullItem {
+      .fullItem,
+      .repairBlockedBox {
         background: #172033;
         border: none;
       }
@@ -611,6 +636,14 @@
       .fullValue,
       .sectionTitle {
         color: #f8fafc;
+      }
+
+      .repairBlockedTitle {
+        color: #fca5a5;
+      }
+
+      .repairBlockedText {
+        color: #94a3b8;
       }
 
       select,
@@ -853,6 +886,9 @@
 
       const isRepairNeeded = status === "수리 필요";
       const isBadStatus = status === "불량";
+      const isDeletedStatus = status === "말소";
+      const isRepairBlocked = isBadStatus || isDeletedStatus;
+
       const noticeText = isBadStatus
         ? "사용 금지"
         : isRepairNeeded
@@ -915,12 +951,28 @@
         <div class="section">
           <div class="sectionTitle">수리 요청</div>
 
-          <textarea id="repairRequest" placeholder="수리가 필요한 내용을 입력하세요."></textarea>
+          ${
+            isRepairBlocked
+              ? `
+                <div class="repairBlockedBox">
+                  <div class="repairBlockedTitle">
+                    수리 요청을 할 수 없습니다
+                  </div>
+                  <div class="repairBlockedText">
+                    이 장비는 ${escapeHtml(status)} 상태입니다.<br>
+                    사용하거나 수리 요청하지 말고 담당자에게 문의하세요.
+                  </div>
+                </div>
+              `
+              : `
+                <textarea id="repairRequest" placeholder="수리가 필요한 내용을 입력하세요."></textarea>
 
-          <button id="saveBtn" onclick="submitRepairRequest()">제출</button>
-          <button id="completeBtn" class="completeBtn ${isRepairNeeded ? "" : "hidden"}" onclick="completeRepair()">수리 완료</button>
+                <button id="saveBtn" onclick="submitRepairRequest()">제출</button>
+                <button id="completeBtn" class="completeBtn ${isRepairNeeded ? "" : "hidden"}" onclick="completeRepair()">수리 완료</button>
 
-          <div id="result" class="result"></div>
+                <div id="result" class="result"></div>
+              `
+          }
         </div>
 
         <a class="systemBtn" href="/dashboard.html">
@@ -968,6 +1020,10 @@
     }
 
     async function submitRepairRequest() {
+      if (currentItem?.status === "불량" || currentItem?.status === "말소") {
+        return;
+      }
+
       const btn = document.getElementById("saveBtn");
       const completeBtn = document.getElementById("completeBtn");
       const result = document.getElementById("result");
@@ -1067,6 +1123,11 @@
     }
 
     function updatePageAfterSave(status, check) {
+      if (currentItem) {
+        currentItem.status = status;
+        currentItem.check = check;
+      }
+
       const badge = document.getElementById("statusBadge");
       badge.textContent = status || "-";
       badge.className = "badge " + getBadgeClass(status);
