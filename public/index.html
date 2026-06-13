@@ -46,8 +46,7 @@
       padding-bottom: 28px;
     }
 
-    .loading,
-    .errorBox {
+    .loading {
       background: white;
       border-radius: 24px;
       padding: 22px;
@@ -71,9 +70,63 @@
     }
 
     .errorBox {
-      color: #991b1b;
-      background: #fff7f7;
-      border: 1px solid #fecaca;
+      position: relative;
+      overflow: hidden;
+      background: #fff7ed;
+      color: #7c2d12;
+      border: 1px solid #fed7aa;
+      border-radius: 24px;
+      padding: 22px 22px 20px;
+      box-shadow: 0 10px 28px rgba(124, 45, 18, 0.10);
+      font-weight: 850;
+      line-height: 1.5;
+    }
+
+    .errorBox::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 6px;
+      background: #f97316;
+    }
+
+    .errorTitle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 18px;
+      font-weight: 950;
+      letter-spacing: -0.03em;
+    }
+
+    .errorIcon {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffedd5;
+      color: #c2410c;
+      font-size: 16px;
+      font-weight: 950;
+      flex: 0 0 auto;
+    }
+
+    .errorMessage {
+      font-size: 15px;
+      font-weight: 850;
+      color: #9a3412;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .errorAction {
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 850;
+      color: #c2410c;
     }
 
     .topCard {
@@ -96,27 +149,28 @@
       z-index: 2;
     }
 
-   .typeBadge {
-  position: absolute;
-  top: 15px;
-  right: -38px;
-  z-index: 3;
-  width: 132px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: rotate(43deg);
-  transform-origin: center;
-  font-size: 12px;
-  line-height: 1;
-  font-weight: 950;
-  letter-spacing: -0.02em;
-  background: rgba(248, 250, 252, 0.96);
-  color: rgba(15, 23, 42, 0.96);
-  box-shadow: none;
-  text-align: center;
-}
+    .typeBadge {
+      position: absolute;
+      top: 15px;
+      right: -38px;
+      z-index: 3;
+      width: 132px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(43deg);
+      transform-origin: center;
+      font-size: 12px;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -0.02em;
+      background: rgba(248, 250, 252, 0.96);
+      color: rgba(15, 23, 42, 0.96);
+      box-shadow: none;
+      text-align: center;
+    }
+
     .mainBlock {
       margin-bottom: 22px;
     }
@@ -398,25 +452,24 @@
     .result.error {
       color: #991b1b;
     }
+
     .systemBtn {
-  display: block;
-  width: 100%;
-  margin: 0 0 14px;
-  padding: 15px 16px;
-  border-radius: 18px;
-  text-align: center;
-  text-decoration: none;
-  font-size: 16px;
-  font-weight: 900;
-  background: #e2e8f0;
-  color: #0f172a;
-}
+      display: block;
+      width: 100%;
+      margin: 0 0 14px;
+      padding: 15px 16px;
+      border-radius: 18px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 900;
+      background: #e2e8f0;
+      color: #0f172a;
+    }
 
-.systemBtn:active {
-  transform: translateY(1px);
-}
-
-
+    .systemBtn:active {
+      transform: translateY(1px);
+    }
 
     .hint {
       margin-top: 12px;
@@ -475,38 +528,39 @@
         border-radius: 22px;
         padding: 18px;
       }
-       .smallLabel,
-  .mainValue,
-  .mainValue.ownerValue,
-  .mainValue.serialValue,
-  .title,
-  .topPound,
-  .badge,
-  .repairNotice,
-  .typeBadge {
-    font-weight: 900;
-  }
 
-  .topPoundUnit {
-    font-weight: 850;
-  }
+      .smallLabel,
+      .mainValue,
+      .mainValue.ownerValue,
+      .mainValue.serialValue,
+      .title,
+      .topPound,
+      .badge,
+      .repairNotice,
+      .typeBadge {
+        font-weight: 900;
+      }
 
-  .sectionTitle,
-  .miniValue,
-  .miniValue.small,
-  .fullValue,
-  button {
-    font-weight: 900;
-  }
+      .topPoundUnit {
+        font-weight: 850;
+      }
 
-  .miniLabel,
-  .fullLabel,
-  label,
-  textarea,
-  .result,
-  .hint {
-    font-weight: 850;
-  }
+      .sectionTitle,
+      .miniValue,
+      .miniValue.small,
+      .fullValue,
+      button {
+        font-weight: 900;
+      }
+
+      .miniLabel,
+      .fullLabel,
+      label,
+      textarea,
+      .result,
+      .hint {
+        font-weight: 850;
+      }
     }
 
     @media (prefers-color-scheme: dark) {
@@ -610,12 +664,13 @@
       .result.error {
         color: #fca5a5;
       }
-.systemBtn {
-    background: #1e293b;
-    color: #f8fafc;
-  }
-      .loading,
-      .errorBox {
+
+      .systemBtn {
+        background: #1e293b;
+        color: #f8fafc;
+      }
+
+      .loading {
         background: #111827;
         color: #f8fafc;
         border: 1px solid #1e293b;
@@ -628,9 +683,27 @@
       }
 
       .errorBox {
-        background: #2b1111;
-        color: #fecaca;
-        border-color: #7f1d1d;
+        background: #24130b;
+        color: #fed7aa;
+        border-color: rgba(249, 115, 22, 0.35);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+      }
+
+      .errorBox::before {
+        background: #fb923c;
+      }
+
+      .errorIcon {
+        background: rgba(251, 146, 60, 0.16);
+        color: #fdba74;
+      }
+
+      .errorMessage {
+        color: #fed7aa;
+      }
+
+      .errorAction {
+        color: #fdba74;
       }
 
       .topCard {
@@ -662,10 +735,10 @@
         color: rgba(15, 23, 42, 0.58);
       }
 
-     .typeBadge {
-  background: rgba(15, 23, 42, 0.96);
-  color: rgba(255, 255, 255, 0.96);
-}
+      .typeBadge {
+        background: rgba(15, 23, 42, 0.96);
+        color: rgba(255, 255, 255, 0.96);
+      }
 
       .repairNotice,
       .banNotice {
@@ -731,7 +804,7 @@
           "";
 
         if (!currentKey) {
-          showError("조회 코드가 없습니다. URL 뒤에 ?id=3 또는 ?t=p&c=KDJ 처럼 붙여주세요.");
+          showError("조회 코드가 없습니다.");
           return;
         }
 
@@ -739,15 +812,14 @@
         const response = await fetch(apiUrl);
 
         if (!response.ok) {
-          const error = await response.json().catch(() => null);
-          showError(error?.message || error?.error || "장비 정보를 찾을 수 없습니다.");
+          showError("장비 정보를 찾을 수 없습니다.");
           return;
         }
 
         currentItem = await response.json();
         renderPage(currentItem);
       } catch (error) {
-        showError("불러오기 실패: " + error.message);
+        showError("장비 정보를 불러오지 못했습니다.");
       }
     }
 
@@ -850,9 +922,11 @@
 
           <div id="result" class="result"></div>
         </div>
-<a class="systemBtn" href="/dashboard.html">
-  공용 장비 현황
-</a>
+
+        <a class="systemBtn" href="/dashboard.html">
+          공용 장비 현황
+        </a>
+
         <div class="hint">
           서울대학교 국궁부 ${isPersonal ? "개인 장비" : "공용 장비"} 관리 체계<br>
           Copyright © Seoul National University Korean Archery Club. All Rights Reserved.
@@ -1051,7 +1125,18 @@
     function showError(message) {
       app.innerHTML = `
         <div class="errorBox">
-          ${escapeHtml(message)}
+          <div class="errorTitle">
+            <span class="errorIcon">!</span>
+            장비를 찾을 수 없습니다
+          </div>
+
+          <div class="errorMessage">
+            해당 일련번호 또는 식별코드의 장비가 등록되어 있지 않습니다.
+          </div>
+
+          <div class="errorAction">
+            번호를 확인한 뒤 다시 조회해주세요.
+          </div>
         </div>
       `;
     }
