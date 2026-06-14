@@ -1,23 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>서울대학교 국궁부 공용 장비 관리 체계</title>
+  <title>NFC 장비 정보</title>
 
   <style>
-    * {
-      box-sizing: border-box;
+    :root {
+      --bg: #f6f7f9;
+      --text: #020617;
+      --muted: rgba(2, 6, 23, 0.58);
+      --line: #020617;
+
+      --normal-card: #2ddc83;
+      --repair-card: #f87171;
+      --bad-card: #facc15;
+      --deleted-card: #cbd5e1;
+
+      --green-bg: #dcfce7;
+      --green-text: #166534;
+
+      --red-bg: #fee2e2;
+      --red-text: #991b1b;
+
+      --yellow-bg: #fef3c7;
+      --yellow-text: #92400e;
+
+      --gray-bg: #e5e7eb;
+      --gray-text: #374151;
     }
 
-    :root {
-      --bg: #070d1a;
-      --text-dark: #020617;
-      --card-normal: #2ddc83;
-      --card-repair: #facc15;
-      --card-bad: #f87171;
-      --panel-dark: #0c1322;
-      --panel-inner: #121b2e;
+    * {
+      box-sizing: border-box;
     }
 
     html {
@@ -26,47 +40,120 @@
 
     body {
       margin: 0;
-      min-height: 100vh;
+      padding: 10px;
       background: var(--bg);
-      color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
-        "Noto Sans KR", "Segoe UI", sans-serif;
-      letter-spacing: -0.04em;
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: -0.05em;
     }
 
-    .page {
-      width: 100%;
-      max-width: 440px;
-      min-height: 100vh;
+    .wrap {
+      max-width: 480px;
       margin: 0 auto;
-      padding: 10px 20px 12px;
-      background: var(--bg);
+      padding-bottom: 24px;
     }
 
-    .equipmentCard {
+    .loadingLogoWrap {
+      min-height: calc(100dvh - 20px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loadingLogo {
+      width: 180px;
+      height: auto;
+      opacity: 0.7;
+      filter: brightness(0);
+    }
+
+    .errorBox {
+      position: relative;
+      overflow: hidden;
+      background: #fff7ed;
+      color: #7c2d12;
+      border: 1px solid #fed7aa;
+      border-radius: 24px;
+      padding: 22px 22px 20px;
+      box-shadow: 0 10px 28px rgba(124, 45, 18, 0.10);
+      font-weight: 850;
+      line-height: 1.5;
+    }
+
+    .errorBox::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 6px;
+      background: #f97316;
+    }
+
+    .errorTitle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 18px;
+      font-weight: 950;
+    }
+
+    .errorIcon {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffedd5;
+      color: #c2410c;
+      font-size: 16px;
+      font-weight: 950;
+      flex: 0 0 auto;
+    }
+
+    .errorMessage {
+      font-size: 15px;
+      font-weight: 850;
+      color: #9a3412;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .errorAction {
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 850;
+      color: #c2410c;
+    }
+
+    .topCard {
       position: relative;
       width: 100%;
-      min-height: calc(100vh - 22px);
+      min-height: calc(100dvh - 20px);
       padding: 34px 26px 18px;
-      border: 1.5px solid #020617;
+      border: 1.5px solid var(--line);
       border-radius: 22px;
-      background: var(--card-normal);
-      color: var(--text-dark);
+      background: var(--normal-card);
+      color: var(--text);
       overflow: hidden;
       display: flex;
       flex-direction: column;
     }
 
-    .equipmentCard.normal {
-      background: var(--card-normal);
+    .topCard.normal {
+      background: var(--normal-card);
     }
 
-    .equipmentCard.repair {
-      background: var(--card-repair);
+    .topCard.repair {
+      background: var(--repair-card);
     }
 
-    .equipmentCard.bad {
-      background: var(--card-bad);
+    .topCard.bad {
+      background: var(--bad-card);
+    }
+
+    .topCard.deleted {
+      background: var(--deleted-card);
     }
 
     .clubBadge {
@@ -99,16 +186,16 @@
       font-size: 80px;
       font-weight: 400;
       line-height: 0.95;
-      letter-spacing: -0.08em;
+      letter-spacing: -0.085em;
     }
 
     .mainMetric {
-      margin-top: 34px;
+      margin-top: 36px;
       display: flex;
       align-items: baseline;
-      gap: 11px;
-      color: #020617;
+      gap: 9px;
       white-space: nowrap;
+      color: var(--text);
     }
 
     .serialNumber,
@@ -116,7 +203,7 @@
       font-size: 80px;
       font-weight: 400;
       line-height: 0.9;
-      letter-spacing: -0.08em;
+      letter-spacing: -0.085em;
     }
 
     .metricDivider {
@@ -142,17 +229,17 @@
       margin-top: 64px;
       width: 100%;
       height: 32px;
-      border: 1.5px solid #020617;
+      border: 1.5px solid var(--line);
       display: grid;
       grid-template-columns: 58px 66px 1fr;
-      color: #020617;
+      color: var(--text);
     }
 
     .statusCell {
       display: flex;
       align-items: center;
       justify-content: center;
-      border-right: 1.5px solid #020617;
+      border-right: 1.5px solid var(--line);
       font-size: 11px;
       font-weight: 500;
       line-height: 1;
@@ -162,11 +249,19 @@
       border-right: 0;
     }
 
+    .statusCell.notice {
+      padding: 0 10px;
+      justify-content: flex-start;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
     .detailGrid {
       margin-top: 42px;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      column-gap: 42px;
+      column-gap: 34px;
       row-gap: 28px;
     }
 
@@ -179,19 +274,21 @@
       font-size: 28px;
       font-weight: 400;
       line-height: 1;
-      color: #020617;
+      color: var(--text);
     }
 
     .detailValue {
       font-size: 42px;
       font-weight: 400;
       line-height: 1.05;
-      color: #020617;
+      color: var(--text);
       word-break: keep-all;
+      overflow-wrap: anywhere;
     }
 
     .detailValue.small {
-      font-size: 39px;
+      font-size: 38px;
+      line-height: 1.12;
     }
 
     .scrollHint {
@@ -200,36 +297,40 @@
       text-align: center;
       font-size: 16px;
       font-weight: 500;
-      color: #020617;
+      color: var(--text);
     }
 
     .repairSection {
       margin-top: 14px;
       padding: 24px 20px 22px;
-      border: 1.5px solid #020617;
+      border: 1.5px solid var(--line);
       border-radius: 22px;
-      background: var(--card-normal);
-      color: #020617;
+      background: var(--normal-card);
+      color: var(--text);
     }
 
     .repairSection.normal {
-      background: var(--card-normal);
+      background: var(--normal-card);
     }
 
     .repairSection.repair {
-      background: var(--card-repair);
+      background: var(--repair-card);
     }
 
     .repairSection.bad {
-      background: var(--card-bad);
+      background: var(--bad-card);
+    }
+
+    .repairSection.deleted {
+      background: var(--deleted-card);
     }
 
     .repairTitle {
       margin: 0 0 18px;
-      font-size: 42px;
+      font-size: 54px;
       font-weight: 400;
-      line-height: 1;
-      letter-spacing: -0.08em;
+      line-height: 0.95;
+      letter-spacing: -0.085em;
     }
 
     .repairGuide {
@@ -237,114 +338,164 @@
       font-size: 16px;
       font-weight: 500;
       line-height: 1.45;
-    }
-
-    .repairForm {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+      word-break: keep-all;
     }
 
     textarea {
       width: 100%;
-      min-height: 120px;
+      min-height: 122px;
       resize: vertical;
       padding: 15px;
-      border: 1.5px solid #020617;
+      border: 1.5px solid var(--line);
       border-radius: 0;
       outline: none;
       background: transparent;
-      color: #020617;
+      color: var(--text);
       font-family: inherit;
       font-size: 16px;
       line-height: 1.45;
     }
 
-    textarea::placeholder {
+    #repairRequest {
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    #repairRequest::placeholder {
       color: rgba(2, 6, 23, 0.55);
+      font-weight: 500;
     }
 
     button {
       width: 100%;
       height: 48px;
-      border: 1.5px solid #020617;
+      margin-top: 14px;
+      border: 1.5px solid var(--line);
       border-radius: 0;
       background: #020617;
       color: #ffffff;
       font-family: inherit;
       font-size: 15px;
-      font-weight: 800;
+      font-weight: 850;
       cursor: pointer;
+      box-shadow: none;
     }
 
     button:active {
       transform: translateY(1px);
     }
 
-    .linkButton {
-      margin-top: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 42px;
-      border-radius: 14px;
-      background: #1d293b;
-      color: #ffffff;
-      text-decoration: none;
-      font-size: 13px;
+    button:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+
+    .completeBtn {
+      margin-top: 10px;
+      background: transparent;
+      color: var(--text);
+    }
+
+    .completeBtn.hidden {
+      display: none;
+    }
+
+    .result {
+      margin-top: 13px;
+      font-size: 15px;
+      font-weight: 700;
+      min-height: 22px;
+      color: rgba(2, 6, 23, 0.68);
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .result.success {
+      color: #14532d;
+    }
+
+    .result.error {
+      color: #7f1d1d;
+    }
+
+    .repairBlockedBox {
+      border: 1.5px solid var(--line);
+      padding: 16px;
+      line-height: 1.5;
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .repairBlockedTitle {
+      font-size: 18px;
       font-weight: 900;
+      color: #7f1d1d;
+      margin-bottom: 6px;
     }
 
-    .footer {
-      margin-top: 12px;
-      padding-bottom: 6px;
+    .repairBlockedText {
+      font-size: 14px;
+      font-weight: 750;
+      color: rgba(2, 6, 23, 0.72);
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .systemBtn {
+      display: block;
+      width: 100%;
+      margin: 14px 0;
+      padding: 15px 16px;
+      border-radius: 18px;
       text-align: center;
-      color: #93c5fd;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 900;
+      background: #1e293b;
+      color: #ffffff;
+      letter-spacing: -0.04em;
     }
 
-    .footerTitle {
-      margin-bottom: 8px;
-      font-size: 11px;
-      font-weight: 800;
+    .systemBtn:active {
+      transform: translateY(1px);
     }
 
-    .copyright {
-      font-size: 10.5px;
-      line-height: 1.35;
-      color: #93c5fd;
+    .hint {
+      margin-top: 12px;
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.5;
+      text-align: center;
+      letter-spacing: -0.03em;
     }
 
-    @media (max-width: 380px) {
-      .page {
-        padding-left: 16px;
-        padding-right: 16px;
+    @media (max-width: 420px) {
+      body {
+        padding: 10px;
       }
 
-      .equipmentCard {
-        padding-left: 24px;
-        padding-right: 24px;
+      .topCard {
+        padding: 34px 26px 18px;
       }
 
       .infoTitle {
-        font-size: 72px;
+        font-size: 78px;
       }
 
       .serialNumber,
       .poundNumber {
-        font-size: 72px;
+        font-size: 78px;
       }
 
       .metricDivider {
-        font-size: 64px;
+        font-size: 70px;
       }
 
       .metricUnitKo {
-        font-size: 38px;
+        font-size: 40px;
       }
 
       .metricUnitLb {
-        font-size: 32px;
+        font-size: 34px;
       }
 
       .detailGrid {
@@ -352,150 +503,535 @@
       }
 
       .detailLabel {
-        font-size: 25px;
+        font-size: 27px;
       }
 
       .detailValue {
-        font-size: 38px;
+        font-size: 40px;
       }
 
       .detailValue.small {
         font-size: 35px;
       }
     }
+
+    @media (max-width: 370px) {
+      .topCard {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      .infoTitle {
+        font-size: 70px;
+      }
+
+      .serialNumber,
+      .poundNumber {
+        font-size: 68px;
+      }
+
+      .metricDivider {
+        font-size: 62px;
+      }
+
+      .metricUnitKo {
+        font-size: 34px;
+      }
+
+      .metricUnitLb {
+        font-size: 30px;
+      }
+
+      .statusBar {
+        margin-top: 48px;
+      }
+
+      .detailGrid {
+        margin-top: 34px;
+        row-gap: 24px;
+      }
+
+      .detailLabel {
+        font-size: 24px;
+        margin-bottom: 16px;
+      }
+
+      .detailValue {
+        font-size: 35px;
+      }
+
+      .detailValue.small {
+        font-size: 30px;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1020;
+      }
+
+      body {
+        background: #0b1020;
+      }
+
+      .loadingLogo {
+        filter: brightness(0) invert(1);
+        opacity: 0.85;
+      }
+
+      .systemBtn {
+        background: #1e293b;
+        color: #f8fafc;
+      }
+
+      .hint {
+        color: #94a3b8;
+      }
+
+      .errorBox {
+        background: #24130b;
+        color: #fed7aa;
+        border-color: rgba(249, 115, 22, 0.35);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+      }
+
+      .errorBox::before {
+        background: #fb923c;
+      }
+
+      .errorIcon {
+        background: rgba(251, 146, 60, 0.16);
+        color: #fdba74;
+      }
+
+      .errorMessage {
+        color: #fed7aa;
+      }
+
+      .errorAction {
+        color: #fdba74;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <main class="page">
-    <section class="equipmentCard normal" id="equipmentCard">
-      <div class="clubBadge">
-        서울대학교&nbsp;<span>국궁부</span>
-      </div>
-
-      <h1 class="infoTitle">Info</h1>
-
-      <div class="mainMetric">
-        <span class="serialNumber" id="heroSerial">27</span>
-        <span class="metricUnitKo">번</span>
-        <span class="metricDivider">/</span>
-        <span class="poundNumber" id="heroPound">45</span>
-        <span class="metricUnitLb">lb</span>
-      </div>
-
-      <div class="statusBar">
-        <div class="statusCell" id="statusCell">정상</div>
-        <div class="statusCell">공용 장비</div>
-        <div class="statusCell"></div>
-      </div>
-
-      <div class="detailGrid">
-        <div class="detailBlock">
-          <div class="detailLabel">브랜드</div>
-          <div class="detailValue" id="brandValue">혁무궁</div>
-        </div>
-
-        <div class="detailBlock">
-          <div class="detailLabel">사이즈</div>
-          <div class="detailValue" id="sizeValue">장</div>
-        </div>
-
-        <div class="detailBlock">
-          <div class="detailLabel">기타</div>
-          <div class="detailValue" id="etcValue">-</div>
-        </div>
-
-        <div class="detailBlock">
-          <div class="detailLabel">점검내역</div>
-          <div class="detailValue small" id="checkValue">2026-06-10</div>
-        </div>
-      </div>
-
-      <div class="scrollHint">아래로 스크롤해 수리 요청</div>
-    </section>
-
-    <section class="repairSection normal" id="repairSection">
-      <h2 class="repairTitle">Repair</h2>
-
-      <p class="repairGuide">
-        장비에 문제가 있거나 점검이 필요한 경우 아래에 내용을 적어 제출하세요.
-      </p>
-
-      <form class="repairForm" id="repairForm">
-        <textarea
-          id="repairText"
-          placeholder="수리가 필요한 내용을 입력하세요."
-        ></textarea>
-
-        <button type="submit">제출</button>
-      </form>
-    </section>
-
-    <a class="linkButton" href="#" id="publicStatusLink">
-      공용 장비 현황
-    </a>
-
-    <footer class="footer">
-      <div class="footerTitle">
-        서울대학교 국궁부 공용 장비 관리 체계
-      </div>
-      <div class="copyright">
-        Copyright © Seoul National University Korean Archery Club.
-        All Rights Reserved.
-      </div>
-    </footer>
-  </main>
+  <div class="wrap" id="app">
+    <div class="loadingLogoWrap">
+      <img class="loadingLogo" src="/logo.png" alt="로딩 중">
+    </div>
+  </div>
 
   <script>
-    const equipment = {
-      serial: "27",
-      status: "정상",
-      brand: "혁무궁",
-      size: "장",
-      pound: "45",
-      etc: "-",
-      checkHistory: "2026-06-10"
-    };
+    const app = document.getElementById("app");
 
-    const statusStyleMap = {
-      "정상": "normal",
-      "수리 필요": "repair",
-      "불량": "bad"
-    };
+    let currentItem = null;
+    let currentMode = "bow";
+    let currentKey = "";
 
-    function renderEquipment(data) {
-      const statusClass = statusStyleMap[data.status] || "normal";
+    init();
 
-      const equipmentCard = document.getElementById("equipmentCard");
-      const repairSection = document.getElementById("repairSection");
+    async function init() {
+      try {
+        const params = new URLSearchParams(window.location.search);
 
-      equipmentCard.className = `equipmentCard ${statusClass}`;
-      repairSection.className = `repairSection ${statusClass}`;
+        currentMode = getMode(params);
+        currentKey =
+          params.get("id") ||
+          params.get("c") ||
+          params.get("code") ||
+          params.get("serial") ||
+          "";
 
-      document.getElementById("heroSerial").textContent = data.serial;
-      document.getElementById("heroPound").textContent = data.pound;
-      document.getElementById("statusCell").textContent = data.status;
-      document.getElementById("brandValue").textContent = data.brand || "-";
-      document.getElementById("sizeValue").textContent = data.size || "-";
-      document.getElementById("etcValue").textContent = data.etc || "-";
-      document.getElementById("checkValue").textContent = data.checkHistory || "-";
+        if (!currentKey) {
+          showError("조회 코드가 없습니다.");
+          return;
+        }
+
+        const apiUrl = buildApiUrl(currentMode, currentKey);
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+          showError("장비 정보를 찾을 수 없습니다.");
+          return;
+        }
+
+        currentItem = await response.json();
+        renderPage(currentItem);
+      } catch (error) {
+        showError("장비 정보를 불러오지 못했습니다.");
+      }
     }
 
-    document.getElementById("repairForm").addEventListener("submit", function (event) {
-      event.preventDefault();
+    function getMode(params) {
+      const raw = String(
+        params.get("t") ||
+        params.get("type") ||
+        params.get("mode") ||
+        "bow"
+      ).trim().toLowerCase();
 
-      const text = document.getElementById("repairText").value.trim();
+      if (raw === "p" || raw === "personal" || raw === "item" || raw === "private") {
+        return "personal";
+      }
 
-      if (!text) {
-        alert("수리 요청 내용을 입력해주세요.");
+      return "bow";
+    }
+
+    function buildApiUrl(mode, key) {
+      if (mode === "personal") {
+        return "/api/bow?t=p&c=" + encodeURIComponent(key);
+      }
+
+      return "/api/bow?id=" + encodeURIComponent(key);
+    }
+
+    function renderPage(item) {
+      const isPersonal = item.mode === "personal";
+      const status = item.status || "-";
+      const cardClass = getCardClass(status);
+
+      const isRepairNeeded = status === "수리 필요";
+      const isBadStatus = status === "불량";
+      const isDeletedStatus = status === "말소";
+      const isRepairBlocked = isBadStatus || isDeletedStatus;
+
+      const noticeText = isBadStatus
+        ? "사용 금지"
+        : isDeletedStatus
+          ? "말소 장비"
+          : isRepairNeeded
+            ? "사용 전 확인 필요"
+            : "";
+
+      const typeLabel = isPersonal ? "개인 장비" : "공용 장비";
+      const mainNumber = isPersonal
+        ? item.code || item.serial || "-"
+        : item.serial || "-";
+
+      const mainUnit = isPersonal ? "" : "번";
+      const pound = item.pound || "-";
+
+      document.title = isPersonal
+        ? `${item.code || ""} 장비`
+        : `${item.serial || ""}번 활`;
+
+      app.innerHTML = `
+        <div id="topCard" class="topCard ${cardClass}">
+          <div class="clubBadge">
+            서울대학교&nbsp;<span>국궁부</span>
+          </div>
+
+          <h1 class="infoTitle">Info</h1>
+
+          <div class="mainMetric">
+            <span class="serialNumber" id="heroSerial">${escapeHtml(mainNumber)}</span>
+            <span class="metricUnitKo">${escapeHtml(mainUnit)}</span>
+            <span class="metricDivider">/</span>
+            <span class="poundNumber" id="heroPound">${escapeHtml(pound)}</span>
+            <span class="metricUnitLb">lb</span>
+          </div>
+
+          <div class="statusBar">
+            <div id="statusBadge" class="statusCell">
+              ${escapeHtml(status)}
+            </div>
+            <div class="statusCell">
+              ${escapeHtml(typeLabel)}
+            </div>
+            <div id="repairNotice" class="statusCell notice">
+              ${escapeHtml(noticeText)}
+            </div>
+          </div>
+
+          <div class="detailGrid">
+            ${renderIntegratedInfo(item)}
+          </div>
+
+          <div class="scrollHint">아래로 스크롤해 수리 요청</div>
+        </div>
+
+        <div id="repairSection" class="repairSection ${cardClass}">
+          <h2 class="repairTitle">Repair</h2>
+
+          ${
+            isRepairBlocked
+              ? `
+                <div class="repairBlockedBox">
+                  <div class="repairBlockedTitle">
+                    수리 요청을 할 수 없습니다
+                  </div>
+                  <div class="repairBlockedText">
+                    이 장비는 ${escapeHtml(status)} 상태입니다.<br>
+                    사용하거나 수리 요청하지 말고 담당자에게 문의하세요.
+                  </div>
+                </div>
+              `
+              : `
+                <p class="repairGuide">
+                  장비에 문제가 있거나 점검이 필요한 경우 아래에 내용을 적어 제출하세요.
+                </p>
+
+                <textarea id="repairRequest" placeholder="수리가 필요한 내용을 입력하세요."></textarea>
+
+                <button id="saveBtn" onclick="submitRepairRequest()">제출</button>
+                <button id="completeBtn" class="completeBtn ${isRepairNeeded ? "" : "hidden"}" onclick="completeRepair()">수리 완료</button>
+
+                <div id="result" class="result"></div>
+              `
+          }
+        </div>
+
+        <a class="systemBtn" href="/dashboard.html">
+          공용 장비 현황
+        </a>
+
+        <div class="hint">
+          서울대학교 국궁부 ${isPersonal ? "개인 장비" : "공용 장비"} 관리 체계<br>
+          Copyright © Seoul National University Korean Archery Club. All Rights Reserved.
+        </div>
+      `;
+    }
+
+    function renderIntegratedInfo(item) {
+      if (item.mode === "personal") {
+        return `
+          ${detailBlock("소유자", item.owner)}
+          ${detailBlock("사이즈", item.size)}
+          ${detailBlock("브랜드", item.brand)}
+          ${detailBlock("점검내역", item.check || "-", true, "checkView")}
+        `;
+      }
+
+      return `
+        ${detailBlock("브랜드", item.brand)}
+        ${detailBlock("사이즈", item.size)}
+        ${detailBlock("기타", item.etc)}
+        ${detailBlock("점검내역", item.check || "-", true, "checkView")}
+      `;
+    }
+
+    function detailBlock(label, value, small = false, id = "") {
+      return `
+        <div class="detailBlock">
+          <div class="detailLabel">${escapeHtml(label)}</div>
+          <div ${id ? `id="${id}"` : ""} class="detailValue ${small ? "small" : ""}">
+            ${escapeHtml(value || "-")}
+          </div>
+        </div>
+      `;
+    }
+
+    async function submitRepairRequest() {
+      if (currentItem?.status === "불량" || currentItem?.status === "말소") {
         return;
       }
 
-      alert("수리 요청이 제출되었습니다.");
-      document.getElementById("repairText").value = "";
-    });
+      const btn = document.getElementById("saveBtn");
+      const completeBtn = document.getElementById("completeBtn");
+      const result = document.getElementById("result");
+      const textarea = document.getElementById("repairRequest");
 
-    renderEquipment(equipment);
+      const status = "수리 필요";
+      const check = textarea.value.trim();
+
+      result.className = "result";
+
+      if (!check) {
+        result.textContent = "수리 요청 내용을 입력해주세요.";
+        result.classList.add("error");
+        return;
+      }
+
+      btn.disabled = true;
+      if (completeBtn) completeBtn.disabled = true;
+      result.textContent = "제출 중...";
+
+      try {
+        await saveStatusAndCheck(status, check, "제출 실패");
+
+        textarea.value = "";
+        result.textContent = "수리 요청이 접수되었습니다.";
+        result.classList.add("success");
+
+        updatePageAfterSave(status, check);
+      } catch (error) {
+        result.textContent = "제출 실패: " + error.message;
+        result.classList.add("error");
+      } finally {
+        btn.disabled = false;
+        if (completeBtn) completeBtn.disabled = false;
+      }
+    }
+
+    async function completeRepair() {
+      const btn = document.getElementById("saveBtn");
+      const completeBtn = document.getElementById("completeBtn");
+      const result = document.getElementById("result");
+      const textarea = document.getElementById("repairRequest");
+
+      const status = "정상";
+      const check = formatDate(new Date());
+
+      result.className = "result";
+      btn.disabled = true;
+      if (completeBtn) completeBtn.disabled = true;
+      result.textContent = "처리 중...";
+
+      try {
+        await saveStatusAndCheck(status, check, "수리 완료 처리 실패");
+
+        if (textarea) textarea.value = "";
+        result.textContent = `수리 완료 처리되었습니다.\n점검 내역에 ${check} 날짜가 기록되었습니다.`;
+        result.classList.add("success");
+
+        updatePageAfterSave(status, check);
+      } catch (error) {
+        result.textContent = "수리 완료 처리 실패: " + error.message;
+        result.classList.add("error");
+      } finally {
+        btn.disabled = false;
+        if (completeBtn) completeBtn.disabled = false;
+      }
+    }
+
+    async function saveStatusAndCheck(status, check, fallbackMessage) {
+      const body = {
+        type: currentMode,
+        status,
+        check
+      };
+
+      if (currentMode === "personal") {
+        body.code = currentKey;
+      } else {
+        body.id = currentKey;
+      }
+
+      const response = await fetch("/api/bow", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(data?.message || data?.error || fallbackMessage);
+      }
+
+      return data;
+    }
+
+    function updatePageAfterSave(status, check) {
+      if (currentItem) {
+        currentItem.status = status;
+        currentItem.check = check;
+      }
+
+      const cardClass = getCardClass(status);
+
+      const topCard = document.getElementById("topCard");
+      if (topCard) {
+        topCard.className = "topCard " + cardClass;
+      }
+
+      const repairSection = document.getElementById("repairSection");
+      if (repairSection) {
+        repairSection.className = "repairSection " + cardClass;
+      }
+
+      const badge = document.getElementById("statusBadge");
+      if (badge) {
+        badge.textContent = status || "-";
+        badge.className = "statusCell";
+      }
+
+      const checkView = document.getElementById("checkView");
+      if (checkView) {
+        checkView.textContent = check || "-";
+      }
+
+      const repairNotice = document.getElementById("repairNotice");
+      if (repairNotice) {
+        if (status === "수리 필요") {
+          repairNotice.textContent = "사용 전 확인 필요";
+        } else if (status === "불량") {
+          repairNotice.textContent = "사용 금지";
+        } else if (status === "말소") {
+          repairNotice.textContent = "말소 장비";
+        } else {
+          repairNotice.textContent = "";
+        }
+      }
+
+      const completeBtn = document.getElementById("completeBtn");
+      if (completeBtn) {
+        if (status === "수리 필요") {
+          completeBtn.classList.remove("hidden");
+        } else {
+          completeBtn.classList.add("hidden");
+        }
+      }
+    }
+
+    function getCardClass(status) {
+      if (status === "수리 필요") return "repair";
+      if (status === "불량") return "bad";
+      if (status === "말소") return "deleted";
+      return "normal";
+    }
+
+    function getBadgeClass(status) {
+      if (status === "수리 필요") return "repair";
+      if (status === "불량") return "bad";
+      if (status === "말소") return "deleted";
+      return "normal";
+    }
+
+    function formatDate(date) {
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const dd = String(date.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function showError(message) {
+      app.innerHTML = `
+        <div class="errorBox">
+          <div class="errorTitle">
+            <span class="errorIcon">!</span>
+            장비를 찾을 수 없습니다
+          </div>
+
+          <div class="errorMessage">
+            해당 일련번호 또는 식별코드의 장비가 등록되어 있지 않습니다.
+          </div>
+
+          <div class="errorAction">
+            번호를 확인한 뒤 다시 조회해주세요.
+          </div>
+        </div>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function escapeTextarea(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
   </script>
 </body>
 </html>
