@@ -54,7 +54,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #d8e8ef;
+      background: #f8fafc;
     }
 
     .loadingLogo {
@@ -128,151 +128,272 @@
     }
 
     .topCard {
-      position: relative;
-      overflow: hidden;
       width: 100%;
       min-height: 100dvh;
-      background: #d8e8ef;
-      color: #071022;
-      border-radius: 0;
-      padding: 34px 28px 30px;
+      background: #f8fafc;
+      color: #030712;
+      padding: 22px 22px 28px;
       margin-bottom: 14px;
       display: flex;
       flex-direction: column;
     }
 
-    .topCard::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 78% 14%, rgba(255, 255, 255, 0.48), transparent 30%),
-        linear-gradient(180deg, rgba(255,255,255,0.20), rgba(255,255,255,0) 46%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .statusPanel {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 31%;
-      height: 100%;
-      z-index: 0;
-      opacity: 0.92;
-      border-radius: 0;
-    }
-
-    .topCard.status-normal .statusPanel {
-      background: linear-gradient(180deg, #bbf7d0 0%, #86efac 100%);
-    }
-
-    .topCard.status-repair .statusPanel {
-      background: linear-gradient(180deg, #fecaca 0%, #fca5a5 100%);
-    }
-
-    .topCard.status-bad .statusPanel {
-      background: linear-gradient(180deg, #fde68a 0%, #facc15 100%);
-    }
-
-    .topCard.status-deleted .statusPanel {
-      background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 100%);
-    }
-
     .topCardInner {
-      position: relative;
-      z-index: 2;
       width: 100%;
       max-width: 480px;
-      min-height: calc(100dvh - 64px);
+      min-height: calc(100dvh - 50px);
       margin: 0 auto;
       display: flex;
       flex-direction: column;
     }
 
-    .topHeader {
+    .topNav {
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: flex-start;
-      gap: 16px;
-      min-height: 38px;
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
-    .topClub {
-      font-size: 13px;
-      font-weight: 950;
-      letter-spacing: -0.02em;
-      color: rgba(7, 16, 34, 0.72);
-    }
-
-    .topType {
-      font-size: 13px;
-      font-weight: 950;
-      padding: 7px 10px;
-      border-radius: 999px;
-      white-space: nowrap;
-      color: #071022;
-      background: rgba(255,255,255,0.36);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-
-    .heroMetrics {
-      margin-top: 42px;
+    .navLeft {
       display: flex;
-      flex-direction: column;
-      gap: 28px;
-      width: min(78%, 360px);
-    }
-
-    .metricBlock {
+      align-items: center;
+      gap: 8px;
       min-width: 0;
     }
 
-    .metricLabel {
-      font-size: 13px;
+    .backMark {
+      font-size: 18px;
       font-weight: 950;
-      color: rgba(7, 16, 34, 0.58);
-      margin-bottom: 8px;
+      line-height: 1;
+    }
+
+    .navTitle {
+      font-size: 14px;
+      font-weight: 850;
+      color: rgba(3, 7, 18, 0.72);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .navType {
+      flex: 0 0 auto;
+      font-size: 12px;
+      font-weight: 950;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .flightHero {
+      position: relative;
+      flex: 0 0 auto;
+      padding-bottom: 18px;
+    }
+
+    .flightCodeBlock {
+      position: relative;
+      min-height: 112px;
+    }
+
+    .flightLabel {
+      font-size: 13px;
+      font-weight: 850;
+      color: rgba(3, 7, 18, 0.52);
+      margin-bottom: 5px;
       letter-spacing: -0.02em;
     }
 
-    .metricValue {
-      font-size: 96px;
-      line-height: 0.84;
+    .flightCode {
+      font-size: 82px;
+      line-height: 0.86;
       font-weight: 950;
       letter-spacing: -0.08em;
-      color: #071022;
+      color: #030712;
       word-break: keep-all;
       overflow-wrap: anywhere;
     }
 
-    .metricValue.personalCode {
-      font-size: 58px;
-      line-height: 0.95;
+    .flightCode.personalCode {
+      font-size: 54px;
+      line-height: 0.98;
       letter-spacing: -0.065em;
     }
 
-    .metricValue .unit {
-      font-size: 28px;
+    .flightSub {
+      position: absolute;
+      right: 0;
+      top: 34px;
+      text-align: right;
+      font-size: 11px;
+      line-height: 1.35;
+      font-weight: 850;
+      color: rgba(3, 7, 18, 0.58);
+      max-width: 120px;
+      word-break: keep-all;
+    }
+
+    .routeLine {
+      position: relative;
+      height: 44px;
+      margin: -2px 0 0;
+    }
+
+    .routeDashes {
+      position: absolute;
+      left: 32px;
+      top: 12px;
+      width: 120px;
+      border-top: 2px dashed rgba(3, 7, 18, 0.45);
+      transform: rotate(24deg);
+      transform-origin: left center;
+    }
+
+    .routePlane {
+      position: absolute;
+      left: 120px;
+      top: 12px;
+      font-size: 20px;
       font-weight: 950;
+      transform: rotate(20deg);
+      color: #030712;
+    }
+
+    .poundBlock {
+      position: relative;
+      padding-bottom: 18px;
+      border-bottom: 1.5px solid rgba(3, 7, 18, 0.10);
+    }
+
+    .poundCode {
+      font-size: 82px;
+      line-height: 0.86;
+      font-weight: 950;
+      letter-spacing: -0.08em;
+      color: #030712;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .poundCode .unit {
+      font-size: 25px;
       letter-spacing: -0.04em;
       margin-left: 5px;
-      color: rgba(7, 16, 34, 0.74);
+      font-weight: 950;
     }
 
-    .lowerInfo {
+    .ticketCard {
       margin-top: auto;
-      padding-top: 28px;
-      padding-bottom: 8px;
+      border-radius: 22px;
+      padding: 20px;
+      color: #050505;
+      box-shadow: 0 18px 34px rgba(15, 23, 42, 0.14);
     }
 
-    .statusMain {
+    .ticket-normal {
+      background: linear-gradient(135deg, #bbf7d0 0%, #86efac 100%);
+    }
+
+    .ticket-repair {
+      background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+    }
+
+    .ticket-bad {
+      background: linear-gradient(135deg, #fde68a 0%, #facc15 100%);
+    }
+
+    .ticket-deleted {
+      background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+    }
+
+    .ticketTop {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 18px;
+    }
+
+    .ticketLabel {
+      font-size: 10px;
+      line-height: 1.2;
+      font-weight: 850;
+      color: rgba(5, 5, 5, 0.46);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+
+    .ticketMain {
+      font-size: 24px;
+      line-height: 1.05;
+      font-weight: 950;
+      letter-spacing: -0.045em;
+      color: #050505;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .ticketStatus {
+      text-align: right;
+    }
+
+    .ticketStatus .ticketMain {
+      white-space: nowrap;
+    }
+
+    .ticketGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 18px;
+      margin-bottom: 18px;
+    }
+
+    .ticketItem {
+      min-width: 0;
+    }
+
+    .ticketValue {
+      font-size: 18px;
+      line-height: 1.15;
+      font-weight: 950;
+      letter-spacing: -0.035em;
+      color: #050505;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .ticketItem.full {
+      grid-column: 1 / -1;
+    }
+
+    .barcode {
+      height: 54px;
+      border-radius: 4px;
+      overflow: hidden;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          #050505 0 2px,
+          transparent 2px 5px,
+          #050505 5px 7px,
+          transparent 7px 11px,
+          #050505 11px 12px,
+          transparent 12px 16px
+        );
+      opacity: 0.92;
+      margin-top: 6px;
+    }
+
+    .ticketNoticeRow {
       display: flex;
       align-items: center;
-      gap: 10px;
       flex-wrap: wrap;
-      margin-bottom: 14px;
+      gap: 8px;
+      margin-top: 14px;
     }
 
     .badge,
@@ -280,16 +401,16 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 34px;
-      padding: 7px 14px;
+      min-height: 32px;
+      padding: 7px 12px;
       border-radius: 999px;
       font-weight: 950;
-      font-size: 15px;
+      font-size: 14px;
       box-shadow: none;
     }
 
     .badge.normal {
-      background: #071022;
+      background: #050505;
       color: #ffffff;
     }
 
@@ -299,19 +420,19 @@
     }
 
     .badge.bad {
-      background: #071022;
+      background: #050505;
       color: #facc15;
     }
 
     .badge.deleted {
-      background: #071022;
+      background: #050505;
       color: #d1d5db;
     }
 
     .repairNotice {
-      background: rgba(7, 16, 34, 0.10);
-      color: #071022;
-      border: 2px solid rgba(7, 16, 34, 0.18);
+      background: rgba(5, 5, 5, 0.10);
+      color: #050505;
+      border: 1.5px solid rgba(5, 5, 5, 0.16);
     }
 
     .repairNotice.hidden {
@@ -319,39 +440,17 @@
     }
 
     .banNotice {
-      background: rgba(7, 16, 34, 0.10);
-      color: #071022;
-      border: 2px solid rgba(7, 16, 34, 0.18);
-    }
-
-    .checkText {
-      font-size: 28px;
-      line-height: 1.08;
-      font-weight: 950;
-      letter-spacing: -0.055em;
-      color: #071022;
-      word-break: keep-all;
-      overflow-wrap: anywhere;
-      white-space: pre-wrap;
-      margin-bottom: 9px;
-    }
-
-    .metaText {
-      font-size: 15px;
-      line-height: 1.35;
-      font-weight: 850;
-      color: rgba(7, 16, 34, 0.78);
-      word-break: keep-all;
-      overflow-wrap: anywhere;
-      margin-bottom: 14px;
-      max-width: 86%;
+      background: rgba(5, 5, 5, 0.10);
+      color: #050505;
+      border: 1.5px solid rgba(5, 5, 5, 0.16);
     }
 
     .scrollHint {
       margin-top: 16px;
       font-size: 12px;
-      font-weight: 950;
-      color: rgba(7, 16, 34, 0.50);
+      font-weight: 900;
+      color: rgba(3, 7, 18, 0.46);
+      text-align: center;
     }
 
     .section {
@@ -369,14 +468,6 @@
       font-weight: 900;
       margin-bottom: 14px;
       letter-spacing: -0.02em;
-    }
-
-    label {
-      display: block;
-      font-size: 14px;
-      color: var(--muted);
-      font-weight: 850;
-      margin: 14px 0 7px;
     }
 
     textarea {
@@ -507,42 +598,67 @@
     @media (max-width: 420px) {
       .topCard {
         min-height: 100dvh;
-        padding: 34px 24px 30px;
+        padding: 20px 20px 26px;
       }
 
       .topCardInner {
-        min-height: calc(100dvh - 64px);
+        min-height: calc(100dvh - 46px);
       }
 
-      .statusPanel {
-        width: 33%;
+      .topHeader {
+        margin-bottom: 18px;
       }
 
-      .heroMetrics {
-        margin-top: 40px;
-        gap: 27px;
-        width: min(78%, 330px);
+      .flightCode,
+      .poundCode {
+        font-size: 72px;
       }
 
-      .metricValue {
-        font-size: 88px;
-      }
-
-      .metricValue.personalCode {
+      .flightCode.personalCode {
         font-size: 48px;
       }
 
-      .metricValue .unit {
-        font-size: 26px;
+      .poundCode .unit {
+        font-size: 23px;
       }
 
-      .checkText {
-        font-size: 26px;
+      .flightCodeBlock {
+        min-height: 100px;
       }
 
-      .metaText {
-        font-size: 14px;
-        max-width: 88%;
+      .flightSub {
+        top: 31px;
+        max-width: 110px;
+      }
+
+      .routeLine {
+        height: 38px;
+      }
+
+      .routeDashes {
+        left: 26px;
+        width: 104px;
+      }
+
+      .routePlane {
+        left: 104px;
+      }
+
+      .ticketCard {
+        border-radius: 20px;
+        padding: 18px;
+      }
+
+      .ticketMain {
+        font-size: 22px;
+      }
+
+      .ticketValue {
+        font-size: 17px;
+      }
+
+      .barcode {
+        height: 50px;
       }
 
       .section {
@@ -559,42 +675,54 @@
 
     @media (max-height: 700px) {
       .topCard {
-        padding-top: 26px;
-        padding-bottom: 24px;
+        padding-top: 16px;
+        padding-bottom: 20px;
       }
 
       .topCardInner {
-        min-height: calc(100dvh - 50px);
+        min-height: calc(100dvh - 36px);
       }
 
-      .heroMetrics {
-        margin-top: 28px;
-        gap: 20px;
+      .topHeader {
+        margin-bottom: 12px;
       }
 
-      .metricValue {
-        font-size: 72px;
+      .flightCode,
+      .poundCode {
+        font-size: 60px;
       }
 
-      .metricValue.personalCode {
-        font-size: 38px;
+      .flightCode.personalCode {
+        font-size: 40px;
       }
 
-      .metricValue .unit {
-        font-size: 22px;
+      .flightCodeBlock {
+        min-height: 82px;
       }
 
-      .lowerInfo {
-        padding-top: 18px;
+      .cityBlock {
+        margin-bottom: 10px;
       }
 
-      .checkText {
-        font-size: 22px;
+      .routeLine {
+        height: 30px;
       }
 
-      .metaText {
-        font-size: 13px;
-        margin-bottom: 8px;
+      .ticketCard {
+        padding: 15px;
+      }
+
+      .ticketTop {
+        margin-bottom: 12px;
+      }
+
+      .ticketGrid {
+        gap: 10px 14px;
+        margin-bottom: 12px;
+      }
+
+      .barcode {
+        height: 42px;
       }
 
       .scrollHint {
@@ -626,78 +754,24 @@
       }
 
       .topCard {
-        background: #090d1f;
-        color: #eaf6ff;
-      }
-
-      .topCard::before {
-        background:
-          radial-gradient(circle at 78% 18%, rgba(255,255,255,0.08), transparent 28%),
-          linear-gradient(180deg, rgba(255,255,255,0.04), transparent 42%);
-      }
-
-      .topCard.status-normal .statusPanel {
-        background: linear-gradient(180deg, rgba(34,197,94,0.44), rgba(20,83,45,0.54));
-      }
-
-      .topCard.status-repair .statusPanel {
-        background: linear-gradient(180deg, rgba(239,68,68,0.54), rgba(127,29,29,0.58));
-      }
-
-      .topCard.status-bad .statusPanel {
-        background: linear-gradient(180deg, rgba(250,204,21,0.56), rgba(146,64,14,0.54));
-      }
-
-      .topCard.status-deleted .statusPanel {
-        background: linear-gradient(180deg, rgba(100,116,139,0.58), rgba(30,41,59,0.62));
+        background: #f8fafc;
+        color: #030712;
       }
 
       .topClub,
-      .topType,
-      .metricValue,
-      .checkText {
-        color: #eaf6ff;
+      .navTitle,
+      .flightCode,
+      .poundCode {
+        color: #030712;
       }
 
-      .topType {
-        background: rgba(255,255,255,0.08);
-      }
-
-      .metricLabel,
-      .metaText,
-      .scrollHint {
-        color: rgba(234, 246, 255, 0.68);
-      }
-
-      .metricValue .unit {
-        color: rgba(234, 246, 255, 0.72);
-      }
-
-      .badge.normal {
-        background: #eaf6ff;
-        color: #090d1f;
-      }
-
-      .badge.repair {
-        background: #fecaca;
-        color: #991b1b;
-      }
-
-      .badge.bad {
-        background: #facc15;
+      .navType {
+        background: #e5e7eb;
         color: #111827;
       }
 
-      .badge.deleted {
-        background: #334155;
-        color: #e2e8f0;
-      }
-
-      .repairNotice,
-      .banNotice {
-        background: rgba(255, 255, 255, 0.10);
-        color: #fecaca;
-        border-color: rgba(255, 255, 255, 0.24);
+      .ticketCard {
+        box-shadow: 0 18px 34px rgba(0, 0, 0, 0.18);
       }
 
       .section {
@@ -721,10 +795,6 @@
 
       .repairBlockedText {
         color: #94a3b8;
-      }
-
-      label {
-        color: #9aa8bc;
       }
 
       textarea {
@@ -884,7 +954,7 @@
       const isPersonal = item.mode === "personal";
       const status = item.status || "-";
       const badgeClass = getBadgeClass(status);
-      const toneClass = getToneClass(status);
+      const ticketClass = getTicketClass(status);
 
       const isRepairNeeded = status === "수리 필요";
       const isBadStatus = status === "불량";
@@ -901,45 +971,98 @@
       const primaryLabel = isPersonal ? "식별 코드" : "일련번호";
       const primaryValue = isPersonal ? item.code : item.serial;
       const primaryClass = isPersonal ? "personalCode" : "";
-
       const poundValue = item.pound || "-";
 
-      const metaText = isPersonal
-        ? `소유자 ${item.owner || "-"} · 브랜드 ${item.brand || "-"} · 사이즈 ${item.size || "-"}`
-        : `브랜드 ${item.brand || "-"} · 사이즈 ${item.size || "-"} · 기타 ${item.etc || "-"}`;
+      const brandText = item.brand || "-";
+      const sizeText = item.size || "-";
+      const checkText = item.check || "-";
 
       document.title = isPersonal
         ? `${item.code || ""} 장비`
         : `${item.serial || ""}번 활`;
 
       app.innerHTML = `
-        <div class="topCard ${toneClass}">
-          <div class="statusPanel"></div>
-
+        <div class="topCard">
           <div class="topCardInner">
-            <div class="topHeader">
-              <div class="topClub">서울대학교 국궁부</div>
-              <div class="topType">${escapeHtml(typeLabel)}</div>
+            <div class="topNav">
+              <div class="navLeft">
+                <div class="backMark">‹</div>
+                <div class="navTitle">SNU Korean Archery</div>
+              </div>
+
+              <div class="navType">${escapeHtml(typeLabel)}</div>
             </div>
 
-            <div class="heroMetrics">
-              <div class="metricBlock">
-                <div class="metricLabel">${escapeHtml(primaryLabel)}</div>
-                <div class="metricValue ${primaryClass}">
+            <div class="flightHero">
+              <div class="flightCodeBlock">
+                <div class="flightLabel">${escapeHtml(primaryLabel)}</div>
+                <div class="flightCode ${primaryClass}">
                   ${escapeHtml(primaryValue || "-")}
                 </div>
+
+                <div class="flightSub">
+                  ${escapeHtml(typeLabel)}<br>
+                  ${escapeHtml(status)}
+                </div>
               </div>
 
-              <div class="metricBlock">
-                <div class="metricLabel">파운드</div>
-                <div class="metricValue">
+              <div class="routeLine">
+                <div class="routeDashes"></div>
+                <div class="routePlane">✈</div>
+              </div>
+
+              <div class="poundBlock">
+                <div class="flightLabel">파운드</div>
+                <div class="poundCode">
                   ${escapeHtml(poundValue)}<span class="unit">lb</span>
+                </div>
+
+                <div class="statusCircle">
+                  ${escapeHtml(getStatusIcon(status))}
                 </div>
               </div>
             </div>
 
-            <div class="lowerInfo">
-              <div class="statusMain">
+            <div class="ticketCard ${ticketClass}">
+              <div class="ticketTop">
+                <div>
+                  <div class="ticketLabel">${isPersonal ? "Owner" : "Brand"}</div>
+                  <div class="ticketMain">
+                    ${escapeHtml(isPersonal ? (item.owner || "-") : brandText)}
+                  </div>
+                </div>
+
+                <div class="ticketStatus">
+                  <div class="ticketLabel">Status</div>
+                  <div id="statusView" class="ticketMain">
+                    ${escapeHtml(status)}
+                  </div>
+                </div>
+              </div>
+
+              <div class="ticketGrid">
+                ${
+                  isPersonal
+                    ? `
+                      ${ticketItem("Code", item.code)}
+                      ${ticketItem("Pound", item.pound ? item.pound + " lb" : "-")}
+                      ${ticketItem("Brand", item.brand)}
+                      ${ticketItem("Size", item.size)}
+                    `
+                    : `
+                      ${ticketItem("Serial", item.serial)}
+                      ${ticketItem("Pound", item.pound ? item.pound + " lb" : "-")}
+                      ${ticketItem("Size", item.size)}
+                      ${ticketItem("Etc", item.etc)}
+                    `
+                }
+
+                ${ticketItem("Check", checkText, true)}
+              </div>
+
+              <div class="barcode"></div>
+
+              <div class="ticketNoticeRow">
                 <div id="statusBadge" class="badge ${badgeClass}">
                   ${escapeHtml(status)}
                 </div>
@@ -948,20 +1071,10 @@
                   ${escapeHtml(noticeText)}
                 </div>
               </div>
+            </div>
 
-              <div id="checkView" class="checkText">
-                ${escapeHtml(item.check || "-")}
-              </div>
-
-              <div class="metaText">
-                ${escapeHtml(metaText)}
-              </div>
-
-              <div id="statusView" style="display:none;">${escapeHtml(status)}</div>
-
-              <div class="scrollHint">
-                아래로 스크롤하여 수리 요청
-              </div>
+            <div class="scrollHint">
+              아래로 스크롤하여 수리 요청
             </div>
           </div>
         </div>
@@ -1002,6 +1115,24 @@
           Copyright © Seoul National University Korean Archery Club. All Rights Reserved.
         </div>
       `;
+    }
+
+    function ticketItem(label, value, full = false) {
+      return `
+        <div class="ticketItem ${full ? "full" : ""}">
+          <div class="ticketLabel">${escapeHtml(label)}</div>
+          <div ${label === "Check" ? `id="checkView"` : ""} class="ticketValue">
+            ${escapeHtml(value || "-")}
+          </div>
+        </div>
+      `;
+    }
+
+    function getStatusIcon(status) {
+      if (status === "수리 필요") return "!";
+      if (status === "불량") return "×";
+      if (status === "말소") return "-";
+      return "✓";
     }
 
     async function submitRepairRequest() {
@@ -1113,15 +1244,17 @@
         currentItem.check = check;
       }
 
-      const topCard = document.querySelector(".topCard");
-      if (topCard) {
-        topCard.classList.remove("status-normal", "status-repair", "status-bad", "status-deleted");
-        topCard.classList.add(getToneClass(status));
+      const ticketCard = document.querySelector(".ticketCard");
+      if (ticketCard) {
+        ticketCard.classList.remove("ticket-normal", "ticket-repair", "ticket-bad", "ticket-deleted");
+        ticketCard.classList.add(getTicketClass(status));
       }
 
       const badge = document.getElementById("statusBadge");
-      badge.textContent = status || "-";
-      badge.className = "badge " + getBadgeClass(status);
+      if (badge) {
+        badge.textContent = status || "-";
+        badge.className = "badge " + getBadgeClass(status);
+      }
 
       const statusView = document.getElementById("statusView");
       if (statusView) {
@@ -1131,6 +1264,16 @@
       const checkView = document.getElementById("checkView");
       if (checkView) {
         checkView.textContent = check || "-";
+      }
+
+      const statusCircle = document.querySelector(".statusCircle");
+      if (statusCircle) {
+        statusCircle.textContent = getStatusIcon(status);
+      }
+
+      const flightSub = document.querySelector(".flightSub");
+      if (flightSub) {
+        flightSub.innerHTML = `${escapeHtml(currentItem?.mode === "personal" ? "개인 장비" : "공용 장비")}<br>${escapeHtml(status || "-")}`;
       }
 
       const repairNotice = document.getElementById("repairNotice");
@@ -1167,11 +1310,11 @@
       return "normal";
     }
 
-    function getToneClass(status) {
-      if (status === "수리 필요") return "status-repair";
-      if (status === "불량") return "status-bad";
-      if (status === "말소") return "status-deleted";
-      return "status-normal";
+    function getTicketClass(status) {
+      if (status === "수리 필요") return "ticket-repair";
+      if (status === "불량") return "ticket-bad";
+      if (status === "말소") return "ticket-deleted";
+      return "ticket-normal";
     }
 
     function formatDate(date) {
