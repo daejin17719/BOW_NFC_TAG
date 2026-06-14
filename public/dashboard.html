@@ -867,7 +867,7 @@
       `;
     }
 
-   function arrowCategoryItem(item, index) {
+ function arrowCategoryItem(item, index) {
   const isTotal = item.label === "총량";
   const isRepair = item.label === "수리 필요";
 
@@ -878,8 +878,14 @@
       ${
         isTotal
           ? `
-            <div class="arrowCategoryValue" id="arrowValue-${index}">
-              ${escapeHtml(item.quantity)}
+            <div class="arrowControl">
+              <div class="arrowControlBtn" style="visibility:hidden;">-</div>
+
+              <div class="arrowCategoryValue" id="arrowValue-${index}">
+                ${escapeHtml(item.quantity)}
+              </div>
+
+              <div class="arrowControlBtn" style="visibility:hidden;">+</div>
             </div>
           `
           : `
@@ -905,7 +911,6 @@
     </div>
   `;
 }
-
     function changeArrowQuantity(index, delta) {
       if (!arrowCategories[index]) return;
       if (arrowCategories[index].label === "총량") return;
