@@ -867,36 +867,44 @@
       `;
     }
 
-    function arrowCategoryItem(item, index) {
-      const isTotal = item.label === "총량";
-      const isRepair = item.label === "수리 필요";
+   function arrowCategoryItem(item, index) {
+  const isTotal = item.label === "총량";
+  const isRepair = item.label === "수리 필요";
 
-      return `
-        <div class="arrowCategoryItem ${isTotal ? "total" : ""} ${isRepair ? "repair" : ""}">
-          <div class="arrowCategoryLabel">${escapeHtml(item.label)}</div>
+  return `
+    <div class="arrowCategoryItem ${isTotal ? "total" : ""} ${isRepair ? "repair" : ""}">
+      <div class="arrowCategoryLabel">${escapeHtml(item.label)}</div>
 
-          <div class="arrowControl">
-            <button
-              class="arrowControlBtn"
-              onclick="changeArrowQuantity(${index}, -1)"
-              ${isTotal ? "disabled" : ""}
-              aria-label="${escapeHtml(item.label)} 감소"
-            >-</button>
-
+      ${
+        isTotal
+          ? `
             <div class="arrowCategoryValue" id="arrowValue-${index}">
               ${escapeHtml(item.quantity)}
             </div>
+          `
+          : `
+            <div class="arrowControl">
+              <button
+                class="arrowControlBtn"
+                onclick="changeArrowQuantity(${index}, -1)"
+                aria-label="${escapeHtml(item.label)} 감소"
+              >-</button>
 
-            <button
-              class="arrowControlBtn"
-              onclick="changeArrowQuantity(${index}, 1)"
-              ${isTotal ? "disabled" : ""}
-              aria-label="${escapeHtml(item.label)} 증가"
-            >+</button>
-          </div>
-        </div>
-      `;
-    }
+              <div class="arrowCategoryValue" id="arrowValue-${index}">
+                ${escapeHtml(item.quantity)}
+              </div>
+
+              <button
+                class="arrowControlBtn"
+                onclick="changeArrowQuantity(${index}, 1)"
+                aria-label="${escapeHtml(item.label)} 증가"
+              >+</button>
+            </div>
+          `
+      }
+    </div>
+  `;
+}
 
     function changeArrowQuantity(index, delta) {
       if (!arrowCategories[index]) return;
