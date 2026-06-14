@@ -152,7 +152,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 18px;
+      margin-bottom: 12px;
     }
 
     .navLeft {
@@ -189,10 +189,10 @@
 
     .heroArea {
       flex: 0 0 auto;
-      min-height: 310px;
+      min-height: 410px;
       position: relative;
       border-bottom: 1.5px solid rgba(3, 7, 18, 0.10);
-      margin-bottom: 22px;
+      margin-bottom: 28px;
     }
 
     .heroMetric {
@@ -201,68 +201,71 @@
     }
 
     .serialMetric {
-      top: 0;
+      top: 2px;
       left: 0;
-      width: 78%;
+      width: 94%;
     }
 
     .poundMetric {
-      top: 150px;
+      top: 206px;
       right: 0;
-      width: 78%;
+      width: 94%;
       text-align: right;
     }
 
+    .metricRow {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .poundMetric .metricRow {
+      justify-content: flex-end;
+    }
+
     .metricLabel {
-      font-size: 14px;
-      font-weight: 850;
+      flex: 0 0 auto;
+      padding-top: 19px;
+      font-size: 12px;
+      line-height: 1.12;
+      font-weight: 950;
       color: rgba(3, 7, 18, 0.52);
-      margin-bottom: 6px;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.04em;
+      word-break: keep-all;
     }
 
     .metricValue {
-      font-size: 116px;
-      line-height: 0.82;
+      font-size: 154px;
+      line-height: 0.78;
       font-weight: 950;
-      letter-spacing: -0.085em;
+      letter-spacing: -0.095em;
       color: #030712;
       word-break: keep-all;
       overflow-wrap: anywhere;
     }
 
     .metricValue.personalCode {
-      font-size: 66px;
+      font-size: 76px;
       line-height: 0.96;
-      letter-spacing: -0.07em;
+      letter-spacing: -0.075em;
     }
 
     .metricValue .unit {
-      font-size: 32px;
+      font-size: 38px;
+      line-height: 1;
       font-weight: 950;
-      letter-spacing: -0.04em;
-      margin-left: 5px;
-    }
-
-    .heroSubInfo {
-      position: absolute;
-      right: 2px;
-      top: 74px;
-      text-align: right;
-      font-size: 12px;
-      line-height: 1.35;
-      font-weight: 850;
-      color: rgba(3, 7, 18, 0.58);
-      max-width: 130px;
-      word-break: keep-all;
+      letter-spacing: -0.05em;
+      margin-left: 8px;
+      vertical-align: baseline;
     }
 
     .ticketCard {
       margin-top: auto;
       border-radius: 24px;
-      padding: 18px;
+      padding: 23px 24px 24px;
       color: #050505;
-      box-shadow: 0 16px 28px rgba(15, 23, 42, 0.12);
+      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.14);
       max-height: none;
       overflow: hidden;
     }
@@ -285,27 +288,27 @@
 
     .ticketTop {
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 14px;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
       align-items: start;
-      margin-bottom: 16px;
+      margin-bottom: 24px;
     }
 
     .ticketLabel {
       font-size: 10px;
-      line-height: 1.2;
-      font-weight: 900;
-      color: rgba(5, 5, 5, 0.48);
-      margin-bottom: 4px;
+      line-height: 1.1;
+      font-weight: 950;
+      color: rgba(5, 5, 5, 0.46);
+      margin-bottom: 7px;
       text-transform: uppercase;
-      letter-spacing: 0;
+      letter-spacing: -0.02em;
     }
 
     .ticketMain {
-      font-size: 25px;
-      line-height: 1.08;
+      font-size: 27px;
+      line-height: 1.02;
       font-weight: 950;
-      letter-spacing: -0.045em;
+      letter-spacing: -0.055em;
       color: #050505;
       word-break: keep-all;
       overflow-wrap: anywhere;
@@ -322,8 +325,8 @@
     .ticketGrid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 13px 18px;
-      margin-bottom: 10px;
+      gap: 24px 34px;
+      margin-bottom: 12px;
     }
 
     .ticketItem {
@@ -331,10 +334,10 @@
     }
 
     .ticketValue {
-      font-size: 17px;
-      line-height: 1.22;
+      font-size: 20px;
+      line-height: 1.12;
       font-weight: 950;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.045em;
       color: #050505;
       word-break: keep-all;
       overflow-wrap: anywhere;
@@ -350,9 +353,9 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 14px;
-      padding-top: 12px;
-      border-top: 1.5px solid rgba(5, 5, 5, 0.14);
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1.5px solid rgba(5, 5, 5, 0.15);
     }
 
     .badge,
@@ -360,11 +363,12 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 31px;
-      padding: 7px 12px;
+      min-height: 38px;
+      padding: 9px 16px;
       border-radius: 999px;
       font-weight: 950;
-      font-size: 13px;
+      font-size: 15px;
+      letter-spacing: -0.04em;
       box-shadow: none;
     }
 
@@ -405,11 +409,12 @@
     }
 
     .scrollHint {
-      margin-top: 12px;
-      font-size: 12px;
-      font-weight: 900;
-      color: rgba(3, 7, 18, 0.46);
+      margin-top: 14px;
+      font-size: 13px;
+      font-weight: 950;
+      color: rgba(3, 7, 18, 0.42);
       text-align: center;
+      letter-spacing: -0.03em;
     }
 
     .section {
@@ -565,53 +570,61 @@
       }
 
       .topNav {
-        margin-bottom: 16px;
+        margin-bottom: 10px;
       }
 
       .heroArea {
-        min-height: 300px;
-        margin-bottom: 18px;
+        min-height: 392px;
+        margin-bottom: 26px;
       }
 
-      .metricValue {
-        font-size: 106px;
-      }
-
-      .metricValue.personalCode {
-        font-size: 58px;
-      }
-
-      .metricValue .unit {
-        font-size: 30px;
+      .serialMetric {
+        width: 96%;
       }
 
       .poundMetric {
-        top: 146px;
+        top: 198px;
+        width: 96%;
       }
 
-      .heroSubInfo {
-        top: 70px;
+      .metricLabel {
+        padding-top: 17px;
+        font-size: 11px;
+      }
+
+      .metricValue {
+        font-size: 142px;
+      }
+
+      .metricValue.personalCode {
+        font-size: 66px;
+      }
+
+      .metricValue .unit {
+        font-size: 35px;
+        margin-left: 7px;
       }
 
       .ticketCard {
         border-radius: 22px;
-        padding: 17px;
+        padding: 22px 24px 24px;
       }
 
       .ticketTop {
-        margin-bottom: 14px;
+        gap: 15px;
+        margin-bottom: 23px;
       }
 
       .ticketMain {
-        font-size: 24px;
+        font-size: 26px;
       }
 
       .ticketGrid {
-        gap: 12px 16px;
+        gap: 24px 32px;
       }
 
       .ticketValue {
-        font-size: 16px;
+        font-size: 19px;
       }
 
       .section {
@@ -626,6 +639,45 @@
       }
     }
 
+    @media (max-width: 360px) {
+      .heroArea {
+        min-height: 360px;
+      }
+
+      .poundMetric {
+        top: 184px;
+      }
+
+      .metricValue {
+        font-size: 122px;
+      }
+
+      .metricValue.personalCode {
+        font-size: 58px;
+      }
+
+      .metricValue .unit {
+        font-size: 31px;
+      }
+
+      .metricLabel {
+        padding-top: 14px;
+        font-size: 10px;
+      }
+
+      .ticketCard {
+        padding: 20px 22px 22px;
+      }
+
+      .ticketGrid {
+        gap: 22px 26px;
+      }
+
+      .ticketValue {
+        font-size: 18px;
+      }
+    }
+
     @media (max-height: 700px) {
       .topCard {
         padding-top: 14px;
@@ -637,82 +689,82 @@
       }
 
       .topNav {
-        margin-bottom: 12px;
+        margin-bottom: 8px;
       }
 
       .heroArea {
-        min-height: 236px;
+        min-height: 280px;
         margin-bottom: 14px;
       }
 
-      .metricLabel {
-        font-size: 12px;
-        margin-bottom: 3px;
-      }
-
-      .metricValue {
-        font-size: 78px;
-      }
-
-      .metricValue.personalCode {
-        font-size: 42px;
-      }
-
-      .metricValue .unit {
-        font-size: 22px;
+      .serialMetric {
+        top: 0;
       }
 
       .poundMetric {
-        top: 112px;
+        top: 136px;
       }
 
-      .heroSubInfo {
-        top: 52px;
-        font-size: 11px;
+      .metricLabel {
+        padding-top: 11px;
+        font-size: 10px;
+      }
+
+      .metricValue {
+        font-size: 96px;
+      }
+
+      .metricValue.personalCode {
+        font-size: 44px;
+      }
+
+      .metricValue .unit {
+        font-size: 25px;
+        margin-left: 5px;
       }
 
       .ticketCard {
-        padding: 14px;
+        padding: 16px 18px 18px;
         border-radius: 20px;
       }
 
       .ticketTop {
-        margin-bottom: 10px;
+        margin-bottom: 13px;
       }
 
       .ticketMain {
-        font-size: 21px;
+        font-size: 22px;
       }
 
       .ticketGrid {
-        gap: 8px 12px;
+        gap: 12px 22px;
         margin-bottom: 8px;
       }
 
       .ticketLabel {
         font-size: 9px;
-        margin-bottom: 2px;
+        margin-bottom: 4px;
       }
 
       .ticketValue {
-        font-size: 14px;
+        font-size: 15px;
         line-height: 1.15;
       }
 
       .ticketNoticeRow {
-        margin-top: 10px;
-        padding-top: 10px;
+        margin-top: 12px;
+        padding-top: 11px;
       }
 
       .badge,
       .repairNotice {
-        min-height: 28px;
-        font-size: 12px;
-        padding: 6px 10px;
+        min-height: 30px;
+        font-size: 13px;
+        padding: 6px 12px;
       }
 
       .scrollHint {
-        margin-top: 8px;
+        margin-top: 9px;
       }
     }
 
@@ -979,21 +1031,20 @@
 
             <div class="heroArea">
               <div class="heroMetric serialMetric">
-                <div class="metricLabel">${escapeHtml(primaryLabel)}</div>
-                <div class="metricValue ${primaryClass}">
-                  ${escapeHtml(primaryValue || "-")}
+                <div class="metricRow">
+                  <div class="metricValue ${primaryClass}">
+                    ${escapeHtml(primaryValue || "-")}
+                  </div>
+                  <div class="metricLabel">${escapeHtml(primaryLabel)}</div>
                 </div>
               </div>
 
-              <div class="heroSubInfo">
-                ${escapeHtml(typeLabel)}<br>
-                ${escapeHtml(status)}
-              </div>
-
               <div class="heroMetric poundMetric">
-                <div class="metricLabel">파운드</div>
-                <div class="metricValue">
-                  ${escapeHtml(poundValue)}<span class="unit">lb</span>
+                <div class="metricRow">
+                  <div class="metricLabel">파운드</div>
+                  <div class="metricValue">
+                    ${escapeHtml(poundValue)}<span class="unit">lb</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1230,11 +1281,6 @@
       const checkView = document.getElementById("checkView");
       if (checkView) {
         checkView.textContent = check || "-";
-      }
-
-      const heroSubInfo = document.querySelector(".heroSubInfo");
-      if (heroSubInfo) {
-        heroSubInfo.innerHTML = `${escapeHtml(currentItem?.mode === "personal" ? "개인 장비" : "공용 장비")}<br>${escapeHtml(status || "-")}`;
       }
 
       const repairNotice = document.getElementById("repairNotice");
