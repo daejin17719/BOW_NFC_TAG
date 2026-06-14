@@ -49,23 +49,12 @@
       padding-bottom: 28px;
     }
 
-    .loading {
-      background: white;
-      border-radius: 24px;
-      padding: 22px;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-      font-weight: 850;
-      line-height: 1.5;
-    }
-
     .loadingLogoWrap {
       min-height: 100dvh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background:
-        radial-gradient(circle at top left, #e0f2fe 0, transparent 34%),
-        var(--bg);
+      background: #d8e8ef;
     }
 
     .loadingLogo {
@@ -143,11 +132,10 @@
       overflow: hidden;
       width: 100%;
       min-height: 100dvh;
-      background: #df2508;
-      color: #050505;
+      background: #d8e8ef;
+      color: #071022;
       border-radius: 0;
-      padding: 36px 28px 34px;
-      box-shadow: none;
+      padding: 34px 28px 30px;
       margin-bottom: 14px;
       display: flex;
       flex-direction: column;
@@ -158,9 +146,47 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(circle at 82% 12%, rgba(255,255,255,0.18), transparent 22%),
-        linear-gradient(180deg, rgba(255,255,255,0.08), transparent 36%);
+        radial-gradient(circle at 82% 18%, rgba(255, 255, 255, 0.42), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0) 45%);
       pointer-events: none;
+    }
+
+    .topCard::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: clamp(34px, 11vw, 72px);
+      width: 4px;
+      height: 58%;
+      background: #071022;
+      opacity: 0.92;
+      border-radius: 0 0 999px 999px;
+      z-index: 1;
+    }
+
+    .stringKnob {
+      position: absolute;
+      right: calc(clamp(34px, 11vw, 72px) - 13px);
+      top: 47%;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 6px solid #071022;
+      background: #d8e8ef;
+      z-index: 3;
+    }
+
+    .stringKnob::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 24px;
+      transform: translateX(-50%);
+      width: 28px;
+      height: 56px;
+      border-radius: 999px;
+      background: rgba(7, 16, 34, 0.15);
+      z-index: -1;
     }
 
     .topCardInner {
@@ -168,7 +194,7 @@
       z-index: 2;
       width: 100%;
       max-width: 480px;
-      min-height: calc(100dvh - 70px);
+      min-height: calc(100dvh - 64px);
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -176,90 +202,114 @@
 
     .topHeader {
       display: flex;
-      align-items: flex-start;
       justify-content: space-between;
+      align-items: flex-start;
       gap: 16px;
-      padding-bottom: 18px;
-      border-bottom: 2px solid rgba(0, 0, 0, 0.65);
+      min-height: 38px;
     }
 
     .topClub {
       font-size: 13px;
       font-weight: 950;
       letter-spacing: -0.02em;
-      margin-bottom: 8px;
-    }
-
-    .topHeaderLabel {
-      font-size: 13px;
-      font-weight: 950;
-      color: rgba(0, 0, 0, 0.62);
+      color: rgba(7, 16, 34, 0.72);
     }
 
     .topType {
       font-size: 13px;
       font-weight: 950;
       padding: 7px 10px;
-      border: 2px solid rgba(0, 0, 0, 0.72);
+      border: 2px solid rgba(7, 16, 34, 0.76);
       border-radius: 999px;
       white-space: nowrap;
+      color: #071022;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
 
-    .heroPrimary {
-      margin-top: 34px;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 30px;
-    }
-
-    .heroMetric {
-      min-width: 0;
+    .heroNumbers {
+      margin-top: 30px;
+      width: min(70%, 330px);
     }
 
     .metricLabel {
-      font-size: 15px;
+      font-size: 13px;
       font-weight: 950;
-      color: rgba(0, 0, 0, 0.62);
+      color: rgba(7, 16, 34, 0.58);
       margin-bottom: 8px;
+      letter-spacing: -0.02em;
     }
 
-    .metricValue {
-      color: #050505;
+    .primaryNumber {
+      font-size: 112px;
+      line-height: 0.78;
       font-weight: 950;
       letter-spacing: -0.08em;
+      color: #071022;
       word-break: keep-all;
       overflow-wrap: anywhere;
     }
 
-    .serialMetricValue {
-      font-size: 118px;
-      line-height: 0.82;
-    }
-
-    .ownerMetricValue {
-      font-size: 54px;
-      line-height: 0.92;
+    .ownerNumber {
+      font-size: 56px;
+      line-height: 0.96;
       letter-spacing: -0.065em;
-      max-width: 88%;
     }
 
-    .poundMetricValue {
-      font-size: 92px;
-      line-height: 0.86;
+    .numberDivider {
+      width: 74px;
+      height: 3px;
+      border-radius: 999px;
+      background: rgba(7, 16, 34, 0.62);
+      margin: 18px 0 16px;
     }
 
-    .poundMetricValue span {
-      font-size: 28px;
+    .poundNumber {
+      font-size: 96px;
+      line-height: 0.82;
+      font-weight: 950;
+      letter-spacing: -0.08em;
+      color: rgba(255,255,255,0.96);
+      text-shadow: 0 1px 0 rgba(7, 16, 34, 0.10);
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .poundNumber span {
+      font-size: 27px;
+      font-weight: 950;
       letter-spacing: -0.04em;
-      margin-left: 4px;
+      margin-left: 5px;
     }
 
-    .statusRow {
+    .lowerInfo {
+      margin-top: auto;
+      padding-top: 28px;
+      padding-bottom: 8px;
+    }
+
+    .statusIcon {
+      width: 58px;
+      height: 58px;
+      border-radius: 12px;
+      background: #071022;
+      color: #d8e8ef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 25px;
+      font-weight: 950;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 22px rgba(7, 16, 34, 0.14);
+    }
+
+    .statusMain {
       display: flex;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: 22px;
+      margin-bottom: 12px;
     }
 
     .badge,
@@ -276,7 +326,7 @@
     }
 
     .badge.normal {
-      background: #050505;
+      background: #071022;
       color: #ffffff;
     }
 
@@ -286,19 +336,19 @@
     }
 
     .badge.bad {
-      background: #050505;
+      background: #071022;
       color: #facc15;
     }
 
     .badge.deleted {
-      background: #050505;
+      background: #071022;
       color: #d1d5db;
     }
 
     .repairNotice {
-      background: rgba(0, 0, 0, 0.14);
-      color: #050505;
-      border: 2px solid rgba(0, 0, 0, 0.34);
+      background: rgba(7, 16, 34, 0.10);
+      color: #071022;
+      border: 2px solid rgba(7, 16, 34, 0.22);
     }
 
     .repairNotice.hidden {
@@ -306,69 +356,46 @@
     }
 
     .banNotice {
-      background: rgba(0, 0, 0, 0.14);
-      color: #050505;
-      border: 2px solid rgba(0, 0, 0, 0.34);
+      background: rgba(7, 16, 34, 0.10);
+      color: #071022;
+      border: 2px solid rgba(7, 16, 34, 0.22);
     }
 
-    .heroDetails {
-      margin-top: auto;
-      padding-top: 26px;
-    }
-
-    .heroDetailsTitle {
-      font-size: 14px;
+    .checkText {
+      font-size: 30px;
+      line-height: 1.05;
       font-weight: 950;
-      margin-bottom: 12px;
-      padding-bottom: 9px;
-      border-bottom: 2px solid rgba(0, 0, 0, 0.65);
-    }
-
-    .checkBlock {
-      margin-bottom: 14px;
-    }
-
-    .checkLabel {
-      font-size: 11px;
-      font-weight: 950;
-      color: rgba(0, 0, 0, 0.58);
-      margin-bottom: 5px;
-    }
-
-    .checkValue {
-      font-size: 16px;
-      font-weight: 950;
-      line-height: 1.35;
-      color: #050505;
+      letter-spacing: -0.055em;
+      color: #071022;
       word-break: keep-all;
       overflow-wrap: anywhere;
       white-space: pre-wrap;
+      margin-bottom: 8px;
     }
 
-    .equipmentMeta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .equipmentMeta span {
-      padding: 7px 10px;
-      border-radius: 999px;
-      background: rgba(0, 0, 0, 0.08);
-      color: rgba(0, 0, 0, 0.68);
-      font-size: 13px;
-      font-weight: 950;
-      line-height: 1.2;
+    .metaText {
+      font-size: 15px;
+      line-height: 1.35;
+      font-weight: 850;
+      color: rgba(7, 16, 34, 0.78);
       word-break: keep-all;
       overflow-wrap: anywhere;
+      margin-bottom: 14px;
+    }
+
+    .bottomIcons {
+      display: flex;
+      gap: 12px;
+      color: rgba(7, 16, 34, 0.70);
+      font-size: 18px;
+      font-weight: 900;
     }
 
     .scrollHint {
-      margin-top: 18px;
+      margin-top: 16px;
       font-size: 12px;
       font-weight: 950;
-      color: rgba(0, 0, 0, 0.52);
-      text-align: center;
+      color: rgba(7, 16, 34, 0.50);
     }
 
     .section {
@@ -528,42 +555,45 @@
     @media (max-width: 420px) {
       .topCard {
         min-height: 100dvh;
-        padding: 34px 24px 32px;
+        padding: 34px 24px 30px;
       }
 
       .topCardInner {
-        min-height: calc(100dvh - 66px);
+        min-height: calc(100dvh - 64px);
       }
 
-      .heroPrimary {
-        margin-top: 32px;
-        gap: 28px;
+      .heroNumbers {
+        margin-top: 28px;
+        width: min(72%, 320px);
       }
 
-      .serialMetricValue {
-        font-size: 112px;
+      .primaryNumber {
+        font-size: 104px;
       }
 
-      .ownerMetricValue {
+      .ownerNumber {
         font-size: 48px;
-        max-width: 86%;
       }
 
-      .poundMetricValue {
-        font-size: 86px;
+      .numberDivider {
+        width: 66px;
+        margin: 16px 0 14px;
       }
 
-      .poundMetricValue span {
-        font-size: 26px;
+      .poundNumber {
+        font-size: 88px;
       }
 
-      .checkValue {
-        font-size: 15px;
+      .poundNumber span {
+        font-size: 25px;
       }
 
-      .equipmentMeta span {
-        font-size: 12px;
-        padding: 7px 9px;
+      .checkText {
+        font-size: 27px;
+      }
+
+      .metaText {
+        font-size: 14px;
       }
 
       .section {
@@ -576,79 +606,64 @@
       .hint {
         width: calc(100% - 20px);
       }
-
-      .metricLabel,
-      .metricValue,
-      .badge,
-      .repairNotice,
-      .topType,
-      .topClub,
-      .heroDetailsTitle,
-      .checkValue,
-      .equipmentMeta span {
-        font-weight: 950;
-      }
-
-      .sectionTitle,
-      button {
-        font-weight: 900;
-      }
-
-      label,
-      textarea,
-      .result,
-      .hint,
-      .repairBlockedText {
-        font-weight: 850;
-      }
     }
 
     @media (max-height: 700px) {
       .topCard {
-        padding-top: 28px;
-        padding-bottom: 26px;
+        padding-top: 26px;
+        padding-bottom: 24px;
       }
 
       .topCardInner {
-        min-height: calc(100dvh - 54px);
+        min-height: calc(100dvh - 50px);
       }
 
-      .heroPrimary {
-        margin-top: 24px;
-        gap: 22px;
+      .heroNumbers {
+        margin-top: 20px;
       }
 
-      .serialMetricValue {
-        font-size: 94px;
+      .primaryNumber {
+        font-size: 86px;
       }
 
-      .ownerMetricValue {
-        font-size: 40px;
+      .ownerNumber {
+        font-size: 38px;
       }
 
-      .poundMetricValue {
-        font-size: 72px;
+      .numberDivider {
+        margin: 12px 0 10px;
       }
 
-      .poundMetricValue span {
-        font-size: 23px;
+      .poundNumber {
+        font-size: 70px;
       }
 
-      .heroDetails {
+      .poundNumber span {
+        font-size: 22px;
+      }
+
+      .lowerInfo {
         padding-top: 18px;
       }
 
-      .equipmentMeta {
-        gap: 6px;
+      .statusIcon {
+        width: 48px;
+        height: 48px;
+        font-size: 21px;
+        margin-bottom: 10px;
       }
 
-      .equipmentMeta span {
-        font-size: 12px;
-        padding: 6px 8px;
+      .checkText {
+        font-size: 23px;
+      }
+
+      .metaText {
+        font-size: 13px;
+        margin-bottom: 8px;
       }
 
       .scrollHint {
-        margin-top: 12px;
+        margin-top: 10px;
       }
     }
 
@@ -670,66 +685,70 @@
         background: #0b1020;
       }
 
-      .loading {
-        background: #111827;
-        color: #f8fafc;
-        border: 1px solid #1e293b;
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
-      }
-
       .loadingLogo {
         filter: brightness(0) invert(1);
         opacity: 0.85;
       }
 
       .topCard {
-        background: #050505;
-        color: #f8fafc;
-        box-shadow: none;
-        border: none;
+        background: #090d1f;
+        color: #eaf6ff;
       }
 
       .topCard::before {
         background:
-          radial-gradient(circle at 82% 12%, rgba(255,255,255,0.12), transparent 22%),
-          linear-gradient(180deg, rgba(255,255,255,0.06), transparent 36%);
+          radial-gradient(circle at 78% 18%, rgba(255,255,255,0.08), transparent 28%),
+          linear-gradient(180deg, rgba(255,255,255,0.04), transparent 42%);
       }
 
-      .topHeader {
-        border-bottom-color: rgba(255, 255, 255, 0.72);
+      .topCard::after {
+        background: #cfe7f1;
+      }
+
+      .stringKnob {
+        border-color: #cfe7f1;
+        background: #090d1f;
+      }
+
+      .stringKnob::after {
+        background: rgba(207, 231, 241, 0.22);
       }
 
       .topClub,
       .topType,
-      .metricValue,
-      .checkValue {
-        color: #f8fafc;
+      .primaryNumber,
+      .checkText,
+      .bottomIcons {
+        color: #eaf6ff;
       }
 
       .topType {
-        border-color: rgba(255, 255, 255, 0.72);
+        border-color: rgba(234, 246, 255, 0.72);
+        background: rgba(255,255,255,0.06);
       }
 
-      .topHeaderLabel,
       .metricLabel,
-      .checkLabel,
+      .metaText,
       .scrollHint {
-        color: rgba(248, 250, 252, 0.62);
+        color: rgba(234, 246, 255, 0.68);
       }
 
-      .heroDetailsTitle {
-        color: #f8fafc;
-        border-bottom-color: rgba(255, 255, 255, 0.72);
+      .numberDivider {
+        background: rgba(234, 246, 255, 0.68);
       }
 
-      .equipmentMeta span {
-        background: rgba(255, 255, 255, 0.10);
-        color: rgba(248, 250, 252, 0.76);
+      .poundNumber {
+        color: rgba(234, 246, 255, 0.72);
+      }
+
+      .statusIcon {
+        background: #cfe7f1;
+        color: #090d1f;
       }
 
       .badge.normal {
-        background: #f8fafc;
-        color: #050505;
+        background: #eaf6ff;
+        color: #090d1f;
       }
 
       .badge.repair {
@@ -781,7 +800,6 @@
         color: #9aa8bc;
       }
 
-      select,
       textarea {
         background: #172033;
         color: #f8fafc;
@@ -789,7 +807,6 @@
         box-shadow: none;
       }
 
-      select:focus,
       textarea:focus {
         border: none;
         box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.14);
@@ -955,11 +972,13 @@
       const typeLabel = isPersonal ? "개인 장비" : "공용 장비";
       const primaryLabel = isPersonal ? "식별 코드" : "일련번호";
       const primaryValue = isPersonal ? item.code : item.serial;
-      const primaryValueClass = isPersonal ? "ownerMetricValue" : "serialMetricValue";
+      const primaryClass = isPersonal ? "ownerNumber" : "";
 
-      const poundText = item.pound
-        ? `${escapeHtml(item.pound)}<span>lb</span>`
-        : `-<span>lb</span>`;
+      const poundValue = item.pound || "-";
+
+      const metaText = isPersonal
+        ? `소유자 ${item.owner || "-"} · 브랜드 ${item.brand || "-"} · 사이즈 ${item.size || "-"}`
+        : `브랜드 ${item.brand || "-"} · 사이즈 ${item.size || "-"} · 기타 ${item.etc || "-"}`;
 
       document.title = isPersonal
         ? `${item.code || ""} 장비`
@@ -967,69 +986,60 @@
 
       app.innerHTML = `
         <div class="topCard">
+          <div class="stringKnob"></div>
+
           <div class="topCardInner">
             <div class="topHeader">
-              <div>
-                <div class="topClub">서울대학교 국궁부</div>
-                <div class="topHeaderLabel">${escapeHtml(typeLabel)}</div>
-              </div>
-
-              <div class="topType">${escapeHtml(status)}</div>
+              <div class="topClub">서울대학교 국궁부</div>
+              <div class="topType">${escapeHtml(typeLabel)}</div>
             </div>
 
-            <div class="heroPrimary">
-              <div class="heroMetric">
-                <div class="metricLabel">${escapeHtml(primaryLabel)}</div>
-                <div class="metricValue ${primaryValueClass}">
-                  ${escapeHtml(primaryValue || "-")}
+            <div class="heroNumbers">
+              <div class="metricLabel">${escapeHtml(primaryLabel)}</div>
+              <div class="primaryNumber ${primaryClass}">
+                ${escapeHtml(primaryValue || "-")}
+              </div>
+
+              <div class="numberDivider"></div>
+
+              <div class="metricLabel">파운드</div>
+              <div class="poundNumber">
+                ${escapeHtml(poundValue)}<span>lb</span>
+              </div>
+            </div>
+
+            <div class="lowerInfo">
+              <div class="statusIcon">${escapeHtml(getStatusIcon(status))}</div>
+
+              <div class="statusMain">
+                <div id="statusBadge" class="badge ${badgeClass}">
+                  ${escapeHtml(status)}
+                </div>
+
+                <div id="repairNotice" class="repairNotice ${isRepairNeeded || isBadStatus ? "" : "hidden"} ${isBadStatus ? "banNotice" : ""}">
+                  ${escapeHtml(noticeText)}
                 </div>
               </div>
 
-              <div class="heroMetric">
-                <div class="metricLabel">파운드</div>
-                <div class="metricValue poundMetricValue">
-                  ${poundText}
-                </div>
-              </div>
-            </div>
-
-            <div class="statusRow">
-              <div id="statusBadge" class="badge ${badgeClass}">
-                ${escapeHtml(status)}
+              <div id="checkView" class="checkText">
+                ${escapeHtml(item.check || "-")}
               </div>
 
-              <div id="repairNotice" class="repairNotice ${isRepairNeeded || isBadStatus ? "" : "hidden"} ${isBadStatus ? "banNotice" : ""}">
-                ${escapeHtml(noticeText)}
-              </div>
-            </div>
-
-            <div class="heroDetails">
-              <div class="heroDetailsTitle">장비 보조 정보</div>
-
-              <div class="checkBlock">
-                <div class="checkLabel">점검 내역</div>
-                <div id="checkView" class="checkValue">${escapeHtml(item.check || "-")}</div>
+              <div class="metaText">
+                ${escapeHtml(metaText)}
               </div>
 
-              <div class="equipmentMeta">
-                ${
-                  isPersonal
-                    ? `
-                      <span>소유자 ${escapeHtml(item.owner || "-")}</span>
-                      <span>브랜드 ${escapeHtml(item.brand || "-")}</span>
-                      <span>사이즈 ${escapeHtml(item.size || "-")}</span>
-                      <span id="statusView">상태 ${escapeHtml(item.status || "-")}</span>
-                    `
-                    : `
-                      <span>브랜드 ${escapeHtml(item.brand || "-")}</span>
-                      <span>사이즈 ${escapeHtml(item.size || "-")}</span>
-                      <span>기타 ${escapeHtml(item.etc || "-")}</span>
-                      <span id="statusView">상태 ${escapeHtml(item.status || "-")}</span>
-                    `
-                }
+              <div id="statusView" style="display:none;">${escapeHtml(status)}</div>
+
+              <div class="bottomIcons">
+                <span>⌒</span>
+                <span>▻</span>
+                <span>◎</span>
               </div>
 
-              <div class="scrollHint">아래로 스크롤하여 수리 요청</div>
+              <div class="scrollHint">
+                아래로 스크롤하여 수리 요청
+              </div>
             </div>
           </div>
         </div>
@@ -1070,6 +1080,13 @@
           Copyright © Seoul National University Korean Archery Club. All Rights Reserved.
         </div>
       `;
+    }
+
+    function getStatusIcon(status) {
+      if (status === "수리 필요") return "!";
+      if (status === "불량") return "×";
+      if (status === "말소") return "-";
+      return "✓";
     }
 
     async function submitRepairRequest() {
@@ -1187,17 +1204,17 @@
 
       const statusView = document.getElementById("statusView");
       if (statusView) {
-        statusView.textContent = "상태 " + (status || "-");
-      }
-
-      const topType = document.querySelector(".topType");
-      if (topType) {
-        topType.textContent = status || "-";
+        statusView.textContent = status || "-";
       }
 
       const checkView = document.getElementById("checkView");
       if (checkView) {
         checkView.textContent = check || "-";
+      }
+
+      const statusIcon = document.querySelector(".statusIcon");
+      if (statusIcon) {
+        statusIcon.textContent = getStatusIcon(status);
       }
 
       const repairNotice = document.getElementById("repairNotice");
@@ -1267,13 +1284,6 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-    }
-
-    function escapeTextarea(value) {
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
     }
   </script>
 </body>
