@@ -30,31 +30,36 @@
       box-sizing: border-box;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
       margin: 0;
-      padding: 0;
-      background: var(--bg);
+      padding: 14px;
+      background:
+        radial-gradient(circle at top left, #e0f2fe 0, transparent 34%),
+        var(--bg);
       color: var(--text);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     .wrap {
-      width: 100%;
-      max-width: none;
-      margin: 0;
+      max-width: 480px;
+      margin: 0 auto;
       padding-bottom: 28px;
     }
 
+    .loading {
+      background: white;
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      font-weight: 850;
+      line-height: 1.5;
+    }
+
     .loadingLogoWrap {
-      min-height: 100dvh;
+      min-height: calc(100dvh - 28px);
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #f8fafc;
     }
 
     .loadingLogo {
@@ -67,9 +72,6 @@
     .errorBox {
       position: relative;
       overflow: hidden;
-      width: calc(100% - 28px);
-      max-width: 480px;
-      margin: 14px auto;
       background: #fff7ed;
       color: #7c2d12;
       border: 1px solid #fed7aa;
@@ -128,229 +130,112 @@
     }
 
     .topCard {
-      width: 100%;
-      min-height: 100dvh;
-      background: #f8fafc;
-      color: #030712;
-      padding: 16px 20px 16px;
-      margin-bottom: 14px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .topCardInner {
-      width: 100%;
-      max-width: 480px;
-      height: calc(100dvh - 32px);
-      min-height: 0;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .topNav {
-      flex: 0 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .navLeft {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-width: 0;
-    }
-
-    .backMark {
-      font-size: 18px;
-      font-weight: 950;
-      line-height: 1;
-    }
-
-    .navTitle {
-      font-size: 16px;
-      font-weight: 950;
-      color: #030712;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      letter-spacing: -0.045em;
-    }
-
-    .navType {
-      flex: 0 0 auto;
-      font-size: 13px;
-      font-weight: 950;
-      padding: 8px 13px;
-      border-radius: 999px;
-      background: #e5e7eb;
-      color: #111827;
-      letter-spacing: -0.04em;
-    }
-
-    .heroArea {
-      flex: 0 0 clamp(285px, 43dvh, 410px);
       position: relative;
-      border-bottom: 1.5px solid rgba(3, 7, 18, 0.10);
-      margin-bottom: 18px;
-      overflow: visible;
+      overflow: hidden;
+      min-height: 210px;
+      background: linear-gradient(135deg, #121c2d 0%, #2d3e54 100%);
+      color: white;
+      border-radius: 28px;
+      padding: 24px 28px;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.22);
+      margin-bottom: 14px;
     }
 
-    .heroMetric {
+    .mainBlock,
+    .titleLine,
+    .badge,
+    .repairNotice {
+      position: relative;
+      z-index: 2;
+    }
+
+    .typeBadge {
       position: absolute;
-      min-width: 0;
-    }
-
-    .serialMetric {
-      top: 0;
-      left: 0;
-      width: 100%;
-    }
-
-    .poundMetric {
-      right: 0;
-      bottom: 38px;
-      width: 100%;
-      text-align: right;
-    }
-
-    .metricRow {
+      top: 15px;
+      right: -38px;
+      z-index: 3;
+      width: 132px;
+      height: 30px;
       display: flex;
-      align-items: flex-start;
-      gap: 11px;
-      min-width: 0;
-    }
-
-    .poundMetric .metricRow {
-      justify-content: flex-end;
-    }
-
-    .metricLabel {
-      flex: 0 0 auto;
-      padding-top: 18px;
-      font-size: 13px;
-      line-height: 1.05;
-      font-weight: 950;
-      color: rgba(3, 7, 18, 0.52);
-      letter-spacing: -0.055em;
-      word-break: keep-all;
-      white-space: nowrap;
-    }
-
-    .metricValue {
-      font-size: clamp(122px, 36vw, 172px);
-      line-height: 0.76;
-      font-weight: 950;
-      letter-spacing: -0.105em;
-      color: #030712;
-      word-break: keep-all;
-      overflow-wrap: anywhere;
-    }
-
-    .metricValue.personalCode {
-      font-size: clamp(88px, 28vw, 124px);
-      line-height: 0.82;
-      letter-spacing: -0.095em;
-    }
-
-    .metricValue .unit {
-      font-size: clamp(34px, 9.5vw, 46px);
+      align-items: center;
+      justify-content: center;
+      transform: rotate(43deg);
+      transform-origin: center;
+      font-size: 12px;
       line-height: 1;
       font-weight: 950;
-      letter-spacing: -0.055em;
-      margin-left: 8px;
-      vertical-align: baseline;
+      letter-spacing: -0.02em;
+      background: rgba(248, 250, 252, 0.96);
+      color: rgba(15, 23, 42, 0.96);
+      box-shadow: none;
+      text-align: center;
     }
 
-    .ticketCard {
-      flex: 0 0 auto;
-      margin-top: 0;
-      border-radius: 26px;
-      padding: 20px 24px 21px;
-      color: #050505;
-      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.14);
-      max-height: none;
-      overflow: hidden;
-    }
-
-    .ticket-normal {
-      background: linear-gradient(135deg, #bbf7d0 0%, #86efac 100%);
-    }
-
-    .ticket-repair {
-      background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
-    }
-
-    .ticket-bad {
-      background: linear-gradient(135deg, #fde68a 0%, #facc15 100%);
-    }
-
-    .ticket-deleted {
-      background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
-    }
-
-    .ticketTop {
-      display: block;
+    .mainBlock {
       margin-bottom: 22px;
     }
 
-    .ticketLabel {
-      font-size: 11px;
-      line-height: 1.1;
-      font-weight: 950;
-      color: rgba(5, 5, 5, 0.45);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: -0.045em;
-    }
-
-    .ticketMain {
-      font-size: 32px;
-      line-height: 1.02;
-      font-weight: 950;
-      letter-spacing: -0.075em;
-      color: #050505;
-      word-break: keep-all;
-      overflow-wrap: anywhere;
-    }
-
-    .ticketGrid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px 34px;
+    .smallLabel {
+      font-size: 13px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.68);
       margin-bottom: 8px;
     }
 
-    .ticketItem {
+    .mainValue {
+      line-height: 1.05;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .mainValue.ownerValue {
+      font-size: 35px;
+      font-weight: 900;
+      letter-spacing: -0.045em;
+      max-width: 68%;
+    }
+
+    .mainValue.serialValue {
+      font-size: 50px;
+      line-height: 0.95;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+    }
+
+    .titleLine {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 22px;
+      margin-bottom: 28px;
+      width: 100%;
+    }
+
+    .title {
+      font-size: 34px;
+      line-height: 1.08;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      word-break: keep-all;
       min-width: 0;
     }
 
-    .ticketValue {
-      font-size: 25px;
-      line-height: 1.1;
-      font-weight: 950;
-      letter-spacing: -0.065em;
-      color: #050505;
-      word-break: keep-all;
-      overflow-wrap: anywhere;
-      white-space: pre-wrap;
+    .topPound {
+      flex: 0 0 auto;
+      font-size: 36px;
+      line-height: 1.08;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      white-space: nowrap;
+      color: rgba(255,255,255,0.96);
+      margin-left: auto;
     }
 
-    .ticketItem.full {
-      grid-column: 1 / -1;
-    }
-
-    .ticketNoticeRow {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 20px;
-      padding-top: 14px;
-      border-top: 1.5px solid rgba(5, 5, 5, 0.15);
+    .topPoundUnit {
+      font-size: 20px;
+      font-weight: 850;
+      color: rgba(255,255,255,0.78);
+      margin-left: 2px;
     }
 
     .badge,
@@ -358,39 +243,46 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 36px;
-      padding: 8px 16px;
+      min-height: 34px;
+      padding: 7px 14px;
       border-radius: 999px;
-      font-weight: 950;
-      font-size: 16px;
-      letter-spacing: -0.055em;
+      font-weight: 900;
+      font-size: 15px;
       box-shadow: none;
     }
 
     .badge.normal {
-      background: #050505;
-      color: #ffffff;
+      background: var(--green-bg);
+      color: var(--green-text);
     }
 
     .badge.repair {
-      background: #ffffff;
-      color: #991b1b;
+      background: var(--red-bg);
+      color: var(--red-text);
     }
 
     .badge.bad {
-      background: #050505;
-      color: #facc15;
+      background: var(--yellow-bg);
+      color: var(--yellow-text);
     }
 
     .badge.deleted {
-      background: #050505;
-      color: #d1d5db;
+      background: var(--gray-bg);
+      color: var(--gray-text);
+    }
+
+    .statusRow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .repairNotice {
-      background: rgba(5, 5, 5, 0.10);
-      color: #050505;
-      border: 1.5px solid rgba(5, 5, 5, 0.16);
+      font-size: 14px;
+      padding: 7px 13px;
+      background: rgba(255, 255, 255, 0.14);
+      color: rgba(255, 255, 255, 0.92);
     }
 
     .repairNotice.hidden {
@@ -398,29 +290,16 @@
     }
 
     .banNotice {
-      background: rgba(5, 5, 5, 0.10);
-      color: #050505;
-      border: 1.5px solid rgba(5, 5, 5, 0.16);
-    }
-
-    .scrollHint {
-      flex: 0 0 auto;
-      margin-top: 12px;
-      font-size: 13px;
-      font-weight: 950;
-      color: rgba(3, 7, 18, 0.42);
-      text-align: center;
-      letter-spacing: -0.04em;
+      background: rgba(255, 255, 255, 0.14);
+      color: rgba(255, 255, 255, 0.92);
     }
 
     .section {
-      width: calc(100% - 28px);
-      max-width: 480px;
-      margin: 0 auto 14px;
       background: var(--card);
       border-radius: 24px;
       padding: 20px;
       box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      margin-bottom: 14px;
     }
 
     .sectionTitle {
@@ -430,6 +309,74 @@
       letter-spacing: -0.02em;
     }
 
+    .infoGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .miniCard {
+      background: #f8fafc;
+      border: 1px solid #eef2f7;
+      border-radius: 18px;
+      padding: 14px;
+      min-height: 82px;
+    }
+
+    .miniLabel {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .miniValue {
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .miniValue.small {
+      font-size: 18px;
+      line-height: 1.35;
+    }
+
+    .fullItem {
+      background: #f8fafc;
+      border: 1px solid #eef2f7;
+      border-radius: 18px;
+      padding: 15px;
+      margin-top: 10px;
+    }
+
+    .fullLabel {
+      color: var(--muted);
+      font-weight: 850;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .fullValue {
+      font-size: 18px;
+      font-weight: 850;
+      line-height: 1.45;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 850;
+      margin: 14px 0 7px;
+    }
+
+    select,
     textarea {
       width: 100%;
       border: 1px solid #d1d5db;
@@ -440,6 +387,9 @@
       background: #fff;
       color: var(--text);
       outline: none;
+    }
+
+    textarea {
       min-height: 96px;
       resize: vertical;
       line-height: 1.5;
@@ -528,9 +478,8 @@
 
     .systemBtn {
       display: block;
-      width: calc(100% - 28px);
-      max-width: 480px;
-      margin: 0 auto 14px;
+      width: 100%;
+      margin: 0 0 14px;
       padding: 15px 16px;
       border-radius: 18px;
       text-align: center;
@@ -546,113 +495,95 @@
     }
 
     .hint {
-      width: calc(100% - 28px);
-      max-width: 480px;
-      margin: 12px auto 0;
+      margin-top: 12px;
       color: var(--muted);
       font-size: 13px;
       line-height: 1.5;
       text-align: center;
     }
 
-    @media (max-height: 760px) {
+    @media (max-width: 420px) {
+      body {
+        padding: 10px;
+      }
+
       .topCard {
-        padding-top: 13px;
-        padding-bottom: 13px;
+        min-height: 170px;
+        border-radius: 24px;
+        padding: 24px 26px;
       }
 
-      .topCardInner {
-        height: calc(100dvh - 26px);
+      .typeBadge {
+        top: 14px;
+        right: -40px;
+        width: 136px;
+        height: 30px;
+        transform: rotate(43deg);
       }
 
-      .topNav {
-        margin-bottom: 9px;
+      .mainValue.ownerValue {
+        font-size: 31px;
+        max-width: 68%;
       }
 
-      .ticketCard {
-        padding: 17px 20px 18px;
+      .mainValue.serialValue {
+        font-size: 48px;
+      }
+
+      .titleLine {
+        gap: 18px;
+        margin-bottom: 26px;
+      }
+
+      .title {
+        font-size: 32px;
+      }
+
+      .topPound {
+        font-size: 34px;
+      }
+
+      .topPoundUnit {
+        font-size: 19px;
+      }
+
+      .section {
         border-radius: 22px;
+        padding: 18px;
       }
 
-      .ticketTop {
-        margin-bottom: 15px;
-      }
-
-      .ticketLabel {
-        font-size: 10px;
-        margin-bottom: 5px;
-      }
-
-      .ticketMain {
-        font-size: 27px;
-      }
-
-      .ticketGrid {
-        gap: 15px 26px;
-      }
-
-      .ticketValue {
-        font-size: 21px;
-      }
-
-      .ticketNoticeRow {
-        margin-top: 14px;
-        padding-top: 11px;
-      }
-
+      .smallLabel,
+      .mainValue,
+      .mainValue.ownerValue,
+      .mainValue.serialValue,
+      .title,
+      .topPound,
       .badge,
-      .repairNotice {
-        min-height: 32px;
-        font-size: 15px;
-        padding: 7px 14px;
+      .repairNotice,
+      .typeBadge {
+        font-weight: 900;
       }
 
-      .scrollHint {
-        margin-top: 9px;
-        font-size: 12px;
-      }
-    }
-
-    @media (max-height: 660px) {
-      .ticketCard {
-        padding: 15px 18px 16px;
+      .topPoundUnit {
+        font-weight: 850;
       }
 
-      .ticketTop {
-        margin-bottom: 12px;
+      .sectionTitle,
+      .miniValue,
+      .miniValue.small,
+      .fullValue,
+      button {
+        font-weight: 900;
       }
 
-      .ticketMain {
-        font-size: 24px;
-      }
-
-      .ticketGrid {
-        gap: 12px 22px;
-      }
-
-      .ticketValue {
-        font-size: 18px;
-      }
-
-      .ticketNoticeRow {
-        margin-top: 12px;
-        padding-top: 10px;
-      }
-    }
-
-    @media (max-width: 360px) {
-      .topCard {
-        padding-left: 16px;
-        padding-right: 16px;
-      }
-
-      .ticketCard {
-        padding-left: 18px;
-        padding-right: 18px;
-      }
-
-      .ticketGrid {
-        gap: 14px 20px;
+      .miniLabel,
+      .fullLabel,
+      label,
+      textarea,
+      .result,
+      .hint,
+      .repairBlockedText {
+        font-weight: 850;
       }
     }
 
@@ -663,39 +594,23 @@
         --text: #f8fafc;
         --muted: #94a3b8;
         --primary: #2563eb;
+
+        --green-bg: #dcfce7;
+        --green-text: #166534;
+
+        --red-bg: #fee2e2;
+        --red-text: #991b1b;
+
+        --yellow-bg: #fef3c7;
+        --yellow-text: #92400e;
+
+        --gray-bg: #334155;
+        --gray-text: #e2e8f0;
       }
 
       body {
         background: #0b1020;
         color: var(--text);
-      }
-
-      .loadingLogoWrap {
-        background: #0b1020;
-      }
-
-      .loadingLogo {
-        filter: brightness(0) invert(1);
-        opacity: 0.85;
-      }
-
-      .topCard {
-        background: #f8fafc;
-        color: #030712;
-      }
-
-      .navTitle,
-      .metricValue {
-        color: #030712;
-      }
-
-      .navType {
-        background: #e5e7eb;
-        color: #111827;
-      }
-
-      .ticketCard {
-        box-shadow: 0 18px 34px rgba(0, 0, 0, 0.18);
       }
 
       .section {
@@ -704,13 +619,23 @@
         box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22);
       }
 
-      .sectionTitle {
-        color: #f8fafc;
-      }
-
+      .miniCard,
+      .fullItem,
       .repairBlockedBox {
         background: #172033;
         border: none;
+      }
+
+      .miniLabel,
+      .fullLabel,
+      label {
+        color: #9aa8bc;
+      }
+
+      .miniValue,
+      .fullValue,
+      .sectionTitle {
+        color: #f8fafc;
       }
 
       .repairBlockedTitle {
@@ -721,6 +646,7 @@
         color: #94a3b8;
       }
 
+      select,
       textarea {
         background: #172033;
         color: #f8fafc;
@@ -728,6 +654,7 @@
         box-shadow: none;
       }
 
+      select:focus,
       textarea:focus {
         border: none;
         box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.14);
@@ -776,6 +703,18 @@
         color: #f8fafc;
       }
 
+      .loading {
+        background: #111827;
+        color: #f8fafc;
+        border: 1px solid #1e293b;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+      }
+
+      .loadingLogo {
+        filter: brightness(0) invert(1);
+        opacity: 0.85;
+      }
+
       .errorBox {
         background: #24130b;
         color: #fed7aa;
@@ -798,6 +737,72 @@
 
       .errorAction {
         color: #fdba74;
+      }
+
+      .topCard {
+        background: linear-gradient(
+          135deg,
+          rgba(248, 250, 252, 0.95) 0%,
+          rgba(232, 241, 251, 0.95) 100%
+        );
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        color: #0f172a;
+        box-shadow:
+          0 18px 38px rgba(0, 0, 0, 0.30),
+          inset 0 1px 0 rgba(255, 255, 255, 0.65);
+        border: none;
+      }
+
+      .smallLabel {
+        color: rgba(15, 23, 42, 0.62);
+      }
+
+      .title,
+      .mainValue,
+      .topPound {
+        color: #0b1220;
+      }
+
+      .topPoundUnit {
+        color: rgba(15, 23, 42, 0.58);
+      }
+
+      .typeBadge {
+        background: rgba(15, 23, 42, 0.96);
+        color: rgba(255, 255, 255, 0.96);
+      }
+
+      .repairNotice,
+      .banNotice {
+        background: rgba(15, 23, 42, 0.08);
+        color: #991b1b;
+      }
+
+      .topCard .badge,
+      .topCard .repairNotice {
+        border: none;
+        box-shadow: none;
+      }
+
+      .topCard .badge.normal {
+        background: #bbf7d0;
+        color: #14532d;
+      }
+
+      .topCard .badge.repair {
+        background: #fecaca;
+        color: #991b1b;
+      }
+
+      .topCard .badge.bad {
+        background: #fde68a;
+        color: #78350f;
+      }
+
+      .topCard .badge.deleted {
+        background: #cbd5e1;
+        color: #1e293b;
       }
     }
   </style>
@@ -878,7 +883,6 @@
       const isPersonal = item.mode === "personal";
       const status = item.status || "-";
       const badgeClass = getBadgeClass(status);
-      const ticketClass = getTicketClass(status);
 
       const isRepairNeeded = status === "수리 필요";
       const isBadStatus = status === "불량";
@@ -892,14 +896,15 @@
           : "";
 
       const typeLabel = isPersonal ? "개인 장비" : "공용 장비";
-      const primaryLabel = isPersonal ? "식별 코드" : "일련번호";
-      const primaryValue = isPersonal ? item.code : item.serial;
-      const primaryClass = isPersonal ? "personalCode" : "";
-      const poundValue = item.pound || "-";
+      const mainLabel = isPersonal ? "소유자" : "일련번호";
+      const mainValue = isPersonal ? item.owner : item.serial;
+      const mainValueClass = isPersonal ? "ownerValue" : "serialValue";
+      const sectionTitle = isPersonal ? "장비 정보" : "장비 정보";
 
-      const brandText = item.brand || "-";
-      const sizeText = item.size || "-";
-      const checkText = item.check || "-";
+      const titleText = `${item.brand || "-"} ${item.size || ""}`.trim();
+      const poundText = item.pound
+        ? `${escapeHtml(item.pound)}<span class="topPoundUnit">lb</span>`
+        : `-<span class="topPoundUnit">lb</span>`;
 
       document.title = isPersonal
         ? `${item.code || ""} 장비`
@@ -907,78 +912,39 @@
 
       app.innerHTML = `
         <div class="topCard">
-          <div class="topCardInner">
-            <div class="topNav">
-              <div class="navLeft">
-                <div class="backMark">‹</div>
-                <div class="navTitle">SNU Korean Archery</div>
-              </div>
+          <div class="typeBadge">${escapeHtml(typeLabel)}</div>
 
-              <div class="navType">${escapeHtml(typeLabel)}</div>
+          <div class="mainBlock">
+            <div class="smallLabel">${mainLabel}</div>
+            <div class="mainValue ${mainValueClass}">${escapeHtml(mainValue || "-")}</div>
+          </div>
+
+          <div class="titleLine">
+            <div class="title">${escapeHtml(titleText)}</div>
+            <div class="topPound">${poundText}</div>
+          </div>
+
+          <div class="statusRow">
+            <div id="statusBadge" class="badge ${badgeClass}">
+              ${escapeHtml(status)}
             </div>
 
-            <div class="heroArea">
-              <div class="heroMetric serialMetric">
-                <div class="metricRow">
-                  <div class="metricValue ${primaryClass}">
-                    ${escapeHtml(primaryValue || "-")}
-                  </div>
-                  <div class="metricLabel">${escapeHtml(primaryLabel)}</div>
-                </div>
-              </div>
-
-              <div class="heroMetric poundMetric">
-                <div class="metricRow">
-                  <div class="metricLabel">파운드</div>
-                  <div class="metricValue">
-                    ${escapeHtml(poundValue)}<span class="unit">lb</span>
-                  </div>
-                </div>
-              </div>
+            <div id="repairNotice" class="repairNotice ${isRepairNeeded || isBadStatus ? "" : "hidden"} ${isBadStatus ? "banNotice" : ""}">
+              ${escapeHtml(noticeText)}
             </div>
+          </div>
+        </div>
 
-            <div class="ticketCard ${ticketClass}">
-              <div class="ticketTop">
-                <div class="ticketLabel">${isPersonal ? "Owner" : "Brand"}</div>
-                <div class="ticketMain">
-                  ${escapeHtml(isPersonal ? (item.owner || "-") : brandText)}
-                </div>
-              </div>
+        <div class="section">
+          <div class="sectionTitle">${sectionTitle}</div>
 
-              <div class="ticketGrid">
-                ${
-                  isPersonal
-                    ? `
-                      ${ticketItem("Code", item.code)}
-                      ${ticketItem("Pound", item.pound ? item.pound + " lb" : "-")}
-                      ${ticketItem("Brand", item.brand)}
-                      ${ticketItem("Size", item.size)}
-                    `
-                    : `
-                      ${ticketItem("Serial", item.serial)}
-                      ${ticketItem("Pound", item.pound ? item.pound + " lb" : "-")}
-                      ${ticketItem("Size", item.size)}
-                      ${ticketItem("Etc", item.etc)}
-                    `
-                }
+          <div class="infoGrid">
+            ${renderInfoCards(item)}
+          </div>
 
-                ${ticketItem("Check", checkText, true)}
-              </div>
-
-              <div class="ticketNoticeRow">
-                <div id="statusBadge" class="badge ${badgeClass}">
-                  ${escapeHtml(status)}
-                </div>
-
-                <div id="repairNotice" class="repairNotice ${isRepairNeeded || isBadStatus ? "" : "hidden"} ${isBadStatus ? "banNotice" : ""}">
-                  ${escapeHtml(noticeText)}
-                </div>
-              </div>
-            </div>
-
-            <div class="scrollHint">
-              아래로 스크롤하여 수리 요청
-            </div>
+          <div class="fullItem">
+            <div class="fullLabel">점검 내역</div>
+            <div id="checkView" class="fullValue">${escapeHtml(item.check || "-")}</div>
           </div>
         </div>
 
@@ -1020,11 +986,33 @@
       `;
     }
 
-    function ticketItem(label, value, full = false) {
+    function renderInfoCards(item) {
+      if (item.mode === "personal") {
+        return `
+          ${miniCard("식별 코드", item.code)}
+          ${miniCard("소유자", item.owner)}
+          ${miniCard("브랜드", item.brand)}
+          ${miniCard("사이즈", item.size)}
+          ${miniCard("파운드", item.pound ? item.pound + " lb" : "-")}
+          ${miniCard("상태", item.status, true, "statusView")}
+        `;
+      }
+
       return `
-        <div class="ticketItem ${full ? "full" : ""}">
-          <div class="ticketLabel">${escapeHtml(label)}</div>
-          <div ${label === "Check" ? `id="checkView"` : ""} class="ticketValue">
+        ${miniCard("일련번호", item.serial)}
+        ${miniCard("상태", item.status, true, "statusView")}
+        ${miniCard("브랜드", item.brand)}
+        ${miniCard("사이즈", item.size)}
+        ${miniCard("파운드", item.pound ? item.pound + " lb" : "-")}
+        ${miniCard("기타", item.etc, true)}
+      `;
+    }
+
+    function miniCard(label, value, small = false, id = "") {
+      return `
+        <div class="miniCard">
+          <div class="miniLabel">${escapeHtml(label)}</div>
+          <div ${id ? `id="${id}"` : ""} class="miniValue ${small ? "small" : ""}">
             ${escapeHtml(value || "-")}
           </div>
         </div>
@@ -1140,16 +1128,13 @@
         currentItem.check = check;
       }
 
-      const ticketCard = document.querySelector(".ticketCard");
-      if (ticketCard) {
-        ticketCard.classList.remove("ticket-normal", "ticket-repair", "ticket-bad", "ticket-deleted");
-        ticketCard.classList.add(getTicketClass(status));
-      }
-
       const badge = document.getElementById("statusBadge");
-      if (badge) {
-        badge.textContent = status || "-";
-        badge.className = "badge " + getBadgeClass(status);
+      badge.textContent = status || "-";
+      badge.className = "badge " + getBadgeClass(status);
+
+      const statusView = document.getElementById("statusView");
+      if (statusView) {
+        statusView.textContent = status || "-";
       }
 
       const checkView = document.getElementById("checkView");
@@ -1191,13 +1176,6 @@
       return "normal";
     }
 
-    function getTicketClass(status) {
-      if (status === "수리 필요") return "ticket-repair";
-      if (status === "불량") return "ticket-bad";
-      if (status === "말소") return "ticket-deleted";
-      return "ticket-normal";
-    }
-
     function formatDate(date) {
       const yyyy = date.getFullYear();
       const mm = String(date.getMonth() + 1).padStart(2, "0");
@@ -1231,6 +1209,13 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+    }
+
+    function escapeTextarea(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
     }
   </script>
 </body>
