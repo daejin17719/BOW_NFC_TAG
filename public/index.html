@@ -205,68 +205,53 @@
       white-space: nowrap;
     }
 
-    .heroMain {
-      margin-top: 30px;
-    }
-
-    .smallLabel {
-      font-size: 16px;
-      font-weight: 950;
-      color: rgba(0, 0, 0, 0.72);
-      margin-bottom: 8px;
-    }
-
-    .mainValue {
-      line-height: 0.86;
-      word-break: keep-all;
-      overflow-wrap: anywhere;
-      color: #050505;
-    }
-
-    .mainValue.ownerValue {
-      font-size: 54px;
-      font-weight: 950;
-      letter-spacing: -0.06em;
-      max-width: 84%;
-    }
-
-    .mainValue.serialValue {
-      font-size: 128px;
-      line-height: 0.82;
-      font-weight: 950;
-      letter-spacing: -0.08em;
-    }
-
-    .heroSub {
-      margin-top: 24px;
+    .heroPrimary {
+      margin-top: 34px;
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 16px;
-      align-items: end;
+      grid-template-columns: 1fr;
+      gap: 30px;
     }
 
-    .title {
-      font-size: 30px;
-      line-height: 1.08;
-      font-weight: 950;
-      letter-spacing: -0.055em;
-      word-break: keep-all;
+    .heroMetric {
       min-width: 0;
     }
 
-    .topPound {
-      font-size: 30px;
-      line-height: 1.05;
+    .metricLabel {
+      font-size: 15px;
       font-weight: 950;
-      letter-spacing: -0.05em;
-      white-space: nowrap;
-      color: #050505;
+      color: rgba(0, 0, 0, 0.62);
+      margin-bottom: 8px;
     }
 
-    .topPoundUnit {
-      font-size: 16px;
-      font-weight: 900;
-      margin-left: 2px;
+    .metricValue {
+      color: #050505;
+      font-weight: 950;
+      letter-spacing: -0.08em;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .serialMetricValue {
+      font-size: 118px;
+      line-height: 0.82;
+    }
+
+    .ownerMetricValue {
+      font-size: 54px;
+      line-height: 0.92;
+      letter-spacing: -0.065em;
+      max-width: 88%;
+    }
+
+    .poundMetricValue {
+      font-size: 92px;
+      line-height: 0.86;
+    }
+
+    .poundMetricValue span {
+      font-size: 28px;
+      letter-spacing: -0.04em;
+      margin-left: 4px;
     }
 
     .statusRow {
@@ -274,7 +259,7 @@
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: 20px;
+      margin-top: 22px;
     }
 
     .badge,
@@ -339,38 +324,43 @@
       border-bottom: 2px solid rgba(0, 0, 0, 0.65);
     }
 
-    .heroGrid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 13px 18px;
+    .checkBlock {
+      margin-bottom: 14px;
     }
 
-    .heroInfo {
-      min-width: 0;
-    }
-
-    .heroInfoLabel {
+    .checkLabel {
       font-size: 11px;
       font-weight: 950;
       color: rgba(0, 0, 0, 0.58);
       margin-bottom: 5px;
     }
 
-    .heroInfoValue {
-      font-size: 15px;
+    .checkValue {
+      font-size: 16px;
       font-weight: 950;
       line-height: 1.35;
       color: #050505;
       word-break: keep-all;
       overflow-wrap: anywhere;
-    }
-
-    .heroInfo.full {
-      grid-column: 1 / -1;
-    }
-
-    .heroInfo.full .heroInfoValue {
       white-space: pre-wrap;
+    }
+
+    .equipmentMeta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .equipmentMeta span {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.08);
+      color: rgba(0, 0, 0, 0.68);
+      font-size: 13px;
+      font-weight: 950;
+      line-height: 1.2;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
     }
 
     .scrollHint {
@@ -545,33 +535,35 @@
         min-height: calc(100dvh - 66px);
       }
 
-      .mainValue.serialValue {
-        font-size: 118px;
+      .heroPrimary {
+        margin-top: 32px;
+        gap: 28px;
       }
 
-      .mainValue.ownerValue {
+      .serialMetricValue {
+        font-size: 112px;
+      }
+
+      .ownerMetricValue {
         font-size: 48px;
-        max-width: 84%;
+        max-width: 86%;
       }
 
-      .title {
-        font-size: 27px;
+      .poundMetricValue {
+        font-size: 86px;
       }
 
-      .topPound {
-        font-size: 27px;
+      .poundMetricValue span {
+        font-size: 26px;
       }
 
-      .topPoundUnit {
+      .checkValue {
         font-size: 15px;
       }
 
-      .heroGrid {
-        gap: 12px 16px;
-      }
-
-      .heroInfoValue {
-        font-size: 14px;
+      .equipmentMeta span {
+        font-size: 12px;
+        padding: 7px 9px;
       }
 
       .section {
@@ -585,23 +577,16 @@
         width: calc(100% - 20px);
       }
 
-      .smallLabel,
-      .mainValue,
-      .mainValue.ownerValue,
-      .mainValue.serialValue,
-      .title,
-      .topPound,
+      .metricLabel,
+      .metricValue,
       .badge,
       .repairNotice,
       .topType,
       .topClub,
       .heroDetailsTitle,
-      .heroInfoValue {
+      .checkValue,
+      .equipmentMeta span {
         font-weight: 950;
-      }
-
-      .topPoundUnit {
-        font-weight: 900;
       }
 
       .sectionTitle,
@@ -628,36 +613,38 @@
         min-height: calc(100dvh - 54px);
       }
 
-      .heroMain {
-        margin-top: 22px;
+      .heroPrimary {
+        margin-top: 24px;
+        gap: 22px;
       }
 
-      .mainValue.serialValue {
-        font-size: 98px;
+      .serialMetricValue {
+        font-size: 94px;
       }
 
-      .mainValue.ownerValue {
+      .ownerMetricValue {
         font-size: 40px;
       }
 
-      .title {
-        font-size: 24px;
+      .poundMetricValue {
+        font-size: 72px;
       }
 
-      .topPound {
-        font-size: 24px;
+      .poundMetricValue span {
+        font-size: 23px;
       }
 
       .heroDetails {
         padding-top: 18px;
       }
 
-      .heroGrid {
-        gap: 9px 14px;
+      .equipmentMeta {
+        gap: 6px;
       }
 
-      .heroInfoValue {
-        font-size: 13px;
+      .equipmentMeta span {
+        font-size: 12px;
+        padding: 6px 8px;
       }
 
       .scrollHint {
@@ -714,11 +701,8 @@
 
       .topClub,
       .topType,
-      .mainValue,
-      .title,
-      .topPound,
-      .topPoundUnit,
-      .heroInfoValue {
+      .metricValue,
+      .checkValue {
         color: #f8fafc;
       }
 
@@ -727,8 +711,8 @@
       }
 
       .topHeaderLabel,
-      .smallLabel,
-      .heroInfoLabel,
+      .metricLabel,
+      .checkLabel,
       .scrollHint {
         color: rgba(248, 250, 252, 0.62);
       }
@@ -736,6 +720,11 @@
       .heroDetailsTitle {
         color: #f8fafc;
         border-bottom-color: rgba(255, 255, 255, 0.72);
+      }
+
+      .equipmentMeta span {
+        background: rgba(255, 255, 255, 0.10);
+        color: rgba(248, 250, 252, 0.76);
       }
 
       .badge.normal {
@@ -964,14 +953,13 @@
           : "";
 
       const typeLabel = isPersonal ? "개인 장비" : "공용 장비";
-      const mainLabel = isPersonal ? "소유자" : "일련번호";
-      const mainValue = isPersonal ? item.owner : item.serial;
-      const mainValueClass = isPersonal ? "ownerValue" : "serialValue";
+      const primaryLabel = isPersonal ? "식별 코드" : "일련번호";
+      const primaryValue = isPersonal ? item.code : item.serial;
+      const primaryValueClass = isPersonal ? "ownerMetricValue" : "serialMetricValue";
 
-      const titleText = `${item.brand || "-"} ${item.size || ""}`.trim();
       const poundText = item.pound
-        ? `${escapeHtml(item.pound)}<span class="topPoundUnit">lb</span>`
-        : `-<span class="topPoundUnit">lb</span>`;
+        ? `${escapeHtml(item.pound)}<span>lb</span>`
+        : `-<span>lb</span>`;
 
       document.title = isPersonal
         ? `${item.code || ""} 장비`
@@ -983,58 +971,62 @@
             <div class="topHeader">
               <div>
                 <div class="topClub">서울대학교 국궁부</div>
-                <div class="topHeaderLabel">${escapeHtml(mainLabel)}</div>
+                <div class="topHeaderLabel">${escapeHtml(typeLabel)}</div>
               </div>
 
-              <div class="topType">${escapeHtml(typeLabel)}</div>
+              <div class="topType">${escapeHtml(status)}</div>
             </div>
 
-            <div class="heroMain">
-              <div class="mainValue ${mainValueClass}">
-                ${escapeHtml(mainValue || "-")}
+            <div class="heroPrimary">
+              <div class="heroMetric">
+                <div class="metricLabel">${escapeHtml(primaryLabel)}</div>
+                <div class="metricValue ${primaryValueClass}">
+                  ${escapeHtml(primaryValue || "-")}
+                </div>
               </div>
 
-              <div class="heroSub">
-                <div class="title">${escapeHtml(titleText)}</div>
-                <div class="topPound">${poundText}</div>
+              <div class="heroMetric">
+                <div class="metricLabel">파운드</div>
+                <div class="metricValue poundMetricValue">
+                  ${poundText}
+                </div>
+              </div>
+            </div>
+
+            <div class="statusRow">
+              <div id="statusBadge" class="badge ${badgeClass}">
+                ${escapeHtml(status)}
               </div>
 
-              <div class="statusRow">
-                <div id="statusBadge" class="badge ${badgeClass}">
-                  ${escapeHtml(status)}
-                </div>
-
-                <div id="repairNotice" class="repairNotice ${isRepairNeeded || isBadStatus ? "" : "hidden"} ${isBadStatus ? "banNotice" : ""}">
-                  ${escapeHtml(noticeText)}
-                </div>
+              <div id="repairNotice" class="repairNotice ${isRepairNeeded || isBadStatus ? "" : "hidden"} ${isBadStatus ? "banNotice" : ""}">
+                ${escapeHtml(noticeText)}
               </div>
             </div>
 
             <div class="heroDetails">
-              <div class="heroDetailsTitle">장비 세부 정보</div>
+              <div class="heroDetailsTitle">장비 보조 정보</div>
 
-              <div class="heroGrid">
+              <div class="checkBlock">
+                <div class="checkLabel">점검 내역</div>
+                <div id="checkView" class="checkValue">${escapeHtml(item.check || "-")}</div>
+              </div>
+
+              <div class="equipmentMeta">
                 ${
                   isPersonal
                     ? `
-                      ${heroInfo("식별 코드", item.code)}
-                      ${heroInfo("소유자", item.owner)}
-                      ${heroInfo("브랜드", item.brand)}
-                      ${heroInfo("사이즈", item.size)}
-                      ${heroInfo("파운드", item.pound ? item.pound + " lb" : "-")}
-                      ${heroInfo("상태", item.status, false, "statusView")}
+                      <span>소유자 ${escapeHtml(item.owner || "-")}</span>
+                      <span>브랜드 ${escapeHtml(item.brand || "-")}</span>
+                      <span>사이즈 ${escapeHtml(item.size || "-")}</span>
+                      <span id="statusView">상태 ${escapeHtml(item.status || "-")}</span>
                     `
                     : `
-                      ${heroInfo("일련번호", item.serial)}
-                      ${heroInfo("상태", item.status, false, "statusView")}
-                      ${heroInfo("브랜드", item.brand)}
-                      ${heroInfo("사이즈", item.size)}
-                      ${heroInfo("파운드", item.pound ? item.pound + " lb" : "-")}
-                      ${heroInfo("기타", item.etc)}
+                      <span>브랜드 ${escapeHtml(item.brand || "-")}</span>
+                      <span>사이즈 ${escapeHtml(item.size || "-")}</span>
+                      <span>기타 ${escapeHtml(item.etc || "-")}</span>
+                      <span id="statusView">상태 ${escapeHtml(item.status || "-")}</span>
                     `
                 }
-
-                ${heroInfo("점검 내역", item.check || "-", true, "checkView")}
               </div>
 
               <div class="scrollHint">아래로 스크롤하여 수리 요청</div>
@@ -1076,17 +1068,6 @@
         <div class="hint">
           서울대학교 국궁부 ${isPersonal ? "개인 장비" : "공용 장비"} 관리 체계<br>
           Copyright © Seoul National University Korean Archery Club. All Rights Reserved.
-        </div>
-      `;
-    }
-
-    function heroInfo(label, value, full = false, id = "") {
-      return `
-        <div class="heroInfo ${full ? "full" : ""}">
-          <div class="heroInfoLabel">${escapeHtml(label)}</div>
-          <div ${id ? `id="${id}"` : ""} class="heroInfoValue">
-            ${escapeHtml(value || "-")}
-          </div>
         </div>
       `;
     }
@@ -1206,7 +1187,12 @@
 
       const statusView = document.getElementById("statusView");
       if (statusView) {
-        statusView.textContent = status || "-";
+        statusView.textContent = "상태 " + (status || "-");
+      }
+
+      const topType = document.querySelector(".topType");
+      if (topType) {
+        topType.textContent = status || "-";
       }
 
       const checkView = document.getElementById("checkView");
