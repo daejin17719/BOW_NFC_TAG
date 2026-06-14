@@ -132,7 +132,7 @@
       min-height: 100dvh;
       background: #f8fafc;
       color: #030712;
-      padding: 22px 22px 28px;
+      padding: 18px 20px 22px;
       margin-bottom: 14px;
       display: flex;
       flex-direction: column;
@@ -141,7 +141,7 @@
     .topCardInner {
       width: 100%;
       max-width: 480px;
-      min-height: calc(100dvh - 50px);
+      min-height: calc(100dvh - 40px);
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -152,7 +152,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .navLeft {
@@ -169,9 +169,9 @@
     }
 
     .navTitle {
-      font-size: 14px;
-      font-weight: 850;
-      color: rgba(3, 7, 18, 0.72);
+      font-size: 15px;
+      font-weight: 900;
+      color: #030712;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -181,115 +181,90 @@
       flex: 0 0 auto;
       font-size: 12px;
       font-weight: 950;
-      padding: 7px 10px;
+      padding: 7px 11px;
       border-radius: 999px;
       background: #e5e7eb;
       color: #111827;
     }
 
-    .flightHero {
-      position: relative;
+    .heroArea {
       flex: 0 0 auto;
-      padding-bottom: 18px;
-    }
-
-    .flightCodeBlock {
+      min-height: 310px;
       position: relative;
-      min-height: 112px;
+      border-bottom: 1.5px solid rgba(3, 7, 18, 0.10);
+      margin-bottom: 22px;
     }
 
-    .flightLabel {
-      font-size: 13px;
+    .heroMetric {
+      position: absolute;
+      min-width: 0;
+    }
+
+    .serialMetric {
+      top: 0;
+      left: 0;
+      width: 78%;
+    }
+
+    .poundMetric {
+      top: 150px;
+      right: 0;
+      width: 78%;
+      text-align: right;
+    }
+
+    .metricLabel {
+      font-size: 14px;
       font-weight: 850;
       color: rgba(3, 7, 18, 0.52);
-      margin-bottom: 5px;
+      margin-bottom: 6px;
       letter-spacing: -0.02em;
     }
 
-    .flightCode {
-      font-size: 82px;
-      line-height: 0.86;
+    .metricValue {
+      font-size: 116px;
+      line-height: 0.82;
       font-weight: 950;
-      letter-spacing: -0.08em;
+      letter-spacing: -0.085em;
       color: #030712;
       word-break: keep-all;
       overflow-wrap: anywhere;
     }
 
-    .flightCode.personalCode {
-      font-size: 54px;
-      line-height: 0.98;
-      letter-spacing: -0.065em;
+    .metricValue.personalCode {
+      font-size: 66px;
+      line-height: 0.96;
+      letter-spacing: -0.07em;
     }
 
-    .flightSub {
+    .metricValue .unit {
+      font-size: 32px;
+      font-weight: 950;
+      letter-spacing: -0.04em;
+      margin-left: 5px;
+    }
+
+    .heroSubInfo {
       position: absolute;
-      right: 0;
-      top: 34px;
+      right: 2px;
+      top: 74px;
       text-align: right;
-      font-size: 11px;
+      font-size: 12px;
       line-height: 1.35;
       font-weight: 850;
       color: rgba(3, 7, 18, 0.58);
-      max-width: 120px;
+      max-width: 130px;
       word-break: keep-all;
-    }
-
-    .routeLine {
-      position: relative;
-      height: 44px;
-      margin: -2px 0 0;
-    }
-
-    .routeDashes {
-      position: absolute;
-      left: 32px;
-      top: 12px;
-      width: 120px;
-      border-top: 2px dashed rgba(3, 7, 18, 0.45);
-      transform: rotate(24deg);
-      transform-origin: left center;
-    }
-
-    .routePlane {
-      position: absolute;
-      left: 120px;
-      top: 12px;
-      font-size: 20px;
-      font-weight: 950;
-      transform: rotate(20deg);
-      color: #030712;
-    }
-
-    .poundBlock {
-      position: relative;
-      padding-bottom: 18px;
-      border-bottom: 1.5px solid rgba(3, 7, 18, 0.10);
-    }
-
-    .poundCode {
-      font-size: 82px;
-      line-height: 0.86;
-      font-weight: 950;
-      letter-spacing: -0.08em;
-      color: #030712;
-      word-break: keep-all;
-      overflow-wrap: anywhere;
-    }
-
-    .poundCode .unit {
-      font-size: 25px;
-      letter-spacing: -0.04em;
-      margin-left: 5px;
-      font-weight: 950;
     }
 
     .ticketCard {
       margin-top: auto;
-      border-radius: 22px;
-      padding: 20px;
+      border-radius: 24px;
+      padding: 18px;
       color: #050505;
-      box-shadow: 0 18px 34px rgba(15, 23, 42, 0.14);
+      box-shadow: 0 16px 28px rgba(15, 23, 42, 0.12);
+      max-height: none;
+      overflow: hidden;
     }
 
     .ticket-normal {
@@ -311,24 +286,24 @@
     .ticketTop {
       display: grid;
       grid-template-columns: 1fr auto;
-      gap: 18px;
+      gap: 14px;
       align-items: start;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .ticketLabel {
       font-size: 10px;
       line-height: 1.2;
-      font-weight: 850;
-      color: rgba(5, 5, 5, 0.46);
-      margin-bottom: 5px;
+      font-weight: 900;
+      color: rgba(5, 5, 5, 0.48);
+      margin-bottom: 4px;
       text-transform: uppercase;
-      letter-spacing: -0.01em;
+      letter-spacing: 0;
     }
 
     .ticketMain {
-      font-size: 24px;
-      line-height: 1.05;
+      font-size: 25px;
+      line-height: 1.08;
       font-weight: 950;
       letter-spacing: -0.045em;
       color: #050505;
@@ -347,8 +322,8 @@
     .ticketGrid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px 18px;
-      margin-bottom: 18px;
+      gap: 13px 18px;
+      margin-bottom: 10px;
     }
 
     .ticketItem {
@@ -356,10 +331,10 @@
     }
 
     .ticketValue {
-      font-size: 18px;
-      line-height: 1.15;
+      font-size: 17px;
+      line-height: 1.22;
       font-weight: 950;
-      letter-spacing: -0.035em;
+      letter-spacing: -0.03em;
       color: #050505;
       word-break: keep-all;
       overflow-wrap: anywhere;
@@ -370,30 +345,14 @@
       grid-column: 1 / -1;
     }
 
-    .barcode {
-      height: 54px;
-      border-radius: 4px;
-      overflow: hidden;
-      background:
-        repeating-linear-gradient(
-          90deg,
-          #050505 0 2px,
-          transparent 2px 5px,
-          #050505 5px 7px,
-          transparent 7px 11px,
-          #050505 11px 12px,
-          transparent 12px 16px
-        );
-      opacity: 0.92;
-      margin-top: 6px;
-    }
-
     .ticketNoticeRow {
       display: flex;
       align-items: center;
       flex-wrap: wrap;
       gap: 8px;
       margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1.5px solid rgba(5, 5, 5, 0.14);
     }
 
     .badge,
@@ -401,11 +360,11 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 32px;
+      min-height: 31px;
       padding: 7px 12px;
       border-radius: 999px;
       font-weight: 950;
-      font-size: 14px;
+      font-size: 13px;
       box-shadow: none;
     }
 
@@ -446,7 +405,7 @@
     }
 
     .scrollHint {
-      margin-top: 16px;
+      margin-top: 12px;
       font-size: 12px;
       font-weight: 900;
       color: rgba(3, 7, 18, 0.46);
@@ -598,67 +557,61 @@
     @media (max-width: 420px) {
       .topCard {
         min-height: 100dvh;
-        padding: 20px 20px 26px;
+        padding: 16px 20px 22px;
       }
 
       .topCardInner {
-        min-height: calc(100dvh - 46px);
+        min-height: calc(100dvh - 38px);
       }
 
-      .topHeader {
+      .topNav {
+        margin-bottom: 16px;
+      }
+
+      .heroArea {
+        min-height: 300px;
         margin-bottom: 18px;
       }
 
-      .flightCode,
-      .poundCode {
-        font-size: 72px;
+      .metricValue {
+        font-size: 106px;
       }
 
-      .flightCode.personalCode {
-        font-size: 48px;
+      .metricValue.personalCode {
+        font-size: 58px;
       }
 
-      .poundCode .unit {
-        font-size: 23px;
+      .metricValue .unit {
+        font-size: 30px;
       }
 
-      .flightCodeBlock {
-        min-height: 100px;
+      .poundMetric {
+        top: 146px;
       }
 
-      .flightSub {
-        top: 31px;
-        max-width: 110px;
-      }
-
-      .routeLine {
-        height: 38px;
-      }
-
-      .routeDashes {
-        left: 26px;
-        width: 104px;
-      }
-
-      .routePlane {
-        left: 104px;
+      .heroSubInfo {
+        top: 70px;
       }
 
       .ticketCard {
-        border-radius: 20px;
-        padding: 18px;
+        border-radius: 22px;
+        padding: 17px;
+      }
+
+      .ticketTop {
+        margin-bottom: 14px;
       }
 
       .ticketMain {
-        font-size: 22px;
+        font-size: 24px;
+      }
+
+      .ticketGrid {
+        gap: 12px 16px;
       }
 
       .ticketValue {
-        font-size: 17px;
-      }
-
-      .barcode {
-        height: 50px;
+        font-size: 16px;
       }
 
       .section {
@@ -675,58 +628,91 @@
 
     @media (max-height: 700px) {
       .topCard {
-        padding-top: 16px;
-        padding-bottom: 20px;
+        padding-top: 14px;
+        padding-bottom: 18px;
       }
 
       .topCardInner {
-        min-height: calc(100dvh - 36px);
+        min-height: calc(100dvh - 32px);
       }
 
-      .topHeader {
+      .topNav {
         margin-bottom: 12px;
       }
 
-      .flightCode,
-      .poundCode {
-        font-size: 60px;
+      .heroArea {
+        min-height: 236px;
+        margin-bottom: 14px;
       }
 
-      .flightCode.personalCode {
-        font-size: 40px;
+      .metricLabel {
+        font-size: 12px;
+        margin-bottom: 3px;
       }
 
-      .flightCodeBlock {
-        min-height: 82px;
+      .metricValue {
+        font-size: 78px;
       }
 
-      .cityBlock {
-        margin-bottom: 10px;
+      .metricValue.personalCode {
+        font-size: 42px;
       }
 
-      .routeLine {
-        height: 30px;
+      .metricValue .unit {
+        font-size: 22px;
+      }
+
+      .poundMetric {
+        top: 112px;
+      }
+
+      .heroSubInfo {
+        top: 52px;
+        font-size: 11px;
       }
 
       .ticketCard {
-        padding: 15px;
+        padding: 14px;
+        border-radius: 20px;
       }
 
       .ticketTop {
-        margin-bottom: 12px;
+        margin-bottom: 10px;
+      }
+
+      .ticketMain {
+        font-size: 21px;
       }
 
       .ticketGrid {
-        gap: 10px 14px;
-        margin-bottom: 12px;
+        gap: 8px 12px;
+        margin-bottom: 8px;
       }
 
-      .barcode {
-        height: 42px;
+      .ticketLabel {
+        font-size: 9px;
+        margin-bottom: 2px;
+      }
+
+      .ticketValue {
+        font-size: 14px;
+        line-height: 1.15;
+      }
+
+      .ticketNoticeRow {
+        margin-top: 10px;
+        padding-top: 10px;
+      }
+
+      .badge,
+      .repairNotice {
+        min-height: 28px;
+        font-size: 12px;
+        padding: 6px 10px;
       }
 
       .scrollHint {
-        margin-top: 10px;
+        margin-top: 8px;
       }
     }
 
@@ -758,10 +744,8 @@
         color: #030712;
       }
 
-      .topClub,
       .navTitle,
-      .flightCode,
-      .poundCode {
+      .metricValue {
         color: #030712;
       }
 
@@ -993,32 +977,23 @@
               <div class="navType">${escapeHtml(typeLabel)}</div>
             </div>
 
-            <div class="flightHero">
-              <div class="flightCodeBlock">
-                <div class="flightLabel">${escapeHtml(primaryLabel)}</div>
-                <div class="flightCode ${primaryClass}">
+            <div class="heroArea">
+              <div class="heroMetric serialMetric">
+                <div class="metricLabel">${escapeHtml(primaryLabel)}</div>
+                <div class="metricValue ${primaryClass}">
                   ${escapeHtml(primaryValue || "-")}
                 </div>
-
-                <div class="flightSub">
-                  ${escapeHtml(typeLabel)}<br>
-                  ${escapeHtml(status)}
-                </div>
               </div>
 
-              <div class="routeLine">
-                <div class="routeDashes"></div>
-                <div class="routePlane">✈</div>
+              <div class="heroSubInfo">
+                ${escapeHtml(typeLabel)}<br>
+                ${escapeHtml(status)}
               </div>
 
-              <div class="poundBlock">
-                <div class="flightLabel">파운드</div>
-                <div class="poundCode">
+              <div class="heroMetric poundMetric">
+                <div class="metricLabel">파운드</div>
+                <div class="metricValue">
                   ${escapeHtml(poundValue)}<span class="unit">lb</span>
-                </div>
-
-                <div class="statusCircle">
-                  ${escapeHtml(getStatusIcon(status))}
                 </div>
               </div>
             </div>
@@ -1059,8 +1034,6 @@
 
                 ${ticketItem("Check", checkText, true)}
               </div>
-
-              <div class="barcode"></div>
 
               <div class="ticketNoticeRow">
                 <div id="statusBadge" class="badge ${badgeClass}">
@@ -1126,13 +1099,6 @@
           </div>
         </div>
       `;
-    }
-
-    function getStatusIcon(status) {
-      if (status === "수리 필요") return "!";
-      if (status === "불량") return "×";
-      if (status === "말소") return "-";
-      return "✓";
     }
 
     async function submitRepairRequest() {
@@ -1266,14 +1232,9 @@
         checkView.textContent = check || "-";
       }
 
-      const statusCircle = document.querySelector(".statusCircle");
-      if (statusCircle) {
-        statusCircle.textContent = getStatusIcon(status);
-      }
-
-      const flightSub = document.querySelector(".flightSub");
-      if (flightSub) {
-        flightSub.innerHTML = `${escapeHtml(currentItem?.mode === "personal" ? "개인 장비" : "공용 장비")}<br>${escapeHtml(status || "-")}`;
+      const heroSubInfo = document.querySelector(".heroSubInfo");
+      if (heroSubInfo) {
+        heroSubInfo.innerHTML = `${escapeHtml(currentItem?.mode === "personal" ? "개인 장비" : "공용 장비")}<br>${escapeHtml(status || "-")}`;
       }
 
       const repairNotice = document.getElementById("repairNotice");
