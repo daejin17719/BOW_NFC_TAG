@@ -132,7 +132,7 @@
       min-height: 100dvh;
       background: #f8fafc;
       color: #030712;
-      padding: 16px 20px 18px;
+      padding: 16px 20px 16px;
       margin-bottom: 14px;
       display: flex;
       flex-direction: column;
@@ -141,7 +141,7 @@
     .topCardInner {
       width: 100%;
       max-width: 480px;
-      height: calc(100dvh - 34px);
+      height: calc(100dvh - 32px);
       min-height: 0;
       margin: 0 auto;
       display: flex;
@@ -154,7 +154,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: clamp(8px, 1.4dvh, 16px);
+      margin-bottom: 12px;
     }
 
     .navLeft {
@@ -171,7 +171,7 @@
     }
 
     .navTitle {
-      font-size: clamp(15px, 4.2vw, 18px);
+      font-size: 16px;
       font-weight: 950;
       color: #030712;
       white-space: nowrap;
@@ -182,7 +182,7 @@
 
     .navType {
       flex: 0 0 auto;
-      font-size: clamp(12px, 3.3vw, 14px);
+      font-size: 13px;
       font-weight: 950;
       padding: 8px 13px;
       border-radius: 999px;
@@ -192,11 +192,11 @@
     }
 
     .heroArea {
-      flex: 1 1 auto;
-      min-height: 0;
+      flex: 0 0 clamp(285px, 43dvh, 410px);
       position: relative;
       border-bottom: 1.5px solid rgba(3, 7, 18, 0.10);
-      margin-bottom: clamp(12px, 2dvh, 24px);
+      margin-bottom: 18px;
+      overflow: visible;
     }
 
     .heroMetric {
@@ -212,7 +212,7 @@
 
     .poundMetric {
       right: 0;
-      bottom: clamp(28px, 6dvh, 54px);
+      bottom: 38px;
       width: 100%;
       text-align: right;
     }
@@ -220,7 +220,7 @@
     .metricRow {
       display: flex;
       align-items: flex-start;
-      gap: clamp(8px, 2.3vw, 12px);
+      gap: 11px;
       min-width: 0;
     }
 
@@ -230,8 +230,8 @@
 
     .metricLabel {
       flex: 0 0 auto;
-      padding-top: clamp(11px, 3.2vw, 20px);
-      font-size: clamp(11px, 3.4vw, 15px);
+      padding-top: 18px;
+      font-size: 13px;
       line-height: 1.05;
       font-weight: 950;
       color: rgba(3, 7, 18, 0.52);
@@ -241,7 +241,7 @@
     }
 
     .metricValue {
-      font-size: clamp(112px, 36vw, 184px);
+      font-size: clamp(122px, 36vw, 172px);
       line-height: 0.76;
       font-weight: 950;
       letter-spacing: -0.105em;
@@ -251,13 +251,13 @@
     }
 
     .metricValue.personalCode {
-      font-size: clamp(82px, 28vw, 128px);
+      font-size: clamp(88px, 28vw, 124px);
       line-height: 0.82;
       letter-spacing: -0.095em;
     }
 
     .metricValue .unit {
-      font-size: clamp(31px, 10vw, 48px);
+      font-size: clamp(34px, 9.5vw, 46px);
       line-height: 1;
       font-weight: 950;
       letter-spacing: -0.055em;
@@ -268,8 +268,8 @@
     .ticketCard {
       flex: 0 0 auto;
       margin-top: 0;
-      border-radius: clamp(22px, 6vw, 28px);
-      padding: clamp(18px, 4.8vw, 28px) clamp(20px, 5.4vw, 28px);
+      border-radius: 26px;
+      padding: 20px 24px 21px;
       color: #050505;
       box-shadow: 0 18px 36px rgba(15, 23, 42, 0.14);
       max-height: none;
@@ -293,25 +293,22 @@
     }
 
     .ticketTop {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 16px;
-      align-items: start;
-      margin-bottom: clamp(18px, 3.6dvh, 32px);
+      display: block;
+      margin-bottom: 22px;
     }
 
     .ticketLabel {
-      font-size: clamp(10px, 2.9vw, 12px);
+      font-size: 11px;
       line-height: 1.1;
       font-weight: 950;
       color: rgba(5, 5, 5, 0.45);
-      margin-bottom: clamp(5px, 1.2dvh, 9px);
+      margin-bottom: 6px;
       text-transform: uppercase;
       letter-spacing: -0.045em;
     }
 
     .ticketMain {
-      font-size: clamp(28px, 8.4vw, 38px);
+      font-size: 32px;
       line-height: 1.02;
       font-weight: 950;
       letter-spacing: -0.075em;
@@ -320,18 +317,10 @@
       overflow-wrap: anywhere;
     }
 
-    .ticketStatus {
-      text-align: right;
-    }
-
-    .ticketStatus .ticketMain {
-      white-space: nowrap;
-    }
-
     .ticketGrid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: clamp(18px, 3.2dvh, 34px) clamp(26px, 7vw, 40px);
+      gap: 24px 34px;
       margin-bottom: 8px;
     }
 
@@ -340,7 +329,7 @@
     }
 
     .ticketValue {
-      font-size: clamp(22px, 6.4vw, 30px);
+      font-size: 25px;
       line-height: 1.1;
       font-weight: 950;
       letter-spacing: -0.065em;
@@ -359,8 +348,8 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: clamp(16px, 2.4dvh, 26px);
-      padding-top: clamp(12px, 2dvh, 18px);
+      margin-top: 20px;
+      padding-top: 14px;
       border-top: 1.5px solid rgba(5, 5, 5, 0.15);
     }
 
@@ -369,11 +358,11 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: clamp(34px, 5.8dvh, 42px);
-      padding: 9px 17px;
+      min-height: 36px;
+      padding: 8px 16px;
       border-radius: 999px;
       font-weight: 950;
-      font-size: clamp(15px, 4.2vw, 18px);
+      font-size: 16px;
       letter-spacing: -0.055em;
       box-shadow: none;
     }
@@ -416,8 +405,8 @@
 
     .scrollHint {
       flex: 0 0 auto;
-      margin-top: clamp(8px, 1.6dvh, 15px);
-      font-size: clamp(12px, 3.5vw, 14px);
+      margin-top: 12px;
+      font-size: 13px;
       font-weight: 950;
       color: rgba(3, 7, 18, 0.42);
       text-align: center;
@@ -568,42 +557,42 @@
 
     @media (max-height: 760px) {
       .topCard {
-        padding-top: 14px;
-        padding-bottom: 14px;
+        padding-top: 13px;
+        padding-bottom: 13px;
       }
 
       .topCardInner {
-        height: calc(100dvh - 28px);
+        height: calc(100dvh - 26px);
       }
 
-      .navTitle {
-        font-size: 15px;
+      .topNav {
+        margin-bottom: 9px;
       }
 
-      .navType {
-        font-size: 12px;
-        padding: 7px 12px;
-      }
-
-      .metricValue {
-        font-size: clamp(98px, 32vw, 138px);
-      }
-
-      .metricValue.personalCode {
-        font-size: clamp(70px, 24vw, 98px);
-      }
-
-      .metricValue .unit {
-        font-size: clamp(27px, 8.5vw, 38px);
-      }
-
-      .metricLabel {
-        font-size: 11px;
-        padding-top: 12px;
+      .heroArea {
+        flex-basis: 270px;
+        margin-bottom: 14px;
       }
 
       .poundMetric {
-        bottom: 24px;
+        bottom: 28px;
+      }
+
+      .metricLabel {
+        padding-top: 13px;
+        font-size: 11px;
+      }
+
+      .metricValue {
+        font-size: clamp(104px, 32vw, 138px);
+      }
+
+      .metricValue.personalCode {
+        font-size: clamp(76px, 24vw, 104px);
+      }
+
+      .metricValue .unit {
+        font-size: clamp(29px, 8.5vw, 38px);
       }
 
       .ticketCard {
@@ -643,35 +632,58 @@
         font-size: 15px;
         padding: 7px 14px;
       }
+
+      .scrollHint {
+        margin-top: 9px;
+        font-size: 12px;
+      }
     }
 
     @media (max-height: 660px) {
+      .heroArea {
+        flex-basis: 230px;
+        margin-bottom: 11px;
+      }
+
+      .poundMetric {
+        bottom: 24px;
+      }
+
       .metricValue {
-        font-size: clamp(86px, 29vw, 116px);
+        font-size: clamp(88px, 29vw, 116px);
       }
 
       .metricValue.personalCode {
-        font-size: clamp(60px, 21vw, 82px);
+        font-size: clamp(64px, 21vw, 86px);
       }
 
       .metricValue .unit {
         font-size: 30px;
       }
 
-      .ticketMain {
-        font-size: 24px;
+      .ticketCard {
+        padding: 15px 18px 16px;
       }
 
-      .ticketValue {
-        font-size: 18px;
+      .ticketTop {
+        margin-bottom: 12px;
+      }
+
+      .ticketMain {
+        font-size: 24px;
       }
 
       .ticketGrid {
         gap: 12px 22px;
       }
 
-      .scrollHint {
-        font-size: 12px;
+      .ticketValue {
+        font-size: 18px;
+      }
+
+      .ticketNoticeRow {
+        margin-top: 12px;
+        padding-top: 10px;
       }
     }
 
@@ -679,14 +691,6 @@
       .topCard {
         padding-left: 16px;
         padding-right: 16px;
-      }
-
-      .metricValue {
-        font-size: clamp(88px, 34vw, 128px);
-      }
-
-      .metricValue.personalCode {
-        font-size: clamp(64px, 26vw, 92px);
       }
 
       .ticketCard {
@@ -982,18 +986,9 @@
 
             <div class="ticketCard ${ticketClass}">
               <div class="ticketTop">
-                <div>
-                  <div class="ticketLabel">${isPersonal ? "Owner" : "Brand"}</div>
-                  <div class="ticketMain">
-                    ${escapeHtml(isPersonal ? (item.owner || "-") : brandText)}
-                  </div>
-                </div>
-
-                <div class="ticketStatus">
-                  <div class="ticketLabel">Status</div>
-                  <div id="statusView" class="ticketMain">
-                    ${escapeHtml(status)}
-                  </div>
+                <div class="ticketLabel">${isPersonal ? "Owner" : "Brand"}</div>
+                <div class="ticketMain">
+                  ${escapeHtml(isPersonal ? (item.owner || "-") : brandText)}
                 </div>
               </div>
 
@@ -1202,11 +1197,6 @@
       if (badge) {
         badge.textContent = status || "-";
         badge.className = "badge " + getBadgeClass(status);
-      }
-
-      const statusView = document.getElementById("statusView");
-      if (statusView) {
-        statusView.textContent = status || "-";
       }
 
       const checkView = document.getElementById("checkView");
