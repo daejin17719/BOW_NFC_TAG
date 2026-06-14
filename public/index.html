@@ -146,47 +146,37 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(circle at 82% 18%, rgba(255, 255, 255, 0.42), transparent 28%),
-        linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0) 45%);
+        radial-gradient(circle at 78% 14%, rgba(255, 255, 255, 0.48), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,0.20), rgba(255,255,255,0) 46%);
       pointer-events: none;
+      z-index: 0;
     }
 
-    .topCard::after {
-      content: "";
+    .statusPanel {
       position: absolute;
       top: 0;
-      right: clamp(34px, 11vw, 72px);
-      width: 4px;
-      height: 58%;
-      background: #071022;
+      right: 0;
+      width: 31%;
+      height: 100%;
+      z-index: 0;
       opacity: 0.92;
-      border-radius: 0 0 999px 999px;
-      z-index: 1;
+      border-radius: 0;
     }
 
-    .stringKnob {
-      position: absolute;
-      right: calc(clamp(34px, 11vw, 72px) - 13px);
-      top: 47%;
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
-      border: 6px solid #071022;
-      background: #d8e8ef;
-      z-index: 3;
+    .topCard.status-normal .statusPanel {
+      background: linear-gradient(180deg, #bbf7d0 0%, #86efac 100%);
     }
 
-    .stringKnob::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 24px;
-      transform: translateX(-50%);
-      width: 28px;
-      height: 56px;
-      border-radius: 999px;
-      background: rgba(7, 16, 34, 0.15);
-      z-index: -1;
+    .topCard.status-repair .statusPanel {
+      background: linear-gradient(180deg, #fecaca 0%, #fca5a5 100%);
+    }
+
+    .topCard.status-bad .statusPanel {
+      background: linear-gradient(180deg, #fde68a 0%, #facc15 100%);
+    }
+
+    .topCard.status-deleted .statusPanel {
+      background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 100%);
     }
 
     .topCardInner {
@@ -219,18 +209,24 @@
       font-size: 13px;
       font-weight: 950;
       padding: 7px 10px;
-      border: 2px solid rgba(7, 16, 34, 0.76);
       border-radius: 999px;
       white-space: nowrap;
       color: #071022;
-      background: rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.36);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
     }
 
-    .heroNumbers {
-      margin-top: 30px;
-      width: min(70%, 330px);
+    .heroMetrics {
+      margin-top: 42px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      width: min(78%, 360px);
+    }
+
+    .metricBlock {
+      min-width: 0;
     }
 
     .metricLabel {
@@ -241,9 +237,9 @@
       letter-spacing: -0.02em;
     }
 
-    .primaryNumber {
-      font-size: 112px;
-      line-height: 0.78;
+    .metricValue {
+      font-size: 96px;
+      line-height: 0.84;
       font-weight: 950;
       letter-spacing: -0.08em;
       color: #071022;
@@ -251,36 +247,18 @@
       overflow-wrap: anywhere;
     }
 
-    .ownerNumber {
-      font-size: 56px;
-      line-height: 0.96;
+    .metricValue.personalCode {
+      font-size: 58px;
+      line-height: 0.95;
       letter-spacing: -0.065em;
     }
 
-    .numberDivider {
-      width: 74px;
-      height: 3px;
-      border-radius: 999px;
-      background: rgba(7, 16, 34, 0.62);
-      margin: 18px 0 16px;
-    }
-
-    .poundNumber {
-      font-size: 96px;
-      line-height: 0.82;
-      font-weight: 950;
-      letter-spacing: -0.08em;
-      color: rgba(255,255,255,0.96);
-      text-shadow: 0 1px 0 rgba(7, 16, 34, 0.10);
-      word-break: keep-all;
-      overflow-wrap: anywhere;
-    }
-
-    .poundNumber span {
-      font-size: 27px;
+    .metricValue .unit {
+      font-size: 28px;
       font-weight: 950;
       letter-spacing: -0.04em;
       margin-left: 5px;
+      color: rgba(7, 16, 34, 0.74);
     }
 
     .lowerInfo {
@@ -289,27 +267,12 @@
       padding-bottom: 8px;
     }
 
-    .statusIcon {
-      width: 58px;
-      height: 58px;
-      border-radius: 12px;
-      background: #071022;
-      color: #d8e8ef;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 25px;
-      font-weight: 950;
-      margin-bottom: 14px;
-      box-shadow: 0 10px 22px rgba(7, 16, 34, 0.14);
-    }
-
     .statusMain {
       display: flex;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .badge,
@@ -348,7 +311,7 @@
     .repairNotice {
       background: rgba(7, 16, 34, 0.10);
       color: #071022;
-      border: 2px solid rgba(7, 16, 34, 0.22);
+      border: 2px solid rgba(7, 16, 34, 0.18);
     }
 
     .repairNotice.hidden {
@@ -358,19 +321,19 @@
     .banNotice {
       background: rgba(7, 16, 34, 0.10);
       color: #071022;
-      border: 2px solid rgba(7, 16, 34, 0.22);
+      border: 2px solid rgba(7, 16, 34, 0.18);
     }
 
     .checkText {
-      font-size: 30px;
-      line-height: 1.05;
+      font-size: 28px;
+      line-height: 1.08;
       font-weight: 950;
       letter-spacing: -0.055em;
       color: #071022;
       word-break: keep-all;
       overflow-wrap: anywhere;
       white-space: pre-wrap;
-      margin-bottom: 8px;
+      margin-bottom: 9px;
     }
 
     .metaText {
@@ -381,14 +344,7 @@
       word-break: keep-all;
       overflow-wrap: anywhere;
       margin-bottom: 14px;
-    }
-
-    .bottomIcons {
-      display: flex;
-      gap: 12px;
-      color: rgba(7, 16, 34, 0.70);
-      font-size: 18px;
-      font-weight: 900;
+      max-width: 86%;
     }
 
     .scrollHint {
@@ -423,7 +379,6 @@
       margin: 14px 0 7px;
     }
 
-    select,
     textarea {
       width: 100%;
       border: 1px solid #d1d5db;
@@ -434,9 +389,6 @@
       background: #fff;
       color: var(--text);
       outline: none;
-    }
-
-    textarea {
       min-height: 96px;
       resize: vertical;
       line-height: 1.5;
@@ -562,38 +514,35 @@
         min-height: calc(100dvh - 64px);
       }
 
-      .heroNumbers {
-        margin-top: 28px;
-        width: min(72%, 320px);
+      .statusPanel {
+        width: 33%;
       }
 
-      .primaryNumber {
-        font-size: 104px;
+      .heroMetrics {
+        margin-top: 40px;
+        gap: 27px;
+        width: min(78%, 330px);
       }
 
-      .ownerNumber {
-        font-size: 48px;
-      }
-
-      .numberDivider {
-        width: 66px;
-        margin: 16px 0 14px;
-      }
-
-      .poundNumber {
+      .metricValue {
         font-size: 88px;
       }
 
-      .poundNumber span {
-        font-size: 25px;
+      .metricValue.personalCode {
+        font-size: 48px;
+      }
+
+      .metricValue .unit {
+        font-size: 26px;
       }
 
       .checkText {
-        font-size: 27px;
+        font-size: 26px;
       }
 
       .metaText {
         font-size: 14px;
+        max-width: 88%;
       }
 
       .section {
@@ -618,27 +567,20 @@
         min-height: calc(100dvh - 50px);
       }
 
-      .heroNumbers {
-        margin-top: 20px;
+      .heroMetrics {
+        margin-top: 28px;
+        gap: 20px;
       }
 
-      .primaryNumber {
-        font-size: 86px;
+      .metricValue {
+        font-size: 72px;
       }
 
-      .ownerNumber {
+      .metricValue.personalCode {
         font-size: 38px;
       }
 
-      .numberDivider {
-        margin: 12px 0 10px;
-      }
-
-      .poundNumber {
-        font-size: 70px;
-      }
-
-      .poundNumber span {
+      .metricValue .unit {
         font-size: 22px;
       }
 
@@ -646,15 +588,8 @@
         padding-top: 18px;
       }
 
-      .statusIcon {
-        width: 48px;
-        height: 48px;
-        font-size: 21px;
-        margin-bottom: 10px;
-      }
-
       .checkText {
-        font-size: 23px;
+        font-size: 22px;
       }
 
       .metaText {
@@ -701,30 +636,31 @@
           linear-gradient(180deg, rgba(255,255,255,0.04), transparent 42%);
       }
 
-      .topCard::after {
-        background: #cfe7f1;
+      .topCard.status-normal .statusPanel {
+        background: linear-gradient(180deg, rgba(34,197,94,0.44), rgba(20,83,45,0.54));
       }
 
-      .stringKnob {
-        border-color: #cfe7f1;
-        background: #090d1f;
+      .topCard.status-repair .statusPanel {
+        background: linear-gradient(180deg, rgba(239,68,68,0.54), rgba(127,29,29,0.58));
       }
 
-      .stringKnob::after {
-        background: rgba(207, 231, 241, 0.22);
+      .topCard.status-bad .statusPanel {
+        background: linear-gradient(180deg, rgba(250,204,21,0.56), rgba(146,64,14,0.54));
+      }
+
+      .topCard.status-deleted .statusPanel {
+        background: linear-gradient(180deg, rgba(100,116,139,0.58), rgba(30,41,59,0.62));
       }
 
       .topClub,
       .topType,
-      .primaryNumber,
-      .checkText,
-      .bottomIcons {
+      .metricValue,
+      .checkText {
         color: #eaf6ff;
       }
 
       .topType {
-        border-color: rgba(234, 246, 255, 0.72);
-        background: rgba(255,255,255,0.06);
+        background: rgba(255,255,255,0.08);
       }
 
       .metricLabel,
@@ -733,17 +669,8 @@
         color: rgba(234, 246, 255, 0.68);
       }
 
-      .numberDivider {
-        background: rgba(234, 246, 255, 0.68);
-      }
-
-      .poundNumber {
+      .metricValue .unit {
         color: rgba(234, 246, 255, 0.72);
-      }
-
-      .statusIcon {
-        background: #cfe7f1;
-        color: #090d1f;
       }
 
       .badge.normal {
@@ -957,6 +884,7 @@
       const isPersonal = item.mode === "personal";
       const status = item.status || "-";
       const badgeClass = getBadgeClass(status);
+      const toneClass = getToneClass(status);
 
       const isRepairNeeded = status === "수리 필요";
       const isBadStatus = status === "불량";
@@ -972,7 +900,7 @@
       const typeLabel = isPersonal ? "개인 장비" : "공용 장비";
       const primaryLabel = isPersonal ? "식별 코드" : "일련번호";
       const primaryValue = isPersonal ? item.code : item.serial;
-      const primaryClass = isPersonal ? "ownerNumber" : "";
+      const primaryClass = isPersonal ? "personalCode" : "";
 
       const poundValue = item.pound || "-";
 
@@ -985,8 +913,8 @@
         : `${item.serial || ""}번 활`;
 
       app.innerHTML = `
-        <div class="topCard">
-          <div class="stringKnob"></div>
+        <div class="topCard ${toneClass}">
+          <div class="statusPanel"></div>
 
           <div class="topCardInner">
             <div class="topHeader">
@@ -994,23 +922,23 @@
               <div class="topType">${escapeHtml(typeLabel)}</div>
             </div>
 
-            <div class="heroNumbers">
-              <div class="metricLabel">${escapeHtml(primaryLabel)}</div>
-              <div class="primaryNumber ${primaryClass}">
-                ${escapeHtml(primaryValue || "-")}
+            <div class="heroMetrics">
+              <div class="metricBlock">
+                <div class="metricLabel">${escapeHtml(primaryLabel)}</div>
+                <div class="metricValue ${primaryClass}">
+                  ${escapeHtml(primaryValue || "-")}
+                </div>
               </div>
 
-              <div class="numberDivider"></div>
-
-              <div class="metricLabel">파운드</div>
-              <div class="poundNumber">
-                ${escapeHtml(poundValue)}<span>lb</span>
+              <div class="metricBlock">
+                <div class="metricLabel">파운드</div>
+                <div class="metricValue">
+                  ${escapeHtml(poundValue)}<span class="unit">lb</span>
+                </div>
               </div>
             </div>
 
             <div class="lowerInfo">
-              <div class="statusIcon">${escapeHtml(getStatusIcon(status))}</div>
-
               <div class="statusMain">
                 <div id="statusBadge" class="badge ${badgeClass}">
                   ${escapeHtml(status)}
@@ -1030,12 +958,6 @@
               </div>
 
               <div id="statusView" style="display:none;">${escapeHtml(status)}</div>
-
-              <div class="bottomIcons">
-                <span>⌒</span>
-                <span>▻</span>
-                <span>◎</span>
-              </div>
 
               <div class="scrollHint">
                 아래로 스크롤하여 수리 요청
@@ -1080,13 +1002,6 @@
           Copyright © Seoul National University Korean Archery Club. All Rights Reserved.
         </div>
       `;
-    }
-
-    function getStatusIcon(status) {
-      if (status === "수리 필요") return "!";
-      if (status === "불량") return "×";
-      if (status === "말소") return "-";
-      return "✓";
     }
 
     async function submitRepairRequest() {
@@ -1198,6 +1113,12 @@
         currentItem.check = check;
       }
 
+      const topCard = document.querySelector(".topCard");
+      if (topCard) {
+        topCard.classList.remove("status-normal", "status-repair", "status-bad", "status-deleted");
+        topCard.classList.add(getToneClass(status));
+      }
+
       const badge = document.getElementById("statusBadge");
       badge.textContent = status || "-";
       badge.className = "badge " + getBadgeClass(status);
@@ -1210,11 +1131,6 @@
       const checkView = document.getElementById("checkView");
       if (checkView) {
         checkView.textContent = check || "-";
-      }
-
-      const statusIcon = document.querySelector(".statusIcon");
-      if (statusIcon) {
-        statusIcon.textContent = getStatusIcon(status);
       }
 
       const repairNotice = document.getElementById("repairNotice");
@@ -1249,6 +1165,13 @@
       if (status === "불량") return "bad";
       if (status === "말소") return "deleted";
       return "normal";
+    }
+
+    function getToneClass(status) {
+      if (status === "수리 필요") return "status-repair";
+      if (status === "불량") return "status-bad";
+      if (status === "말소") return "status-deleted";
+      return "status-normal";
     }
 
     function formatDate(date) {
