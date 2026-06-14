@@ -30,19 +30,22 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
-      padding: 14px;
-      background:
-        radial-gradient(circle at top left, #e0f2fe 0, transparent 34%),
-        var(--bg);
+      padding: 0;
+      background: var(--bg);
       color: var(--text);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     .wrap {
-      max-width: 480px;
-      margin: 0 auto;
+      width: 100%;
+      max-width: none;
+      margin: 0;
       padding-bottom: 28px;
     }
 
@@ -56,10 +59,13 @@
     }
 
     .loadingLogoWrap {
-      min-height: calc(100dvh - 28px);
+      min-height: 100dvh;
       display: flex;
       align-items: center;
       justify-content: center;
+      background:
+        radial-gradient(circle at top left, #e0f2fe 0, transparent 34%),
+        var(--bg);
     }
 
     .loadingLogo {
@@ -72,6 +78,9 @@
     .errorBox {
       position: relative;
       overflow: hidden;
+      width: calc(100% - 28px);
+      max-width: 480px;
+      margin: 14px auto;
       background: #fff7ed;
       color: #7c2d12;
       border: 1px solid #fed7aa;
@@ -132,146 +141,132 @@
     .topCard {
       position: relative;
       overflow: hidden;
-      min-height: calc(100dvh - 28px);
-      background: linear-gradient(135deg, #121c2d 0%, #2d3e54 100%);
-      color: white;
-      border-radius: 28px;
-      padding: 34px 28px 30px;
-      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.22);
+      width: 100%;
+      min-height: 100dvh;
+      background: #df2508;
+      color: #050505;
+      border-radius: 0;
+      padding: 36px 28px 34px;
+      box-shadow: none;
       margin-bottom: 14px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
     }
 
-    .mainBlock,
-    .titleLine,
-    .badge,
-    .repairNotice {
+    .topCard::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 82% 12%, rgba(255,255,255,0.18), transparent 22%),
+        linear-gradient(180deg, rgba(255,255,255,0.08), transparent 36%);
+      pointer-events: none;
+    }
+
+    .topCardInner {
       position: relative;
       z-index: 2;
+      width: 100%;
+      max-width: 480px;
+      min-height: calc(100dvh - 70px);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
     }
 
-    .typeBadge {
-      position: absolute;
-      top: 15px;
-      right: -38px;
-      z-index: 3;
-      width: 132px;
-      height: 30px;
+    .topHeader {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      transform: rotate(43deg);
-      transform-origin: center;
-      font-size: 12px;
-      line-height: 1;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 18px;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.65);
+    }
+
+    .topClub {
+      font-size: 13px;
       font-weight: 950;
       letter-spacing: -0.02em;
-      background: rgba(248, 250, 252, 0.96);
-      color: rgba(15, 23, 42, 0.96);
-      box-shadow: none;
-      text-align: center;
+      margin-bottom: 8px;
     }
 
-    .mainBlock {
-      margin-bottom: 0;
+    .topHeaderLabel {
+      font-size: 13px;
+      font-weight: 950;
+      color: rgba(0, 0, 0, 0.62);
+    }
+
+    .topType {
+      font-size: 13px;
+      font-weight: 950;
+      padding: 7px 10px;
+      border: 2px solid rgba(0, 0, 0, 0.72);
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .heroMain {
+      margin-top: 30px;
     }
 
     .smallLabel {
-      font-size: 13px;
-      font-weight: 800;
-      color: rgba(255,255,255,0.68);
-      margin-bottom: 10px;
+      font-size: 16px;
+      font-weight: 950;
+      color: rgba(0, 0, 0, 0.72);
+      margin-bottom: 8px;
     }
 
     .mainValue {
-      line-height: 1;
+      line-height: 0.86;
       word-break: keep-all;
       overflow-wrap: anywhere;
+      color: #050505;
     }
 
     .mainValue.ownerValue {
-      font-size: 42px;
-      font-weight: 900;
-      letter-spacing: -0.045em;
-      max-width: 72%;
+      font-size: 54px;
+      font-weight: 950;
+      letter-spacing: -0.06em;
+      max-width: 84%;
     }
 
     .mainValue.serialValue {
-      font-size: 74px;
-      line-height: 0.92;
-      font-weight: 900;
-      letter-spacing: -0.06em;
+      font-size: 128px;
+      line-height: 0.82;
+      font-weight: 950;
+      letter-spacing: -0.08em;
     }
 
-    .titleLine {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 22px;
-      margin-bottom: 0;
-      width: 100%;
+    .heroSub {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: end;
     }
 
     .title {
-      font-size: 44px;
-      line-height: 1.05;
-      font-weight: 900;
+      font-size: 30px;
+      line-height: 1.08;
+      font-weight: 950;
       letter-spacing: -0.055em;
       word-break: keep-all;
       min-width: 0;
     }
 
     .topPound {
-      flex: 0 0 auto;
-      font-size: 46px;
+      font-size: 30px;
       line-height: 1.05;
-      font-weight: 900;
+      font-weight: 950;
       letter-spacing: -0.05em;
       white-space: nowrap;
-      color: rgba(255,255,255,0.96);
-      margin-left: auto;
+      color: #050505;
     }
 
     .topPoundUnit {
-      font-size: 22px;
-      font-weight: 850;
-      color: rgba(255,255,255,0.78);
-      margin-left: 2px;
-    }
-
-    .badge,
-    .repairNotice {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 36px;
-      padding: 8px 15px;
-      border-radius: 999px;
+      font-size: 16px;
       font-weight: 900;
-      font-size: 15px;
-      box-shadow: none;
-    }
-
-    .badge.normal {
-      background: var(--green-bg);
-      color: var(--green-text);
-    }
-
-    .badge.repair {
-      background: var(--red-bg);
-      color: var(--red-text);
-    }
-
-    .badge.bad {
-      background: var(--yellow-bg);
-      color: var(--yellow-text);
-    }
-
-    .badge.deleted {
-      background: var(--gray-bg);
-      color: var(--gray-text);
+      margin-left: 2px;
     }
 
     .statusRow {
@@ -279,14 +274,46 @@
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: 0;
+      margin-top: 20px;
+    }
+
+    .badge,
+    .repairNotice {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-weight: 950;
+      font-size: 15px;
+      box-shadow: none;
+    }
+
+    .badge.normal {
+      background: #050505;
+      color: #ffffff;
+    }
+
+    .badge.repair {
+      background: #ffffff;
+      color: #991b1b;
+    }
+
+    .badge.bad {
+      background: #050505;
+      color: #facc15;
+    }
+
+    .badge.deleted {
+      background: #050505;
+      color: #d1d5db;
     }
 
     .repairNotice {
-      font-size: 14px;
-      padding: 8px 13px;
-      background: rgba(255, 255, 255, 0.14);
-      color: rgba(255, 255, 255, 0.92);
+      background: rgba(0, 0, 0, 0.14);
+      color: #050505;
+      border: 2px solid rgba(0, 0, 0, 0.34);
     }
 
     .repairNotice.hidden {
@@ -294,16 +321,74 @@
     }
 
     .banNotice {
-      background: rgba(255, 255, 255, 0.14);
-      color: rgba(255, 255, 255, 0.92);
+      background: rgba(0, 0, 0, 0.14);
+      color: #050505;
+      border: 2px solid rgba(0, 0, 0, 0.34);
+    }
+
+    .heroDetails {
+      margin-top: auto;
+      padding-top: 26px;
+    }
+
+    .heroDetailsTitle {
+      font-size: 14px;
+      font-weight: 950;
+      margin-bottom: 12px;
+      padding-bottom: 9px;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.65);
+    }
+
+    .heroGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 13px 18px;
+    }
+
+    .heroInfo {
+      min-width: 0;
+    }
+
+    .heroInfoLabel {
+      font-size: 11px;
+      font-weight: 950;
+      color: rgba(0, 0, 0, 0.58);
+      margin-bottom: 5px;
+    }
+
+    .heroInfoValue {
+      font-size: 15px;
+      font-weight: 950;
+      line-height: 1.35;
+      color: #050505;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .heroInfo.full {
+      grid-column: 1 / -1;
+    }
+
+    .heroInfo.full .heroInfoValue {
+      white-space: pre-wrap;
+    }
+
+    .scrollHint {
+      margin-top: 18px;
+      font-size: 12px;
+      font-weight: 950;
+      color: rgba(0, 0, 0, 0.52);
+      text-align: center;
     }
 
     .section {
+      width: calc(100% - 28px);
+      max-width: 480px;
+      margin: 0 auto 14px;
       background: var(--card);
       border-radius: 24px;
       padding: 20px;
       box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-      margin-bottom: 14px;
     }
 
     .sectionTitle {
@@ -311,65 +396,6 @@
       font-weight: 900;
       margin-bottom: 14px;
       letter-spacing: -0.02em;
-    }
-
-    .infoGrid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .miniCard {
-      background: #f8fafc;
-      border: 1px solid #eef2f7;
-      border-radius: 18px;
-      padding: 14px;
-      min-height: 82px;
-    }
-
-    .miniLabel {
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .miniValue {
-      font-size: 21px;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      word-break: keep-all;
-      overflow-wrap: anywhere;
-    }
-
-    .miniValue.small {
-      font-size: 18px;
-      line-height: 1.35;
-    }
-
-    .fullItem {
-      background: #f8fafc;
-      border: 1px solid #eef2f7;
-      border-radius: 18px;
-      padding: 15px;
-      margin-top: 10px;
-    }
-
-    .fullLabel {
-      color: var(--muted);
-      font-weight: 850;
-      font-size: 13px;
-      margin-bottom: 8px;
-    }
-
-    .fullValue {
-      font-size: 18px;
-      font-weight: 850;
-      line-height: 1.45;
-      word-break: keep-all;
-      overflow-wrap: anywhere;
-      white-space: pre-wrap;
     }
 
     label {
@@ -482,8 +508,9 @@
 
     .systemBtn {
       display: block;
-      width: 100%;
-      margin: 0 0 14px;
+      width: calc(100% - 28px);
+      max-width: 480px;
+      margin: 0 auto 14px;
       padding: 15px 16px;
       border-radius: 18px;
       text-align: center;
@@ -499,7 +526,9 @@
     }
 
     .hint {
-      margin-top: 12px;
+      width: calc(100% - 28px);
+      max-width: 480px;
+      margin: 12px auto 0;
       color: var(--muted);
       font-size: 13px;
       line-height: 1.5;
@@ -507,52 +536,53 @@
     }
 
     @media (max-width: 420px) {
-      body {
-        padding: 10px;
-      }
-
       .topCard {
-        min-height: calc(100dvh - 20px);
-        border-radius: 24px;
-        padding: 34px 26px 30px;
+        min-height: 100dvh;
+        padding: 34px 24px 32px;
       }
 
-      .typeBadge {
-        top: 14px;
-        right: -40px;
-        width: 136px;
-        height: 30px;
-        transform: rotate(43deg);
-      }
-
-      .mainValue.ownerValue {
-        font-size: 36px;
-        max-width: 70%;
+      .topCardInner {
+        min-height: calc(100dvh - 66px);
       }
 
       .mainValue.serialValue {
-        font-size: 70px;
+        font-size: 118px;
       }
 
-      .titleLine {
-        gap: 18px;
+      .mainValue.ownerValue {
+        font-size: 48px;
+        max-width: 84%;
       }
 
       .title {
-        font-size: 40px;
+        font-size: 27px;
       }
 
       .topPound {
-        font-size: 42px;
+        font-size: 27px;
       }
 
       .topPoundUnit {
-        font-size: 21px;
+        font-size: 15px;
+      }
+
+      .heroGrid {
+        gap: 12px 16px;
+      }
+
+      .heroInfoValue {
+        font-size: 14px;
       }
 
       .section {
+        width: calc(100% - 20px);
         border-radius: 22px;
         padding: 18px;
+      }
+
+      .systemBtn,
+      .hint {
+        width: calc(100% - 20px);
       }
 
       .smallLabel,
@@ -563,24 +593,22 @@
       .topPound,
       .badge,
       .repairNotice,
-      .typeBadge {
-        font-weight: 900;
+      .topType,
+      .topClub,
+      .heroDetailsTitle,
+      .heroInfoValue {
+        font-weight: 950;
       }
 
       .topPoundUnit {
-        font-weight: 850;
+        font-weight: 900;
       }
 
       .sectionTitle,
-      .miniValue,
-      .miniValue.small,
-      .fullValue,
       button {
         font-weight: 900;
       }
 
-      .miniLabel,
-      .fullLabel,
       label,
       textarea,
       .result,
@@ -596,20 +624,44 @@
         padding-bottom: 26px;
       }
 
+      .topCardInner {
+        min-height: calc(100dvh - 54px);
+      }
+
+      .heroMain {
+        margin-top: 22px;
+      }
+
       .mainValue.serialValue {
-        font-size: 62px;
+        font-size: 98px;
       }
 
       .mainValue.ownerValue {
-        font-size: 34px;
+        font-size: 40px;
       }
 
       .title {
-        font-size: 36px;
+        font-size: 24px;
       }
 
       .topPound {
-        font-size: 38px;
+        font-size: 24px;
+      }
+
+      .heroDetails {
+        padding-top: 18px;
+      }
+
+      .heroGrid {
+        gap: 9px 14px;
+      }
+
+      .heroInfoValue {
+        font-size: 13px;
+      }
+
+      .scrollHint {
+        margin-top: 12px;
       }
     }
 
@@ -620,23 +672,97 @@
         --text: #f8fafc;
         --muted: #94a3b8;
         --primary: #2563eb;
-
-        --green-bg: #dcfce7;
-        --green-text: #166534;
-
-        --red-bg: #fee2e2;
-        --red-text: #991b1b;
-
-        --yellow-bg: #fef3c7;
-        --yellow-text: #92400e;
-
-        --gray-bg: #334155;
-        --gray-text: #e2e8f0;
       }
 
       body {
         background: #0b1020;
         color: var(--text);
+      }
+
+      .loadingLogoWrap {
+        background: #0b1020;
+      }
+
+      .loading {
+        background: #111827;
+        color: #f8fafc;
+        border: 1px solid #1e293b;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+      }
+
+      .loadingLogo {
+        filter: brightness(0) invert(1);
+        opacity: 0.85;
+      }
+
+      .topCard {
+        background: #050505;
+        color: #f8fafc;
+        box-shadow: none;
+        border: none;
+      }
+
+      .topCard::before {
+        background:
+          radial-gradient(circle at 82% 12%, rgba(255,255,255,0.12), transparent 22%),
+          linear-gradient(180deg, rgba(255,255,255,0.06), transparent 36%);
+      }
+
+      .topHeader {
+        border-bottom-color: rgba(255, 255, 255, 0.72);
+      }
+
+      .topClub,
+      .topType,
+      .mainValue,
+      .title,
+      .topPound,
+      .topPoundUnit,
+      .heroInfoValue {
+        color: #f8fafc;
+      }
+
+      .topType {
+        border-color: rgba(255, 255, 255, 0.72);
+      }
+
+      .topHeaderLabel,
+      .smallLabel,
+      .heroInfoLabel,
+      .scrollHint {
+        color: rgba(248, 250, 252, 0.62);
+      }
+
+      .heroDetailsTitle {
+        color: #f8fafc;
+        border-bottom-color: rgba(255, 255, 255, 0.72);
+      }
+
+      .badge.normal {
+        background: #f8fafc;
+        color: #050505;
+      }
+
+      .badge.repair {
+        background: #fecaca;
+        color: #991b1b;
+      }
+
+      .badge.bad {
+        background: #facc15;
+        color: #111827;
+      }
+
+      .badge.deleted {
+        background: #334155;
+        color: #e2e8f0;
+      }
+
+      .repairNotice,
+      .banNotice {
+        background: rgba(255, 255, 255, 0.10);
+        color: #fecaca;
+        border-color: rgba(255, 255, 255, 0.24);
       }
 
       .section {
@@ -645,23 +771,13 @@
         box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22);
       }
 
-      .miniCard,
-      .fullItem,
+      .sectionTitle {
+        color: #f8fafc;
+      }
+
       .repairBlockedBox {
         background: #172033;
         border: none;
-      }
-
-      .miniLabel,
-      .fullLabel,
-      label {
-        color: #9aa8bc;
-      }
-
-      .miniValue,
-      .fullValue,
-      .sectionTitle {
-        color: #f8fafc;
       }
 
       .repairBlockedTitle {
@@ -670,6 +786,10 @@
 
       .repairBlockedText {
         color: #94a3b8;
+      }
+
+      label {
+        color: #9aa8bc;
       }
 
       select,
@@ -729,18 +849,6 @@
         color: #f8fafc;
       }
 
-      .loading {
-        background: #111827;
-        color: #f8fafc;
-        border: 1px solid #1e293b;
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
-      }
-
-      .loadingLogo {
-        filter: brightness(0) invert(1);
-        opacity: 0.85;
-      }
-
       .errorBox {
         background: #24130b;
         color: #fed7aa;
@@ -763,72 +871,6 @@
 
       .errorAction {
         color: #fdba74;
-      }
-
-      .topCard {
-        background: linear-gradient(
-          135deg,
-          rgba(248, 250, 252, 0.95) 0%,
-          rgba(232, 241, 251, 0.95) 100%
-        );
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        color: #0f172a;
-        box-shadow:
-          0 18px 38px rgba(0, 0, 0, 0.30),
-          inset 0 1px 0 rgba(255, 255, 255, 0.65);
-        border: none;
-      }
-
-      .smallLabel {
-        color: rgba(15, 23, 42, 0.62);
-      }
-
-      .title,
-      .mainValue,
-      .topPound {
-        color: #0b1220;
-      }
-
-      .topPoundUnit {
-        color: rgba(15, 23, 42, 0.58);
-      }
-
-      .typeBadge {
-        background: rgba(15, 23, 42, 0.96);
-        color: rgba(255, 255, 255, 0.96);
-      }
-
-      .repairNotice,
-      .banNotice {
-        background: rgba(15, 23, 42, 0.08);
-        color: #991b1b;
-      }
-
-      .topCard .badge,
-      .topCard .repairNotice {
-        border: none;
-        box-shadow: none;
-      }
-
-      .topCard .badge.normal {
-        background: #bbf7d0;
-        color: #14532d;
-      }
-
-      .topCard .badge.repair {
-        background: #fecaca;
-        color: #991b1b;
-      }
-
-      .topCard .badge.bad {
-        background: #fde68a;
-        color: #78350f;
-      }
-
-      .topCard .badge.deleted {
-        background: #cbd5e1;
-        color: #1e293b;
       }
     }
   </style>
@@ -925,7 +967,6 @@
       const mainLabel = isPersonal ? "소유자" : "일련번호";
       const mainValue = isPersonal ? item.owner : item.serial;
       const mainValueClass = isPersonal ? "ownerValue" : "serialValue";
-      const sectionTitle = isPersonal ? "장비 정보" : "장비 정보";
 
       const titleText = `${item.brand || "-"} ${item.size || ""}`.trim();
       const poundText = item.pound
@@ -938,39 +979,66 @@
 
       app.innerHTML = `
         <div class="topCard">
-          <div class="typeBadge">${escapeHtml(typeLabel)}</div>
+          <div class="topCardInner">
+            <div class="topHeader">
+              <div>
+                <div class="topClub">서울대학교 국궁부</div>
+                <div class="topHeaderLabel">${escapeHtml(mainLabel)}</div>
+              </div>
 
-          <div class="mainBlock">
-            <div class="smallLabel">${mainLabel}</div>
-            <div class="mainValue ${mainValueClass}">${escapeHtml(mainValue || "-")}</div>
-          </div>
-
-          <div class="titleLine">
-            <div class="title">${escapeHtml(titleText)}</div>
-            <div class="topPound">${poundText}</div>
-          </div>
-
-          <div class="statusRow">
-            <div id="statusBadge" class="badge ${badgeClass}">
-              ${escapeHtml(status)}
+              <div class="topType">${escapeHtml(typeLabel)}</div>
             </div>
 
-            <div id="repairNotice" class="repairNotice ${isRepairNeeded || isBadStatus ? "" : "hidden"} ${isBadStatus ? "banNotice" : ""}">
-              ${escapeHtml(noticeText)}
+            <div class="heroMain">
+              <div class="mainValue ${mainValueClass}">
+                ${escapeHtml(mainValue || "-")}
+              </div>
+
+              <div class="heroSub">
+                <div class="title">${escapeHtml(titleText)}</div>
+                <div class="topPound">${poundText}</div>
+              </div>
+
+              <div class="statusRow">
+                <div id="statusBadge" class="badge ${badgeClass}">
+                  ${escapeHtml(status)}
+                </div>
+
+                <div id="repairNotice" class="repairNotice ${isRepairNeeded || isBadStatus ? "" : "hidden"} ${isBadStatus ? "banNotice" : ""}">
+                  ${escapeHtml(noticeText)}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div class="section">
-          <div class="sectionTitle">${sectionTitle}</div>
+            <div class="heroDetails">
+              <div class="heroDetailsTitle">장비 세부 정보</div>
 
-          <div class="infoGrid">
-            ${renderInfoCards(item)}
-          </div>
+              <div class="heroGrid">
+                ${
+                  isPersonal
+                    ? `
+                      ${heroInfo("식별 코드", item.code)}
+                      ${heroInfo("소유자", item.owner)}
+                      ${heroInfo("브랜드", item.brand)}
+                      ${heroInfo("사이즈", item.size)}
+                      ${heroInfo("파운드", item.pound ? item.pound + " lb" : "-")}
+                      ${heroInfo("상태", item.status, false, "statusView")}
+                    `
+                    : `
+                      ${heroInfo("일련번호", item.serial)}
+                      ${heroInfo("상태", item.status, false, "statusView")}
+                      ${heroInfo("브랜드", item.brand)}
+                      ${heroInfo("사이즈", item.size)}
+                      ${heroInfo("파운드", item.pound ? item.pound + " lb" : "-")}
+                      ${heroInfo("기타", item.etc)}
+                    `
+                }
 
-          <div class="fullItem">
-            <div class="fullLabel">점검 내역</div>
-            <div id="checkView" class="fullValue">${escapeHtml(item.check || "-")}</div>
+                ${heroInfo("점검 내역", item.check || "-", true, "checkView")}
+              </div>
+
+              <div class="scrollHint">아래로 스크롤하여 수리 요청</div>
+            </div>
           </div>
         </div>
 
@@ -1012,33 +1080,11 @@
       `;
     }
 
-    function renderInfoCards(item) {
-      if (item.mode === "personal") {
-        return `
-          ${miniCard("식별 코드", item.code)}
-          ${miniCard("소유자", item.owner)}
-          ${miniCard("브랜드", item.brand)}
-          ${miniCard("사이즈", item.size)}
-          ${miniCard("파운드", item.pound ? item.pound + " lb" : "-")}
-          ${miniCard("상태", item.status, true, "statusView")}
-        `;
-      }
-
+    function heroInfo(label, value, full = false, id = "") {
       return `
-        ${miniCard("일련번호", item.serial)}
-        ${miniCard("상태", item.status, true, "statusView")}
-        ${miniCard("브랜드", item.brand)}
-        ${miniCard("사이즈", item.size)}
-        ${miniCard("파운드", item.pound ? item.pound + " lb" : "-")}
-        ${miniCard("기타", item.etc, true)}
-      `;
-    }
-
-    function miniCard(label, value, small = false, id = "") {
-      return `
-        <div class="miniCard">
-          <div class="miniLabel">${escapeHtml(label)}</div>
-          <div ${id ? `id="${id}"` : ""} class="miniValue ${small ? "small" : ""}">
+        <div class="heroInfo ${full ? "full" : ""}">
+          <div class="heroInfoLabel">${escapeHtml(label)}</div>
+          <div ${id ? `id="${id}"` : ""} class="heroInfoValue">
             ${escapeHtml(value || "-")}
           </div>
         </div>
