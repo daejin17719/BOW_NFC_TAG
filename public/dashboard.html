@@ -63,6 +63,100 @@
       filter: brightness(0);
     }
 
+    .loginCard {
+      min-height: calc(100dvh - 28px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loginBox {
+      width: 100%;
+      max-width: 360px;
+      background: var(--card);
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+    }
+
+    .loginLogoWrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .loginLogo {
+      width: 92px;
+      height: auto;
+      opacity: 0.82;
+      filter: brightness(0);
+    }
+
+    .loginTitle {
+      font-size: 23px;
+      line-height: 1.15;
+      font-weight: 950;
+      letter-spacing: -0.045em;
+      text-align: center;
+      margin-bottom: 7px;
+    }
+
+    .loginText {
+      font-size: 14px;
+      font-weight: 850;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.45;
+      margin-bottom: 18px;
+    }
+
+    .loginInput {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 18px;
+      padding: 16px;
+      font-size: 24px;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      outline: none;
+      text-align: center;
+      color: var(--text);
+      background: #ffffff;
+    }
+
+    .loginInput:focus {
+      border-color: #94a3b8;
+      box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.20);
+    }
+
+    .loginBtn {
+      width: 100%;
+      margin-top: 14px;
+      border: 0;
+      border-radius: 18px;
+      padding: 15px;
+      font-size: 17px;
+      font-weight: 950;
+      cursor: pointer;
+      background: #0f172a;
+      color: white;
+    }
+
+    .loginBtn:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+
+    .loginError {
+      min-height: 22px;
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: 850;
+      color: #991b1b;
+      text-align: center;
+      line-height: 1.45;
+    }
+
     .topCard {
       position: relative;
       overflow: hidden;
@@ -767,6 +861,34 @@
         opacity: 0.85;
       }
 
+      .loginBox {
+        background: #111827;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+      }
+
+      .loginLogo {
+        filter: brightness(0) invert(1);
+        opacity: 0.86;
+      }
+
+      .loginInput {
+        background: #172033;
+        border: none;
+        color: #f8fafc;
+      }
+
+      .loginInput:focus {
+        box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.16);
+      }
+
+      .loginBtn {
+        background: #334155;
+      }
+
+      .loginError {
+        color: #fca5a5;
+      }
+
       .topCard {
         background: linear-gradient(
           135deg,
@@ -931,6 +1053,11 @@
         }
 
         if (!response.ok) {
+          if (response.status === 401 || data?.error === "unauthorized") {
+            showDashboardLogin(data?.message || "");
+            return;
+          }
+
           showError(data?.message || data?.error || "종합 관리 정보를 불러오지 못했습니다.");
           return;
         }
@@ -938,6 +1065,110 @@
         renderDashboard(data);
       } catch (error) {
         showError("불러오기 실패: " + error.message);
+      }
+    }
+
+    function showLoading() {
+      app.innerHTML = `
+        <div class="loadingLogoWrap">
+          <img class="loadingLogo" src="/logo.png" alt="로딩 중">
+        </div>
+      `;
+    }
+
+    function showDashboardLogin(message = "") {
+      app.innerHTML = `
+        <div class="loginCard">
+          <div class="loginBox">
+            <div class="loginLogoWrap">
+              <img class="loginLogo" src="/logo.png" alt="서울대학교 국궁부">
+            </div>
+
+            <div class="loginTitle">공용 장비 현황</div>
+            <div class="loginText">
+              관리자 비밀번호를 입력하세요.
+            </div>
+
+            <input
+              id="dashboardPasswordInput"
+              class="loginInput"
+              type="password"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              autocomplete="off"
+              placeholder="비밀번호"
+              onkeydown="handleDashboardLoginKey(event)"
+            >
+
+            <button id="dashboardLoginBtn" class="loginBtn" onclick="submitDashboardLogin()">
+              확인
+            </button>
+
+            <div id="dashboardLoginError" class="loginError">
+              ${escapeHtml(message)}
+            </div>
+          </div>
+        </div>
+      `;
+
+      setTimeout(() => {
+        document.getElementById("dashboardPasswordInput")?.focus();
+      }, 80);
+    }
+
+    function handleDashboardLoginKey(event) {
+      if (event.key === "Enter") {
+        submitDashboardLogin();
+      }
+    }
+
+    async function submitDashboardLogin() {
+      const input = document.getElementById("dashboardPasswordInput");
+      const btn = document.getElementById("dashboardLoginBtn");
+      const error = document.getElementById("dashboardLoginError");
+
+      const password = String(input?.value || "").trim();
+
+      if (!password) {
+        if (error) error.textContent = "비밀번호를 입력하세요.";
+        input?.focus();
+        return;
+      }
+
+      if (btn) btn.disabled = true;
+      if (error) error.textContent = "확인 중...";
+
+      try {
+        const response = await fetch("/api/summary", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            action: "dashboardLogin",
+            password
+          })
+        });
+
+        const data = await response.json().catch(() => null);
+
+        if (!response.ok) {
+          throw new Error(data?.message || data?.error || "로그인 실패");
+        }
+
+        showLoading();
+        await init();
+      } catch (loginError) {
+        if (error) {
+          error.textContent = loginError.message;
+        }
+
+        if (input) {
+          input.value = "";
+          input.focus();
+        }
+      } finally {
+        if (btn) btn.disabled = false;
       }
     }
 
@@ -1526,6 +1757,11 @@
       }
 
       if (!response.ok) {
+        if (response.status === 401 || data?.error === "unauthorized") {
+          showDashboardLogin(data?.message || "");
+          throw new Error("대시보드 인증이 필요합니다.");
+        }
+
         throw new Error(data?.message || data?.error || "요청 실패");
       }
 
