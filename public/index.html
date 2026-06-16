@@ -46,15 +46,6 @@
       padding-bottom: 28px;
     }
 
-    .loading {
-      background: white;
-      border-radius: 24px;
-      padding: 22px;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-      font-weight: 850;
-      line-height: 1.5;
-    }
-
     .loadingLogoWrap {
       min-height: calc(100dvh - 28px);
       display: flex;
@@ -368,14 +359,6 @@
       white-space: pre-wrap;
     }
 
-    label {
-      display: block;
-      font-size: 14px;
-      color: var(--muted);
-      font-weight: 850;
-      margin: 14px 0 7px;
-    }
-
     select,
     textarea {
       width: 100%;
@@ -476,6 +459,80 @@
       overflow-wrap: anywhere;
     }
 
+    .borrowLockedBox {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 12px;
+      background: #f8fafc;
+      border: 1px solid #eef2f7;
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .borrowLabel {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 850;
+      margin-bottom: 6px;
+    }
+
+    .borrowName {
+      font-size: 24px;
+      line-height: 1.1;
+      font-weight: 950;
+      letter-spacing: -0.045em;
+      color: #1e40af;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .borrowLockedBadge {
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 950;
+      background: #e2e8f0;
+      color: #475569;
+      white-space: nowrap;
+    }
+
+    .borrowInputBox {
+      display: flex;
+      gap: 10px;
+    }
+
+    .borrowInput {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid #d1d5db;
+      border-radius: 16px;
+      padding: 14px 15px;
+      font-size: 17px;
+      font-weight: 850;
+      font-family: inherit;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+    }
+
+    .borrowSaveBtn {
+      flex: 0 0 auto;
+      width: auto;
+      margin-top: 0;
+      border-radius: 16px;
+      padding: 0 18px;
+      font-size: 16px;
+    }
+
+    .borrowHelp {
+      margin-top: 10px;
+      font-size: 13px;
+      font-weight: 850;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
     .systemBtn {
       display: block;
       width: 100%;
@@ -552,6 +609,18 @@
         padding: 18px;
       }
 
+      .borrowInputBox {
+        gap: 8px;
+      }
+
+      .borrowName {
+        font-size: 22px;
+      }
+
+      .borrowSaveBtn {
+        padding: 0 16px;
+      }
+
       .smallLabel,
       .mainValue,
       .mainValue.ownerValue,
@@ -578,11 +647,12 @@
 
       .miniLabel,
       .fullLabel,
-      label,
       textarea,
       .result,
       .hint,
-      .repairBlockedText {
+      .repairBlockedText,
+      .borrowHelp,
+      .borrowLabel {
         font-weight: 850;
       }
     }
@@ -621,14 +691,15 @@
 
       .miniCard,
       .fullItem,
-      .repairBlockedBox {
+      .repairBlockedBox,
+      .borrowLockedBox {
         background: #172033;
         border: none;
       }
 
       .miniLabel,
       .fullLabel,
-      label {
+      .borrowLabel {
         color: #9aa8bc;
       }
 
@@ -646,16 +717,16 @@
         color: #94a3b8;
       }
 
-      select,
-      textarea {
+      textarea,
+      .borrowInput {
         background: #172033;
         color: #f8fafc;
         border: none;
         box-shadow: none;
       }
 
-      select:focus,
-      textarea:focus {
+      textarea:focus,
+      .borrowInput:focus {
         border: none;
         box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.14);
       }
@@ -686,7 +757,8 @@
       }
 
       .result,
-      .hint {
+      .hint,
+      .borrowHelp {
         color: #94a3b8;
       }
 
@@ -698,16 +770,18 @@
         color: #fca5a5;
       }
 
+      .borrowName {
+        color: #93c5fd;
+      }
+
+      .borrowLockedBadge {
+        background: #263449;
+        color: #cbd5e1;
+      }
+
       .systemBtn {
         background: #1e293b;
         color: #f8fafc;
-      }
-
-      .loading {
-        background: #111827;
-        color: #f8fafc;
-        border: 1px solid #1e293b;
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
       }
 
       .loadingLogo {
@@ -899,7 +973,7 @@
       const mainLabel = isPersonal ? "소유자" : "일련번호";
       const mainValue = isPersonal ? item.owner : item.serial;
       const mainValueClass = isPersonal ? "ownerValue" : "serialValue";
-      const sectionTitle = isPersonal ? "장비 정보" : "장비 정보";
+      const sectionTitle = "장비 정보";
 
       const titleText = `${item.brand || "-"} ${item.size || ""}`.trim();
       const poundText = item.pound
@@ -948,6 +1022,8 @@
           </div>
         </div>
 
+        ${!isPersonal ? renderBorrowSection(item) : ""}
+
         <div class="section">
           <div class="sectionTitle">수리 요청</div>
 
@@ -976,7 +1052,7 @@
         </div>
 
         <a class="systemBtn" href="/dashboard.html">
-          공용 장비 현황 
+          공용 장비 현황
         </a>
 
         <div class="hint">
@@ -1008,6 +1084,60 @@
       `;
     }
 
+    function renderBorrowSection(item) {
+      const borrowedBy = String(item.borrowedBy || "").trim();
+
+      if (borrowedBy) {
+        return `
+          <div class="section">
+            <div class="sectionTitle">개인 반출</div>
+
+            <div class="borrowLockedBox">
+              <div>
+                <div class="borrowLabel">현재 반출자</div>
+                <div id="borrowedByView" class="borrowName">${escapeHtml(borrowedBy)}</div>
+              </div>
+
+              <div class="borrowLockedBadge">
+                수정 불가
+              </div>
+            </div>
+
+            <div class="borrowHelp">
+              반출자 수정은 할 수 없습니다. 반납 처리는 공용 장비 현황에서 진행하세요.
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="section">
+          <div class="sectionTitle">개인 반출</div>
+
+          <div class="borrowInputBox">
+            <input
+              id="borrowedByInput"
+              class="borrowInput"
+              type="text"
+              placeholder="반출자 이름 입력"
+              autocomplete="off"
+              onkeydown="handleBorrowKey(event)"
+            >
+
+            <button id="borrowSaveBtn" class="borrowSaveBtn" onclick="submitBorrowedBy()">
+              등록
+            </button>
+          </div>
+
+          <div id="borrowResult" class="result"></div>
+
+          <div class="borrowHelp">
+            한 번 등록한 반출자는 이 화면에서 수정할 수 없습니다.
+          </div>
+        </div>
+      `;
+    }
+
     function miniCard(label, value, small = false, id = "") {
       return `
         <div class="miniCard">
@@ -1017,6 +1147,83 @@
           </div>
         </div>
       `;
+    }
+
+    function handleBorrowKey(event) {
+      if (event.key === "Enter") {
+        submitBorrowedBy();
+      }
+    }
+
+    async function submitBorrowedBy() {
+      if (currentMode !== "bow") return;
+
+      if (currentItem?.borrowedBy) {
+        alert("이미 반출자가 등록되어 있어 수정할 수 없습니다.");
+        return;
+      }
+
+      const input = document.getElementById("borrowedByInput");
+      const btn = document.getElementById("borrowSaveBtn");
+      const result = document.getElementById("borrowResult");
+
+      const borrowedBy = String(input?.value || "").trim();
+
+      if (!borrowedBy) {
+        if (result) {
+          result.className = "result error";
+          result.textContent = "반출자 이름을 입력해주세요.";
+        }
+        input?.focus();
+        return;
+      }
+
+      if (btn) btn.disabled = true;
+      if (result) {
+        result.className = "result";
+        result.textContent = "등록 중...";
+      }
+
+      try {
+        const response = await fetch("/api/bow", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            type: "bow",
+            id: currentKey,
+            action: "saveBorrowedBy",
+            borrowedBy
+          })
+        });
+
+        const data = await response.json().catch(() => null);
+
+        if (!response.ok) {
+          throw new Error(data?.message || data?.error || "반출자 등록 실패");
+        }
+
+        if (currentItem) {
+          currentItem.borrowedBy = borrowedBy;
+        }
+
+        if (result) {
+          result.className = "result success";
+          result.textContent = "개인 반출이 등록되었습니다.";
+        }
+
+        setTimeout(() => {
+          renderPage(currentItem);
+        }, 500);
+      } catch (error) {
+        if (result) {
+          result.className = "result error";
+          result.textContent = "등록 실패: " + error.message;
+        }
+      } finally {
+        if (btn) btn.disabled = false;
+      }
     }
 
     async function submitRepairRequest() {
@@ -1209,13 +1416,6 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-    }
-
-    function escapeTextarea(value) {
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
     }
   </script>
 </body>
