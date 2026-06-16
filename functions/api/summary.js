@@ -1,6 +1,6 @@
 const TOKEN_CACHE_SECONDS = 3000;
 const DASHBOARD_COOKIE_NAME = "dashboard_auth";
-const DASHBOARD_COOKIE_MAX_AGE = 60 * 60 * 8;
+const DASHBOARD_COOKIE_MAX_AGE = 60 * 10;
 
 export async function onRequestGet({ env, request }) {
   try {
@@ -257,7 +257,7 @@ async function requireDashboardAuth(env, request) {
       status: 401,
       data: {
         error: "unauthorized",
-        message: "대시보드 인증이 필요합니다."
+        message: "관리 인증이 필요합니다."
       }
     };
   }
