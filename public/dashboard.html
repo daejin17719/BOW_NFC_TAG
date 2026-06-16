@@ -214,7 +214,20 @@
       gap: 12px;
     }
 
+    .compactItem {
+      gap: 12px;
+      padding: 14px 15px;
+    }
+
     .actionMain {
+      min-width: 0;
+    }
+
+    .compactTitleRow {
+      display: grid;
+      grid-template-columns: minmax(0, auto) 1fr;
+      align-items: baseline;
+      gap: 10px;
       min-width: 0;
     }
 
@@ -225,6 +238,32 @@
       margin-bottom: 5px;
       word-break: keep-all;
       overflow-wrap: anywhere;
+    }
+
+    .compactItem .actionTitle {
+      margin-bottom: 0;
+      font-size: 22px;
+      white-space: nowrap;
+    }
+
+    .sideInfo {
+      min-width: 0;
+      justify-self: end;
+      text-align: right;
+      font-size: 16px;
+      font-weight: 900;
+      line-height: 1.25;
+      color: #94a3b8;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .repairSideInfo {
+      color: #9ca3af;
+    }
+
+    .borrowSideInfo {
+      color: #2563eb;
     }
 
     .actionSub {
@@ -244,6 +283,11 @@
       align-items: stretch;
     }
 
+    .compactItem .actionBtns {
+      flex-direction: row;
+      gap: 8px;
+    }
+
     .miniActionBtn {
       border: 0;
       border-radius: 999px;
@@ -253,6 +297,11 @@
       font-weight: 950;
       cursor: pointer;
       white-space: nowrap;
+    }
+
+    .compactItem .miniActionBtn {
+      min-height: 36px;
+      padding: 9px 14px;
     }
 
     .miniActionBtn.primary {
@@ -616,13 +665,25 @@
         grid-template-columns: 1fr;
       }
 
+      .compactTitleRow {
+        grid-template-columns: minmax(0, auto) 1fr;
+        gap: 8px;
+      }
+
+      .compactItem .actionTitle {
+        font-size: 22px;
+      }
+
+      .sideInfo {
+        font-size: 16px;
+      }
+
       .actionBtns {
         flex-direction: row;
       }
 
-      .miniActionBtn {
+      .compactItem .miniActionBtn {
         flex: 1;
-        min-height: 36px;
       }
 
       .lookupBox,
@@ -732,6 +793,14 @@
       .lookupSuggestionTitle,
       .memoText {
         color: #f8fafc;
+      }
+
+      .sideInfo {
+        color: #94a3b8;
+      }
+
+      .borrowSideInfo {
+        color: #93c5fd;
       }
 
       .lookupInput,
@@ -1040,13 +1109,14 @@
     function repairBowItem(item) {
       const serial = item.serial || "-";
       const check = item.check || "-";
-      const info = `${item.brand || "-"} / ${item.size || "-"} / ${item.pound || "-"}lb`;
 
       return `
-        <div class="item actionItem">
+        <div class="item actionItem compactItem">
           <div class="actionMain">
-            <div class="actionTitle">${escapeHtml(serial)}번 활</div>
-            <div class="actionSub">${escapeHtml(info)}<br>${escapeHtml(check)}</div>
+            <div class="compactTitleRow">
+              <div class="actionTitle">${escapeHtml(serial)}번 활</div>
+              <div class="sideInfo repairSideInfo">${escapeHtml(check)}</div>
+            </div>
           </div>
 
           <div class="actionBtns">
@@ -1080,13 +1150,14 @@
     function borrowedBowItem(item) {
       const serial = item.serial || "-";
       const borrowedBy = item.borrowedBy || "-";
-      const info = `${item.brand || "-"} / ${item.size || "-"} / ${item.pound || "-"}lb`;
 
       return `
-        <div class="item actionItem">
+        <div class="item actionItem compactItem">
           <div class="actionMain">
-            <div class="actionTitle">${escapeHtml(serial)}번 활</div>
-            <div class="actionSub">반출자: ${escapeHtml(borrowedBy)}<br>${escapeHtml(info)}</div>
+            <div class="compactTitleRow">
+              <div class="actionTitle">${escapeHtml(serial)}번 활</div>
+              <div class="sideInfo borrowSideInfo">${escapeHtml(borrowedBy)}</div>
+            </div>
           </div>
 
           <div class="actionBtns">
