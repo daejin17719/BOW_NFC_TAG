@@ -257,7 +257,7 @@ async function requireDashboardAuth(env, request) {
       status: 401,
       data: {
         error: "unauthorized",
-        message: "관리 인증이 필요합니다."
+        message: "관리자 전용 페이지입니다. 인증이 필요합니다."
       }
     };
   }
