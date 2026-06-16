@@ -62,12 +62,17 @@ export async function onRequestPost(context) {
       body.code ||
       body.serial;
 
-    const status = body.status || "";
-    const check = body.check || "";
-
     if (!key) {
       return jsonResponse({ error: "조회 코드가 없습니다." }, 400);
     }
+
+    if (body.action === "saveBorrowedBy") {
+      const result = await saveBorrowedBy(context.env, key, body.borrowedBy);
+      return jsonResponse(result);
+    }
+
+    const status = body.status || "";
+    const check = body.check || "";
 
     const result = await updateItemData(context.env, mode, key, status, check);
     return jsonResponse(result);
@@ -123,6 +128,7 @@ function getConfig(env, mode) {
       ),
       statusColumn: 6,
       checkColumn: 7,
+      readEndColumn: "G",
     };
   }
 
@@ -139,25 +145,27 @@ function getConfig(env, mode) {
     ),
     statusColumn: 5,
     checkColumn: 7,
+    borrowColumn: 8,
+    readEndColumn: "H",
   };
 }
 
 /*
-속도 개선:
-기존 방식:
-1. A열만 읽기
-2. 찾은 행 A:G 다시 읽기
-
-수정 방식:
-1. A:G를 한 번에 읽기
-2. 서버 코드에서 A열 검색
-3. 찾은 행 데이터를 바로 사용
+공용 활:
+A 일련번호
+B 브랜드
+C 사이즈
+D 파운드
+E 상태
+F 기타
+G 점검 내역
+H 개인 반출
 */
 async function getItemByKey(env, mode, key) {
   const config = getConfig(env, mode);
   const accessToken = await getAccessToken(env);
 
-  const range = `'${config.sheetName}'!A${config.startRow}:G`;
+  const range = `'${config.sheetName}'!A${config.startRow}:${config.readEndColumn}`;
 
   const url =
     `https://sheets.googleapis.com/v4/spreadsheets/${env.SPREADSHEET_ID}/values/` +
@@ -208,6 +216,7 @@ async function getItemByKey(env, mode, key) {
         status: row[4] || "",
         etc: row[5] || "",
         check: row[6] || "",
+        borrowedBy: row[7] || "",
       };
     }
   }
@@ -265,6 +274,60 @@ async function updateItemData(env, mode, key, status, check) {
     key,
     status,
     check,
+  };
+}
+
+async function saveBorrowedBy(env, key, borrowedByValue) {
+  const config = getConfig(env, "bow");
+  const borrowedBy = clean(borrowedByValue);
+
+  if (!borrowedBy) {
+    throw new Error("반출자 이름이 필요합니다.");
+  }
+
+  const item = await getItemByKey(env, "bow", key);
+
+  if (!item) {
+    throw new Error("A열에서 해당 값을 찾을 수 없습니다.");
+  }
+
+  if (item.borrowedBy) {
+    return jsonConflictError("이미 반출자가 등록되어 있어 수정할 수 없습니다.");
+  }
+
+  const accessToken = await getAccessToken(env);
+  const rowNumber = item.rowNumber;
+
+  const range = `'${config.sheetName}'!${columnToLetter(config.borrowColumn)}${rowNumber}`;
+
+  const url =
+    `https://sheets.googleapis.com/v4/spreadsheets/${env.SPREADSHEET_ID}/values/` +
+    encodeURIComponent(range) +
+    "?valueInputOption=USER_ENTERED";
+
+  const response = await fetch(url, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      values: [[borrowedBy]],
+    }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`반출자 저장 실패: ${response.status} ${text}`);
+  }
+
+  return {
+    message: "개인 반출이 등록되었습니다.",
+    updatedAt: formatDateTime(new Date()),
+    mode: "bow",
+    rowNumber,
+    key,
+    borrowedBy,
   };
 }
 
@@ -422,6 +485,10 @@ function normalizeKey(value) {
   return String(value || "").trim().toUpperCase();
 }
 
+function clean(value) {
+  return String(value ?? "").trim();
+}
+
 function columnToLetter(columnNumber) {
   let letter = "";
   let number = columnNumber;
@@ -446,9 +513,18 @@ function formatDateTime(date) {
   return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 }
 
+function jsonConflictError(message) {
+  return {
+    error: "borrow_locked",
+    message,
+  };
+}
+
 function jsonResponse(data, status = 200) {
+  const responseStatus = data?.error === "borrow_locked" ? 409 : status;
+
   return new Response(JSON.stringify(data, null, 2), {
-    status,
+    status: responseStatus,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
       ...corsHeaders(),
