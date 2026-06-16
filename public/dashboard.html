@@ -63,87 +63,6 @@
       filter: brightness(0);
     }
 
-    .passwordOverlay {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      padding: 20px;
-      background:
-        radial-gradient(circle at top left, rgba(224, 242, 254, 0.32) 0, transparent 35%),
-        rgba(15, 23, 42, 0.72);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-
-    .passwordBox {
-      width: 100%;
-      max-width: 360px;
-      background: #ffffff;
-      color: #0f172a;
-      border-radius: 26px;
-      padding: 24px;
-      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.30);
-    }
-
-    .passwordTitle {
-      font-size: 22px;
-      font-weight: 950;
-      letter-spacing: -0.045em;
-      margin-bottom: 7px;
-    }
-
-    .passwordText {
-      font-size: 14px;
-      font-weight: 850;
-      color: #64748b;
-      margin-bottom: 16px;
-      line-height: 1.45;
-    }
-
-    .passwordInput {
-      width: 100%;
-      border: 1px solid #d1d5db;
-      border-radius: 18px;
-      padding: 16px;
-      font-size: 24px;
-      font-weight: 950;
-      letter-spacing: 0.08em;
-      outline: none;
-      text-align: center;
-      color: #0f172a;
-      background: #ffffff;
-    }
-
-    .passwordInput:focus {
-      border-color: #94a3b8;
-      box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.20);
-    }
-
-    .passwordSubmit {
-      width: 100%;
-      margin-top: 14px;
-      border: 0;
-      border-radius: 18px;
-      padding: 15px;
-      font-size: 17px;
-      font-weight: 950;
-      cursor: pointer;
-      background: #0f172a;
-      color: white;
-    }
-
-    .passwordError {
-      min-height: 22px;
-      margin-top: 12px;
-      font-size: 14px;
-      font-weight: 850;
-      color: #991b1b;
-      text-align: center;
-    }
-
     .topCard {
       position: relative;
       overflow: hidden;
@@ -848,25 +767,6 @@
         opacity: 0.85;
       }
 
-      .passwordBox {
-        background: #111827;
-        color: #f8fafc;
-      }
-
-      .passwordText {
-        color: #94a3b8;
-      }
-
-      .passwordInput {
-        background: #172033;
-        border: none;
-        color: #f8fafc;
-      }
-
-      .passwordSubmit {
-        background: #334155;
-      }
-
       .topCard {
         background: linear-gradient(
           135deg,
@@ -999,92 +899,19 @@
 </head>
 
 <body>
-  <div class="wrap" id="app"></div>
+  <div class="wrap" id="app">
+    <div class="loadingLogoWrap">
+      <img class="loadingLogo" src="/logo.png" alt="로딩 중">
+    </div>
+  </div>
 
   <script>
     const app = document.getElementById("app");
 
-    const DASHBOARD_PASSWORD = "2013";
-
     let currentData = null;
     let arrowCategories = [];
 
-    showPasswordGate();
-
-    function showPasswordGate() {
-      app.innerHTML = "";
-
-      const modal = document.createElement("div");
-      modal.id = "passwordGate";
-      modal.className = "passwordOverlay";
-      modal.innerHTML = `
-        <div class="passwordBox">
-          <div class="passwordTitle">공용 장비 현황</div>
-          <div class="passwordText">
-            관리 체계에 접근하려면 비밀번호를 입력하세요.
-          </div>
-
-          <input
-            id="dashboardPasswordInput"
-            class="passwordInput"
-            type="password"
-            inputmode="numeric"
-            pattern="[0-9]*"
-            autocomplete="off"
-            placeholder="비밀번호"
-            onkeydown="handlePasswordKey(event)"
-          >
-
-          <button class="passwordSubmit" onclick="checkDashboardPassword()">
-            확인
-          </button>
-
-          <div id="passwordError" class="passwordError"></div>
-        </div>
-      `;
-
-      document.body.appendChild(modal);
-
-      setTimeout(() => {
-        document.getElementById("dashboardPasswordInput")?.focus();
-      }, 80);
-    }
-
-    function handlePasswordKey(event) {
-      if (event.key === "Enter") {
-        checkDashboardPassword();
-      }
-    }
-
-    function checkDashboardPassword() {
-      const input = document.getElementById("dashboardPasswordInput");
-      const error = document.getElementById("passwordError");
-      const value = String(input?.value || "");
-
-      if (value === DASHBOARD_PASSWORD) {
-        document.getElementById("passwordGate")?.remove();
-        showLoading();
-        init();
-        return;
-      }
-
-      if (error) {
-        error.textContent = "비밀번호가 올바르지 않습니다.";
-      }
-
-      if (input) {
-        input.value = "";
-        input.focus();
-      }
-    }
-
-    function showLoading() {
-      app.innerHTML = `
-        <div class="loadingLogoWrap">
-          <img class="loadingLogo" src="/logo.png" alt="로딩 중">
-        </div>
-      `;
-    }
+    init();
 
     async function init() {
       try {
