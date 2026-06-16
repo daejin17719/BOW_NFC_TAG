@@ -467,80 +467,6 @@
       color: #991b1b;
       margin-bottom: 6px;
     }
-    .passwordOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  padding: 20px;
-  background: rgba(15, 23, 42, 0.48);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.passwordBox {
-  width: 100%;
-  max-width: 360px;
-  background: #ffffff;
-  color: #0f172a;
-  border-radius: 24px;
-  padding: 22px;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
-}
-
-.passwordTitle {
-  font-size: 20px;
-  font-weight: 950;
-  letter-spacing: -0.04em;
-  margin-bottom: 6px;
-}
-
-.passwordText {
-  font-size: 14px;
-  font-weight: 850;
-  color: #64748b;
-  margin-bottom: 14px;
-}
-
-.passwordInput {
-  width: 100%;
-  border: 1px solid #d1d5db;
-  border-radius: 16px;
-  padding: 15px;
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  outline: none;
-  text-align: center;
-}
-
-.passwordInput:focus {
-  border-color: #94a3b8;
-  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.18);
-}
-
-.passwordSubmit,
-.passwordCancel {
-  width: 100%;
-  margin-top: 12px;
-  border: 0;
-  border-radius: 16px;
-  padding: 14px;
-  font-size: 17px;
-  font-weight: 950;
-  cursor: pointer;
-}
-
-.passwordSubmit {
-  background: #0f172a;
-  color: white;
-}
-
-.passwordCancel {
-  background: #e2e8f0;
-  color: #0f172a;
-  box-shadow: none;
-}
 
     .repairBlockedText {
       font-size: 14px;
@@ -1049,9 +975,9 @@
           }
         </div>
 
-        <a class="systemBtn" href="#" onclick="openDashboard(event)">
-  공용 장비 현황
-</a>
+        <a class="systemBtn" href="/dashboard.html">
+          장비 통계 및 현황 
+        </a>
 
         <div class="hint">
           서울대학교 국궁부 ${isPersonal ? "개인 장비" : "공용 장비"} 관리 체계<br>
@@ -1275,64 +1201,6 @@
         </div>
       `;
     }
-    function openDashboard(event) {
-  event.preventDefault();
-
-  const existing = document.getElementById("passwordModal");
-  if (existing) existing.remove();
-
-  const modal = document.createElement("div");
-  modal.id = "passwordModal";
-  modal.innerHTML = `
-    <div class="passwordOverlay" onclick="closePasswordModal(event)">
-      <div class="passwordBox" onclick="event.stopPropagation()">
-        <div class="passwordTitle">공용 장비 현황</div>
-        <div class="passwordText">비밀번호를 입력하세요.</div>
-
-        <input
-          id="dashboardPassword"
-          class="passwordInput"
-          type="password"
-          inputmode="numeric"
-          pattern="[0-9]*"
-          autocomplete="off"
-          placeholder="비밀번호"
-        />
-
-        <button class="passwordSubmit" onclick="checkDashboardPassword()">확인</button>
-        <button class="passwordCancel" onclick="closePasswordModal()">취소</button>
-      </div>
-    </div>
-  `;
-
-  document.body.appendChild(modal);
-
-  setTimeout(() => {
-    document.getElementById("dashboardPassword")?.focus();
-  }, 50);
-}
-
-function checkDashboardPassword() {
-  const input = document.getElementById("dashboardPassword");
-  const password = input?.value || "";
-
-  if (password === "2013") {
-    window.location.href = "/dashboard.html";
-  } else {
-    alert("비밀번호가 올바르지 않습니다.");
-    if (input) {
-      input.value = "";
-      input.focus();
-    }
-  }
-}
-
-function closePasswordModal(event) {
-  if (event && event.target !== event.currentTarget) return;
-
-  const modal = document.getElementById("passwordModal");
-  if (modal) modal.remove();
-}
 
     function escapeHtml(value) {
       return String(value ?? "")
