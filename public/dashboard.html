@@ -88,7 +88,7 @@
     .loginLogo {
       width: 92px;
       height: auto;
-      opacity: 0.82;
+      opacity: 0.92;
       filter: brightness(0);
     }
 
@@ -107,7 +107,17 @@
       color: var(--muted);
       text-align: center;
       line-height: 1.45;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
+    }
+
+    .loginError {
+      min-height: 20px;
+      margin: 0 0 12px;
+      font-size: 14px;
+      font-weight: 850;
+      color: #991b1b;
+      text-align: center;
+      line-height: 1.4;
     }
 
     .loginInput {
@@ -145,16 +155,6 @@
     .loginBtn:disabled {
       opacity: 0.55;
       cursor: default;
-    }
-
-    .loginError {
-      min-height: 22px;
-      margin-top: 12px;
-      font-size: 14px;
-      font-weight: 850;
-      color: #991b1b;
-      text-align: center;
-      line-height: 1.45;
     }
 
     .topCard {
@@ -747,6 +747,41 @@
         padding: 10px;
       }
 
+      .loginCard {
+        align-items: flex-start;
+        padding-top: 28px;
+      }
+
+      .loginBox {
+        padding: 22px;
+      }
+
+      .loginLogoWrap {
+        margin-bottom: 14px;
+      }
+
+      .loginLogo {
+        width: 78px;
+      }
+
+      .loginTitle {
+        font-size: 22px;
+      }
+
+      .loginText {
+        margin-bottom: 12px;
+      }
+
+      .loginError {
+        margin-bottom: 10px;
+        font-size: 13px;
+      }
+
+      .loginInput {
+        padding: 15px;
+        font-size: 23px;
+      }
+
       .topCard {
         min-height: 210px;
         border-radius: 24px;
@@ -826,7 +861,9 @@
       .badge,
       .arrowCategoryValue,
       .arrowControlBtn,
-      .saveBtn {
+      .saveBtn,
+      .loginTitle,
+      .loginBtn {
         font-weight: 900;
       }
 
@@ -837,7 +874,9 @@
       .arrowHelp,
       .saveResult,
       .lookupHint,
-      .memoText {
+      .memoText,
+      .loginText,
+      .loginError {
         font-weight: 850;
       }
     }
@@ -868,7 +907,7 @@
 
       .loginLogo {
         filter: brightness(0) invert(1);
-        opacity: 0.86;
+        opacity: 0.9;
       }
 
       .loginInput {
@@ -1081,12 +1120,16 @@
         <div class="loginCard">
           <div class="loginBox">
             <div class="loginLogoWrap">
-              <img class="loginLogo" src="/logo.png" alt="서울대학교 국궁부">
+              <img class="loginLogo" src="/logo2.png" alt="서울대학교 국궁부">
             </div>
 
             <div class="loginTitle">공용 장비 현황</div>
             <div class="loginText">
               관리자 비밀번호를 입력하세요.
+            </div>
+
+            <div id="dashboardLoginError" class="loginError">
+              ${escapeHtml(message)}
             </div>
 
             <input
@@ -1103,10 +1146,6 @@
             <button id="dashboardLoginBtn" class="loginBtn" onclick="submitDashboardLogin()">
               확인
             </button>
-
-            <div id="dashboardLoginError" class="loginError">
-              ${escapeHtml(message)}
-            </div>
           </div>
         </div>
       `;
