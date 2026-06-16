@@ -1,7 +1,15 @@
 const TOKEN_CACHE_SECONDS = 3000;
+const DASHBOARD_COOKIE_NAME = "dashboard_auth";
+const DASHBOARD_COOKIE_MAX_AGE = 60 * 60 * 8;
 
-export async function onRequestGet({ env }) {
+export async function onRequestGet({ env, request }) {
   try {
+    const auth = await requireDashboardAuth(env, request);
+
+    if (!auth.ok) {
+      return json(auth.data, auth.status);
+    }
+
     const data = await buildSummary(env);
     return json(data);
   } catch (error) {
@@ -27,6 +35,29 @@ export async function onRequestPost({ env, request }) {
         },
         400
       );
+    }
+
+    if (body.action === "dashboardLogin") {
+      return await handleDashboardLogin(env, body);
+    }
+
+    if (body.action === "dashboardLogout") {
+      return json(
+        {
+          ok: true,
+          message: "로그아웃되었습니다."
+        },
+        200,
+        {
+          "Set-Cookie": `${DASHBOARD_COOKIE_NAME}=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax; Secure`
+        }
+      );
+    }
+
+    const auth = await requireDashboardAuth(env, request);
+
+    if (!auth.ok) {
+      return json(auth.data, auth.status);
     }
 
     if (Array.isArray(body.categories) && !body.action) {
@@ -163,6 +194,104 @@ export async function onRequestPost({ env, request }) {
       500
     );
   }
+}
+
+async function handleDashboardLogin(env, body) {
+  const expectedPassword = clean(env.ADMIN_PASSWORD);
+  const inputPassword = clean(body.password);
+
+  if (!expectedPassword) {
+    return json(
+      {
+        error: "admin_password_not_set",
+        message: "ADMIN_PASSWORD가 Cloudflare 환경변수에 설정되지 않았습니다."
+      },
+      500
+    );
+  }
+
+  if (!inputPassword || inputPassword !== expectedPassword) {
+    return json(
+      {
+        error: "unauthorized",
+        message: "비밀번호가 올바르지 않습니다."
+      },
+      401
+    );
+  }
+
+  const token = await createDashboardToken(env);
+
+  return json(
+    {
+      ok: true,
+      message: "인증되었습니다."
+    },
+    200,
+    {
+      "Set-Cookie": `${DASHBOARD_COOKIE_NAME}=${token}; Path=/; Max-Age=${DASHBOARD_COOKIE_MAX_AGE}; HttpOnly; SameSite=Lax; Secure`
+    }
+  );
+}
+
+async function requireDashboardAuth(env, request) {
+  const expectedPassword = clean(env.ADMIN_PASSWORD);
+
+  if (!expectedPassword) {
+    return {
+      ok: false,
+      status: 500,
+      data: {
+        error: "admin_password_not_set",
+        message: "ADMIN_PASSWORD가 Cloudflare 환경변수에 설정되지 않았습니다."
+      }
+    };
+  }
+
+  const cookieToken = getCookie(request, DASHBOARD_COOKIE_NAME);
+  const expectedToken = await createDashboardToken(env);
+
+  if (!cookieToken || cookieToken !== expectedToken) {
+    return {
+      ok: false,
+      status: 401,
+      data: {
+        error: "unauthorized",
+        message: "대시보드 인증이 필요합니다."
+      }
+    };
+  }
+
+  return {
+    ok: true
+  };
+}
+
+async function createDashboardToken(env) {
+  const password = clean(env.ADMIN_PASSWORD);
+  const text = `dashboard:${password}`;
+
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(text)
+  );
+
+  return arrayBufferToBase64Url(digest);
+}
+
+function getCookie(request, name) {
+  const cookieHeader = request.headers.get("Cookie") || "";
+  const cookies = cookieHeader.split(";");
+
+  for (const cookie of cookies) {
+    const [rawKey, ...rawValueParts] = cookie.trim().split("=");
+
+    if (rawKey === name) {
+      return rawValueParts.join("=");
+    }
+  }
+
+  return "";
 }
 
 async function buildSummary(env) {
@@ -767,12 +896,13 @@ function base64ToArrayBuffer(base64) {
   return bytes.buffer;
 }
 
-function json(data, status = 200) {
+function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
     status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "no-store"
+      "Cache-Control": "no-store",
+      ...extraHeaders
     }
   });
 }
