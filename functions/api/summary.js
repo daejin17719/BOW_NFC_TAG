@@ -19,24 +19,141 @@ export async function onRequestPost({ env, request }) {
   try {
     const body = await request.json().catch(() => null);
 
-    if (!body || !Array.isArray(body.categories)) {
+    if (!body) {
       return json(
         {
           error: "invalid_body",
-          message: "categories 배열이 필요합니다."
+          message: "요청 본문이 필요합니다."
         },
         400
       );
     }
 
-    await updateArrowCategories(env, body.categories);
+    if (Array.isArray(body.categories) && !body.action) {
+      await updateArrowCategories(env, body.categories);
+      const data = await buildSummary(env);
 
-    const data = await buildSummary(env);
+      return json({
+        ...data,
+        message: "화살 현황이 저장되었습니다."
+      });
+    }
 
-    return json({
-      ...data,
-      message: "화살 현황이 저장되었습니다."
-    });
+    if (body.action === "saveArrowCategories") {
+      if (!Array.isArray(body.categories)) {
+        return json(
+          {
+            error: "invalid_body",
+            message: "categories 배열이 필요합니다."
+          },
+          400
+        );
+      }
+
+      await updateArrowCategories(env, body.categories);
+      const data = await buildSummary(env);
+
+      return json({
+        ...data,
+        message: "화살 현황이 저장되었습니다."
+      });
+    }
+
+    if (body.action === "completeRepair") {
+      const serial = clean(body.serial);
+
+      if (!serial) {
+        return json(
+          {
+            error: "invalid_body",
+            message: "일련번호가 필요합니다."
+          },
+          400
+        );
+      }
+
+      await completeBowRepair(env, serial);
+      const data = await buildSummary(env);
+
+      return json({
+        ...data,
+        message: `${serial}번 활이 수리 완료 처리되었습니다.`
+      });
+    }
+
+    if (body.action === "completeReturn") {
+      const serial = clean(body.serial);
+
+      if (!serial) {
+        return json(
+          {
+            error: "invalid_body",
+            message: "일련번호가 필요합니다."
+          },
+          400
+        );
+      }
+
+      await completeBowReturn(env, serial);
+      const data = await buildSummary(env);
+
+      return json({
+        ...data,
+        message: `${serial}번 활이 반납 완료 처리되었습니다.`
+      });
+    }
+
+    if (body.action === "addMemo") {
+      const text = clean(body.text);
+
+      if (!text) {
+        return json(
+          {
+            error: "invalid_body",
+            message: "메모 내용이 필요합니다."
+          },
+          400
+        );
+      }
+
+      await addMemo(env, text);
+      const data = await buildSummary(env);
+
+      return json({
+        ...data,
+        message: "메모가 추가되었습니다."
+      });
+    }
+
+    if (body.action === "deleteMemo") {
+      const index = Number(body.index);
+
+      if (!Number.isInteger(index) || index < 0) {
+        return json(
+          {
+            error: "invalid_body",
+            message: "삭제할 메모 번호가 올바르지 않습니다."
+          },
+          400
+        );
+      }
+
+      await deleteMemo(env, index);
+      const data = await buildSummary(env);
+
+      return json({
+        ...data,
+        message: "메모가 삭제되었습니다."
+      });
+    }
+
+    return json(
+      {
+        error: "unknown_action",
+        message: "지원하지 않는 작업입니다."
+      },
+      400
+    );
   } catch (error) {
     return json(
       {
@@ -59,17 +176,21 @@ async function buildSummary(env) {
 
   const accessToken = await getAccessToken(env);
 
-  const bowRange = `${sheetName}!A${startRow}:G`;
+  const bowRange = `${sheetName}!A${startRow}:H`;
   const bowValues = await readSheetValues(spreadsheetId, bowRange, accessToken);
 
   const bows = bowValues
-    .map((row) => normalizeBow(row))
+    .map((row, index) => normalizeBow(row, startRow + index))
     .filter((item) => item.serial);
 
   const summary = createSummary(bows);
 
   const repairBows = bows
     .filter((item) => item.status === "수리 필요")
+    .sort(sortBySerial);
+
+  const borrowedBows = bows
+    .filter((item) => item.borrowedBy)
     .sort(sortBySerial);
 
   const topBowValueRange = `${sheetName}!L46`;
@@ -97,12 +218,17 @@ async function buildSummary(env) {
     over7: toNumber(arrowBadgeValues?.[1]?.[0])
   };
 
+  const memos = await readMemos(env, accessToken);
+
   return {
     summary: {
       ...summary,
       topBowValue
     },
+    bows,
     repairBows,
+    borrowedBows,
+    memos,
     arrowSummary: {
       ...arrowSummary,
       badges: arrowBadges
@@ -154,6 +280,168 @@ async function updateArrowCategories(env, postedCategories) {
   await writeSheetValues(spreadsheetId, quantityRange, values, accessToken);
 }
 
+async function completeBowRepair(env, serial) {
+  const bow = await findBowBySerial(env, serial);
+
+  if (!bow) {
+    throw new Error(`${serial}번 활을 찾지 못했습니다.`);
+  }
+
+  const spreadsheetId = env.SPREADSHEET_ID;
+  const sheetName = env.BOW_SHEET_NAME || "장비";
+  const accessToken = await getAccessToken(env);
+  const date = formatKstDate(new Date());
+
+  await writeSheetValues(
+    spreadsheetId,
+    `${sheetName}!E${bow.rowNumber}:G${bow.rowNumber}`,
+    [["정상", bow.etc || "", date]],
+    accessToken
+  );
+}
+
+async function completeBowReturn(env, serial) {
+  const bow = await findBowBySerial(env, serial);
+
+  if (!bow) {
+    throw new Error(`${serial}번 활을 찾지 못했습니다.`);
+  }
+
+  const spreadsheetId = env.SPREADSHEET_ID;
+  const sheetName = env.BOW_SHEET_NAME || "장비";
+  const accessToken = await getAccessToken(env);
+
+  await writeSheetValues(
+    spreadsheetId,
+    `${sheetName}!H${bow.rowNumber}`,
+    [[""]],
+    accessToken
+  );
+}
+
+async function findBowBySerial(env, serial) {
+  const spreadsheetId = env.SPREADSHEET_ID;
+  const sheetName = env.BOW_SHEET_NAME || "장비";
+  const startRow = Number(env.BOW_DATA_START_ROW || 28);
+
+  if (!spreadsheetId) {
+    throw new Error("SPREADSHEET_ID가 설정되지 않았습니다.");
+  }
+
+  const accessToken = await getAccessToken(env);
+  const bowRange = `${sheetName}!A${startRow}:H`;
+  const bowValues = await readSheetValues(spreadsheetId, bowRange, accessToken);
+
+  const target = clean(serial);
+
+  for (let index = 0; index < bowValues.length; index += 1) {
+    const item = normalizeBow(bowValues[index], startRow + index);
+
+    if (item.serial === target) {
+      return item;
+    }
+  }
+
+  return null;
+}
+
+async function readMemos(env, accessToken) {
+  const spreadsheetId = env.SPREADSHEET_ID;
+
+  if (!spreadsheetId) {
+    throw new Error("SPREADSHEET_ID가 설정되지 않았습니다.");
+  }
+
+  const config = getMemoConfig(env);
+  const rows = await readSheetValues(spreadsheetId, config.range, accessToken);
+  const paddedRows = padRows(rows, config.size);
+
+  return paddedRows
+    .map((row, index) => ({
+      index,
+      text: clean(row[0])
+    }))
+    .filter((item) => item.text);
+}
+
+async function addMemo(env, text) {
+  const spreadsheetId = env.SPREADSHEET_ID;
+
+  if (!spreadsheetId) {
+    throw new Error("SPREADSHEET_ID가 설정되지 않았습니다.");
+  }
+
+  const accessToken = await getAccessToken(env);
+  const config = getMemoConfig(env);
+  const rows = padRows(await readSheetValues(spreadsheetId, config.range, accessToken), config.size);
+
+  const currentTexts = rows.map((row) => clean(row[0]));
+  const emptyIndex = currentTexts.findIndex((value) => !value);
+
+  if (emptyIndex === -1) {
+    throw new Error(`메모 공간이 가득 찼습니다. ${config.range} 범위를 늘려주세요.`);
+  }
+
+  currentTexts[emptyIndex] = text;
+
+  const values = currentTexts.map((value) => [value]);
+  await writeSheetValues(spreadsheetId, config.range, values, accessToken);
+}
+
+async function deleteMemo(env, index) {
+  const spreadsheetId = env.SPREADSHEET_ID;
+
+  if (!spreadsheetId) {
+    throw new Error("SPREADSHEET_ID가 설정되지 않았습니다.");
+  }
+
+  const accessToken = await getAccessToken(env);
+  const config = getMemoConfig(env);
+  const rows = padRows(await readSheetValues(spreadsheetId, config.range, accessToken), config.size);
+
+  if (index >= rows.length) {
+    throw new Error("삭제할 메모를 찾지 못했습니다.");
+  }
+
+  const texts = rows
+    .map((row, rowIndex) => rowIndex === index ? "" : clean(row[0]))
+    .filter(Boolean);
+
+  while (texts.length < config.size) {
+    texts.push("");
+  }
+
+  const values = texts.map((value) => [value]);
+  await writeSheetValues(spreadsheetId, config.range, values, accessToken);
+}
+
+function getMemoConfig(env) {
+  const sheetName = env.BOW_SHEET_NAME || "장비";
+  const column = env.MEMO_COLUMN || "N";
+  const startRow = Number(env.MEMO_START_ROW || 41);
+  const endRow = Number(env.MEMO_END_ROW || 50);
+  const size = Math.max(endRow - startRow + 1, 1);
+
+  return {
+    sheetName,
+    column,
+    startRow,
+    endRow,
+    size,
+    range: `${sheetName}!${column}${startRow}:${column}${endRow}`
+  };
+}
+
+function padRows(rows, size) {
+  const result = Array.isArray(rows) ? [...rows] : [];
+
+  while (result.length < size) {
+    result.push([""]);
+  }
+
+  return result.slice(0, size);
+}
+
 function recalculateArrowTotal(sheetLabels, postedMap) {
   const result = new Map(postedMap);
   let total = 0;
@@ -172,15 +460,17 @@ function recalculateArrowTotal(sheetLabels, postedMap) {
   return result;
 }
 
-function normalizeBow(row) {
+function normalizeBow(row, rowNumber = null) {
   return {
+    rowNumber,
     serial: clean(row[0]),
     brand: clean(row[1]),
     size: clean(row[2]),
     pound: clean(row[3]),
     status: normalizeStatus(row[4]),
     etc: clean(row[5]),
-    check: clean(row[6])
+    check: clean(row[6]),
+    borrowedBy: clean(row[7])
   };
 }
 
@@ -260,6 +550,11 @@ function sortBySerial(a, b) {
   return String(a.serial).localeCompare(String(b.serial), "ko", {
     numeric: true
   });
+}
+
+function formatKstDate(date) {
+  const kst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+  return kst.toISOString().slice(0, 10);
 }
 
 async function readSheetValues(spreadsheetId, range, accessToken) {
