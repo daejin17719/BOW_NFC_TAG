@@ -24,6 +24,9 @@
 
       --gray-bg: #e5e7eb;
       --gray-text: #374151;
+
+      --blue-bg: #dbeafe;
+      --blue-text: #1e40af;
     }
 
     * {
@@ -124,14 +127,6 @@
       color: rgba(255,255,255,0.78);
     }
 
-    .topDesc {
-      margin-top: 14px;
-      font-size: 15px;
-      font-weight: 800;
-      line-height: 1.45;
-      color: rgba(255,255,255,0.74);
-    }
-
     .badgeLine {
       display: flex;
       flex-wrap: wrap;
@@ -161,9 +156,24 @@
       color: var(--red-text);
     }
 
+    .badge.bad {
+      background: var(--yellow-bg);
+      color: var(--yellow-text);
+    }
+
+    .badge.deleted {
+      background: var(--gray-bg);
+      color: var(--gray-text);
+    }
+
     .badge.arrow {
       background: #e0f2fe;
       color: #075985;
+    }
+
+    .badge.borrow {
+      background: var(--blue-bg);
+      color: var(--blue-text);
     }
 
     .section {
@@ -179,38 +189,6 @@
       font-weight: 900;
       margin-bottom: 14px;
       letter-spacing: -0.02em;
-    }
-
-    .statGrid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .statCard {
-      background: #f8fafc;
-      border: 1px solid #eef2f7;
-      border-radius: 18px;
-      padding: 15px;
-      min-height: 96px;
-    }
-
-    .statLabel {
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 850;
-      margin-bottom: 10px;
-    }
-
-    .statValue {
-      font-size: 34px;
-      line-height: 1;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-    }
-
-    .statCard.repair .statValue {
-      color: #991b1b;
     }
 
     .list {
@@ -229,30 +207,72 @@
       padding: 16px;
     }
 
-    .repairItem {
+    .actionItem {
       display: grid;
-      grid-template-columns: auto 1fr;
+      grid-template-columns: 1fr auto;
       align-items: center;
-      gap: 18px;
-      min-height: 54px;
+      gap: 12px;
     }
 
-    .repairTitle {
-      font-size: 24px;
+    .actionMain {
+      min-width: 0;
+    }
+
+    .actionTitle {
+      font-size: 23px;
       font-weight: 900;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.045em;
+      margin-bottom: 5px;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .actionSub {
+      font-size: 14px;
+      font-weight: 850;
+      line-height: 1.4;
+      color: #64748b;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .actionBtns {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .miniActionBtn {
+      border: 0;
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-size: 13px;
+      line-height: 1;
+      font-weight: 950;
+      cursor: pointer;
       white-space: nowrap;
     }
 
-    .repairCheck {
-      justify-self: end;
-      text-align: right;
-      font-size: 18px;
-      font-weight: 900;
-      color: #334155;
-      line-height: 1.4;
-      word-break: keep-all;
-      overflow-wrap: anywhere;
+    .miniActionBtn.primary {
+      background: #0f172a;
+      color: #ffffff;
+    }
+
+    .miniActionBtn.secondary {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .miniActionBtn.repair {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .miniActionBtn.borrow {
+      background: #dbeafe;
+      color: #1e40af;
     }
 
     .emptyBox {
@@ -264,6 +284,96 @@
       font-size: 15px;
       font-weight: 850;
       line-height: 1.45;
+    }
+
+    .lookupBox {
+      display: flex;
+      gap: 10px;
+    }
+
+    .lookupInput {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid #d1d5db;
+      border-radius: 16px;
+      padding: 14px 15px;
+      font-size: 17px;
+      font-weight: 850;
+      font-family: inherit;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+    }
+
+    .lookupBtn {
+      flex: 0 0 auto;
+      border: 0;
+      border-radius: 16px;
+      padding: 0 18px;
+      font-size: 16px;
+      font-weight: 950;
+      color: white;
+      background: #0f172a;
+      cursor: pointer;
+    }
+
+    .lookupHint {
+      margin-top: 10px;
+      font-size: 13px;
+      font-weight: 850;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .lookupSuggestions {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .lookupSuggestion {
+      width: 100%;
+      border: 1px solid #eef2f7;
+      border-radius: 16px;
+      padding: 13px 14px;
+      background: #f8fafc;
+      cursor: pointer;
+      text-align: left;
+      color: inherit;
+    }
+
+    .lookupSuggestionTop {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .lookupSuggestionTitle {
+      font-size: 18px;
+      font-weight: 950;
+      letter-spacing: -0.04em;
+    }
+
+    .lookupSuggestionStatus {
+      flex: 0 0 auto;
+      font-size: 12px;
+      font-weight: 950;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .lookupSuggestionText {
+      font-size: 13px;
+      font-weight: 850;
+      color: #64748b;
+      line-height: 1.45;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
     }
 
     .arrowCategoryList {
@@ -384,26 +494,57 @@
       line-height: 1.5;
     }
 
-    .hint {
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-      text-align: center;
+    .memoList {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-bottom: 14px;
     }
 
-    .lookupBox {
+    .memoItem {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: start;
+      background: #f8fafc;
+      border: 1px solid #eef2f7;
+      border-radius: 16px;
+      padding: 13px 14px;
+    }
+
+    .memoText {
+      font-size: 15px;
+      font-weight: 850;
+      line-height: 1.45;
+      color: #334155;
+      white-space: pre-wrap;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .memoDeleteBtn {
+      border: 0;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 950;
+      cursor: pointer;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .memoInputBox {
       display: flex;
       gap: 10px;
     }
 
-    .lookupInput {
+    .memoInput {
       flex: 1;
       min-width: 0;
       border: 1px solid #d1d5db;
       border-radius: 16px;
-      padding: 14px 15px;
-      font-size: 17px;
+      padding: 13px 14px;
+      font-size: 15px;
       font-weight: 850;
       font-family: inherit;
       background: #fff;
@@ -411,36 +552,24 @@
       outline: none;
     }
 
-    .lookupBtn {
+    .memoAddBtn {
       flex: 0 0 auto;
       border: 0;
       border-radius: 16px;
-      padding: 0 18px;
-      font-size: 16px;
+      padding: 0 16px;
+      font-size: 15px;
       font-weight: 950;
       color: white;
       background: #0f172a;
       cursor: pointer;
     }
 
-    .lookupHint {
-      margin-top: 10px;
-      font-size: 13px;
-      font-weight: 850;
+    .hint {
+      margin-top: 12px;
       color: var(--muted);
+      font-size: 13px;
       line-height: 1.5;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      .lookupInput {
-        background: #172033;
-        color: #f8fafc;
-        border: none;
-      }
-
-      .lookupBtn {
-        background: #334155;
-      }
+      text-align: center;
     }
 
     .errorBox {
@@ -483,25 +612,29 @@
         padding: 18px;
       }
 
-      .repairItem {
-        gap: 14px;
+      .actionItem {
+        grid-template-columns: 1fr;
       }
 
-      .repairTitle {
-        font-size: 23px;
+      .actionBtns {
+        flex-direction: row;
       }
 
-      .repairCheck {
-        font-size: 17px;
+      .miniActionBtn {
+        flex: 1;
+        min-height: 36px;
+      }
+
+      .lookupBox,
+      .memoInputBox {
+        gap: 8px;
       }
 
       .smallLabel,
       .mainTitle,
       .mainNumber,
       .sectionTitle,
-      .statValue,
-      .repairTitle,
-      .repairCheck,
+      .actionTitle,
       .badge,
       .arrowCategoryValue,
       .arrowControlBtn,
@@ -510,13 +643,14 @@
       }
 
       .mainUnit,
-      .topDesc,
-      .statLabel,
+      .actionSub,
       .emptyBox,
       .hint,
       .arrowCategoryLabel,
       .arrowHelp,
-      .saveResult {
+      .saveResult,
+      .lookupHint,
+      .memoText {
         font-weight: 850;
       }
     }
@@ -560,8 +694,7 @@
       }
 
       .mainStatLabel,
-      .mainUnit,
-      .topDesc {
+      .mainUnit {
         color: rgba(15, 23, 42, 0.62);
       }
 
@@ -575,25 +708,42 @@
         color: #f8fafc;
       }
 
-      .statCard,
       .item,
       .emptyBox,
-      .arrowCategoryItem {
+      .arrowCategoryItem,
+      .lookupSuggestion,
+      .memoItem {
         background: #172033;
         border: none;
       }
 
-      .statLabel,
       .emptyBox,
       .hint,
       .arrowCategoryLabel,
       .arrowHelp,
-      .saveResult {
+      .saveResult,
+      .lookupHint,
+      .lookupSuggestionText,
+      .actionSub {
         color: #94a3b8;
       }
 
-      .repairCheck {
+      .actionTitle,
+      .lookupSuggestionTitle,
+      .memoText {
         color: #f8fafc;
+      }
+
+      .lookupInput,
+      .memoInput {
+        background: #172033;
+        color: #f8fafc;
+        border: none;
+      }
+
+      .lookupBtn,
+      .memoAddBtn {
+        background: #334155;
       }
 
       .arrowCategoryValue {
@@ -685,37 +835,15 @@
       }
     }
 
-    function lookupBow() {
-      const input = document.getElementById("bowLookupInput");
-      const value = String(input?.value || "").trim();
-
-      if (!value) {
-        input?.focus();
-        return;
-      }
-
-      const isPublicBow = /^[0-9]+$/.test(value);
-
-      if (isPublicBow) {
-        window.location.href = `/?id=${encodeURIComponent(value)}`;
-      } else {
-        window.location.href = `/?t=p&c=${encodeURIComponent(value)}`;
-      }
-    }
-
-    function handleLookupKey(event) {
-      if (event.key === "Enter") {
-        lookupBow();
-      }
-    }
-
     function renderDashboard(data) {
       currentData = data;
 
       const summary = data.summary || {};
       const repairBows = data.repairBows || [];
+      const borrowedBows = data.borrowedBows || [];
       const arrowSummary = data.arrowSummary || {};
       const arrowBadges = arrowSummary.badges || {};
+      const memos = data.memos || [];
 
       arrowCategories = normalizeCategories(arrowSummary.categories || []);
 
@@ -745,14 +873,25 @@
           <div class="badgeLine">
             <span class="badge normal">정상 ${escapeHtml(summary.normal || 0)}</span>
             <span class="badge repair">수리 필요 ${escapeHtml(summary.repair || 0)}</span>
+            <span class="badge borrow">반출 ${escapeHtml(borrowedBows.length || 0)}</span>
             <span class="badge arrow">6.5치 이하 ${escapeHtml(arrowBadges.under65 || 0)}</span>
             <span class="badge arrow">7치 이상 ${escapeHtml(arrowBadges.over7 || 0)}</span>
           </div>
         </div>
 
         <div class="section">
+          <div class="sectionTitle">관리 메모</div>
+          ${renderMemoSection(memos)}
+        </div>
+
+        <div class="section">
           <div class="sectionTitle">수리 필요한 활</div>
-          ${renderBowList(repairBows, "현재 수리가 필요한 활이 없습니다.")}
+          ${renderRepairBowList(repairBows)}
+        </div>
+
+        <div class="section">
+          <div class="sectionTitle">개인 반출 현황</div>
+          ${renderBorrowedBowList(borrowedBows)}
         </div>
 
         <div class="section">
@@ -764,7 +903,8 @@
               class="lookupInput"
               type="text"
               inputmode="text"
-              placeholder="일련번호 또는 식별코드 입력"
+              placeholder="일련번호, 브랜드, 반출자 검색"
+              oninput="renderLookupSuggestions()"
               onkeydown="handleLookupKey(event)"
             >
 
@@ -773,8 +913,10 @@
             </button>
           </div>
 
+          <div id="lookupSuggestions" class="lookupSuggestions"></div>
+
           <div class="lookupHint">
-            공용 활 일련번호 또는 개인 장비 식별코드를 입력하면 해당 장비 조회 화면으로 이동합니다.
+            숫자는 공용 활 일련번호로, 문자는 개인 장비 식별코드 또는 공용 활 검색어로 처리합니다.
           </div>
         </div>
 
@@ -786,6 +928,318 @@
           서울대학교 국궁부 공용 장비 관리 체계<br>
           Copyright © Seoul National University Korean Archery Club. All Rights Reserved.
         </div>
+      `;
+    }
+
+    function renderMemoSection(memos) {
+      const listHtml = memos.length
+        ? `
+          <div class="memoList">
+            ${memos.map((memo) => `
+              <div class="memoItem">
+                <div class="memoText">${escapeHtml(memo.text)}</div>
+                <button class="memoDeleteBtn" onclick="deleteMemo(${memo.index})">삭제</button>
+              </div>
+            `).join("")}
+          </div>
+        `
+        : `
+          <div class="emptyBox" style="margin-bottom: 14px;">
+            등록된 관리 메모가 없습니다.
+          </div>
+        `;
+
+      return `
+        ${listHtml}
+
+        <div class="memoInputBox">
+          <input
+            id="memoInput"
+            class="memoInput"
+            type="text"
+            placeholder="새 메모 입력"
+            onkeydown="handleMemoKey(event)"
+          >
+
+          <button class="memoAddBtn" onclick="addMemo()">
+            추가
+          </button>
+        </div>
+
+        <div id="memoResult" class="saveResult"></div>
+      `;
+    }
+
+    function handleMemoKey(event) {
+      if (event.key === "Enter") {
+        addMemo();
+      }
+    }
+
+    async function addMemo() {
+      const input = document.getElementById("memoInput");
+      const result = document.getElementById("memoResult");
+      const text = String(input?.value || "").trim();
+
+      if (!text) {
+        input?.focus();
+        return;
+      }
+
+      if (result) {
+        result.className = "saveResult";
+        result.textContent = "저장 중...";
+      }
+
+      try {
+        const data = await postSummary({
+          action: "addMemo",
+          text
+        });
+
+        renderDashboard(data);
+      } catch (error) {
+        if (result) {
+          result.textContent = "저장 실패: " + error.message;
+          result.classList.add("error");
+        }
+      }
+    }
+
+    async function deleteMemo(index) {
+      if (!confirm("이 메모를 삭제할까요?")) return;
+
+      try {
+        const data = await postSummary({
+          action: "deleteMemo",
+          index
+        });
+
+        renderDashboard(data);
+      } catch (error) {
+        alert("삭제 실패: " + error.message);
+      }
+    }
+
+    function renderRepairBowList(items) {
+      if (!items.length) {
+        return `
+          <div class="emptyBox">
+            현재 수리가 필요한 활이 없습니다.
+          </div>
+        `;
+      }
+
+      return `
+        <div class="list">
+          ${items.map(item => repairBowItem(item)).join("")}
+        </div>
+      `;
+    }
+
+    function repairBowItem(item) {
+      const serial = item.serial || "-";
+      const check = item.check || "-";
+      const info = `${item.brand || "-"} / ${item.size || "-"} / ${item.pound || "-"}lb`;
+
+      return `
+        <div class="item actionItem">
+          <div class="actionMain">
+            <div class="actionTitle">${escapeHtml(serial)}번 활</div>
+            <div class="actionSub">${escapeHtml(info)}<br>${escapeHtml(check)}</div>
+          </div>
+
+          <div class="actionBtns">
+            <button class="miniActionBtn secondary" onclick="openBow('${escapeJs(serial)}')">
+              상세
+            </button>
+            <button class="miniActionBtn repair" onclick="completeRepair('${escapeJs(serial)}')">
+              수리 완료
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderBorrowedBowList(items) {
+      if (!items.length) {
+        return `
+          <div class="emptyBox">
+            현재 개인 반출 중인 활이 없습니다.
+          </div>
+        `;
+      }
+
+      return `
+        <div class="list">
+          ${items.map(item => borrowedBowItem(item)).join("")}
+        </div>
+      `;
+    }
+
+    function borrowedBowItem(item) {
+      const serial = item.serial || "-";
+      const borrowedBy = item.borrowedBy || "-";
+      const info = `${item.brand || "-"} / ${item.size || "-"} / ${item.pound || "-"}lb`;
+
+      return `
+        <div class="item actionItem">
+          <div class="actionMain">
+            <div class="actionTitle">${escapeHtml(serial)}번 활</div>
+            <div class="actionSub">반출자: ${escapeHtml(borrowedBy)}<br>${escapeHtml(info)}</div>
+          </div>
+
+          <div class="actionBtns">
+            <button class="miniActionBtn secondary" onclick="openBow('${escapeJs(serial)}')">
+              상세
+            </button>
+            <button class="miniActionBtn borrow" onclick="completeReturn('${escapeJs(serial)}')">
+              반납 완료
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    async function completeRepair(serial) {
+      if (!confirm(`${serial}번 활을 수리 완료 처리할까요?`)) return;
+
+      try {
+        const data = await postSummary({
+          action: "completeRepair",
+          serial
+        });
+
+        renderDashboard(data);
+      } catch (error) {
+        alert("수리 완료 처리 실패: " + error.message);
+      }
+    }
+
+    async function completeReturn(serial) {
+      if (!confirm(`${serial}번 활을 반납 완료 처리할까요?`)) return;
+
+      try {
+        const data = await postSummary({
+          action: "completeReturn",
+          serial
+        });
+
+        renderDashboard(data);
+      } catch (error) {
+        alert("반납 완료 처리 실패: " + error.message);
+      }
+    }
+
+    function openBow(serial) {
+      window.location.href = `/?id=${encodeURIComponent(serial)}`;
+    }
+
+    function lookupBow() {
+      const input = document.getElementById("bowLookupInput");
+      const value = String(input?.value || "").trim();
+
+      if (!value) {
+        input?.focus();
+        return;
+      }
+
+      const matches = getLookupMatches(value);
+
+      if (matches.length === 1) {
+        openBow(matches[0].serial);
+        return;
+      }
+
+      const exactPublicBow = (currentData?.bows || []).find((item) => {
+        return String(item.serial || "").trim() === value;
+      });
+
+      if (exactPublicBow) {
+        openBow(exactPublicBow.serial);
+        return;
+      }
+
+      const isPublicBow = /^[0-9]+$/.test(value);
+
+      if (isPublicBow) {
+        window.location.href = `/?id=${encodeURIComponent(value)}`;
+      } else {
+        window.location.href = `/?t=p&c=${encodeURIComponent(value)}`;
+      }
+    }
+
+    function handleLookupKey(event) {
+      if (event.key === "Enter") {
+        lookupBow();
+      }
+    }
+
+    function renderLookupSuggestions() {
+      const container = document.getElementById("lookupSuggestions");
+      const input = document.getElementById("bowLookupInput");
+
+      if (!container || !input) return;
+
+      const query = String(input.value || "").trim();
+
+      if (!query) {
+        container.innerHTML = "";
+        return;
+      }
+
+      const matches = getLookupMatches(query).slice(0, 6);
+
+      if (!matches.length) {
+        container.innerHTML = `
+          <div class="emptyBox">
+            공용 활 검색 결과가 없습니다. 개인 장비 식별코드라면 조회 버튼을 누르세요.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = matches.map((item) => lookupSuggestionItem(item)).join("");
+    }
+
+    function getLookupMatches(query) {
+      const q = String(query || "").trim().toLowerCase();
+      if (!q) return [];
+
+      const bows = currentData?.bows || [];
+
+      return bows.filter((item) => {
+        const haystack = [
+          item.serial,
+          item.brand,
+          item.size,
+          item.pound,
+          item.status,
+          item.etc,
+          item.check,
+          item.borrowedBy
+        ].map((value) => String(value || "").toLowerCase()).join(" ");
+
+        return haystack.includes(q);
+      }).sort((a, b) => sortBySerialValue(a.serial, b.serial));
+    }
+
+    function lookupSuggestionItem(item) {
+      const serial = item.serial || "-";
+      const status = item.status || "-";
+      const info = `${item.brand || "-"} / ${item.size || "-"} / ${item.pound || "-"}lb`;
+      const borrowed = item.borrowedBy ? ` / 반출: ${item.borrowedBy}` : "";
+
+      return `
+        <button class="lookupSuggestion" onclick="openBow('${escapeJs(serial)}')">
+          <div class="lookupSuggestionTop">
+            <div class="lookupSuggestionTitle">${escapeHtml(serial)}번 활</div>
+            <div class="lookupSuggestionStatus">${escapeHtml(status)}</div>
+          </div>
+          <div class="lookupSuggestionText">
+            ${escapeHtml(info + borrowed)}
+          </div>
+        </button>
       `;
     }
 
@@ -842,15 +1296,6 @@
       `;
     }
 
-    function getArrowQuantity(label) {
-      const item = arrowCategories.find((category) => category.label === label);
-      return item ? item.quantity : 0;
-    }
-
-    function getEditableCategoryCount() {
-      return arrowCategories.filter((item) => item.label !== "총량").length;
-    }
-
     function renderArrowCategoryList() {
       if (!arrowCategories.length) {
         return `
@@ -867,50 +1312,51 @@
       `;
     }
 
- function arrowCategoryItem(item, index) {
-  const isTotal = item.label === "총량";
-  const isRepair = item.label === "수리 필요";
+    function arrowCategoryItem(item, index) {
+      const isTotal = item.label === "총량";
+      const isRepair = item.label === "수리 필요";
 
-  return `
-    <div class="arrowCategoryItem ${isTotal ? "total" : ""} ${isRepair ? "repair" : ""}">
-      <div class="arrowCategoryLabel">${escapeHtml(item.label)}</div>
+      return `
+        <div class="arrowCategoryItem ${isTotal ? "total" : ""} ${isRepair ? "repair" : ""}">
+          <div class="arrowCategoryLabel">${escapeHtml(item.label)}</div>
 
-      ${
-        isTotal
-          ? `
-            <div class="arrowControl">
-              <div class="arrowControlBtn" style="visibility:hidden;">-</div>
+          ${
+            isTotal
+              ? `
+                <div class="arrowControl">
+                  <div class="arrowControlBtn" style="visibility:hidden;">-</div>
 
-              <div class="arrowCategoryValue" id="arrowValue-${index}">
-                ${escapeHtml(item.quantity)}
-              </div>
+                  <div class="arrowCategoryValue" id="arrowValue-${index}">
+                    ${escapeHtml(item.quantity)}
+                  </div>
 
-              <div class="arrowControlBtn" style="visibility:hidden;">+</div>
-            </div>
-          `
-          : `
-            <div class="arrowControl">
-              <button
-                class="arrowControlBtn"
-                onclick="changeArrowQuantity(${index}, -1)"
-                aria-label="${escapeHtml(item.label)} 감소"
-              >-</button>
+                  <div class="arrowControlBtn" style="visibility:hidden;">+</div>
+                </div>
+              `
+              : `
+                <div class="arrowControl">
+                  <button
+                    class="arrowControlBtn"
+                    onclick="changeArrowQuantity(${index}, -1)"
+                    aria-label="${escapeHtml(item.label)} 감소"
+                  >-</button>
 
-              <div class="arrowCategoryValue" id="arrowValue-${index}">
-                ${escapeHtml(item.quantity)}
-              </div>
+                  <div class="arrowCategoryValue" id="arrowValue-${index}">
+                    ${escapeHtml(item.quantity)}
+                  </div>
 
-              <button
-                class="arrowControlBtn"
-                onclick="changeArrowQuantity(${index}, 1)"
-                aria-label="${escapeHtml(item.label)} 증가"
-              >+</button>
-            </div>
-          `
-      }
-    </div>
-  `;
-}
+                  <button
+                    class="arrowControlBtn"
+                    onclick="changeArrowQuantity(${index}, 1)"
+                    aria-label="${escapeHtml(item.label)} 증가"
+                  >+</button>
+                </div>
+              `
+          }
+        </div>
+      `;
+    }
+
     function changeArrowQuantity(index, delta) {
       if (!arrowCategories[index]) return;
       if (arrowCategories[index].label === "총량") return;
@@ -941,28 +1387,10 @@
       result.textContent = "저장 중...";
 
       try {
-        const response = await fetch("/api/summary", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            categories: arrowCategories
-          })
+        const data = await postSummary({
+          action: "saveArrowCategories",
+          categories: arrowCategories
         });
-
-        const text = await response.text();
-        let data;
-
-        try {
-          data = JSON.parse(text);
-        } catch (error) {
-          throw new Error("서버가 JSON이 아닌 응답을 반환했습니다.");
-        }
-
-        if (!response.ok) {
-          throw new Error(data?.message || data?.error || "저장 실패");
-        }
 
         renderDashboard(data);
 
@@ -979,6 +1407,32 @@
       }
     }
 
+    async function postSummary(body) {
+      const response = await fetch("/api/summary", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+      });
+
+      const text = await response.text();
+
+      let data;
+
+      try {
+        data = JSON.parse(text);
+      } catch (error) {
+        throw new Error("서버가 JSON이 아닌 응답을 반환했습니다.");
+      }
+
+      if (!response.ok) {
+        throw new Error(data?.message || data?.error || "요청 실패");
+      }
+
+      return data;
+    }
+
     function clearSaveResult() {
       const result = document.getElementById("arrowSaveResult");
       if (result) {
@@ -987,48 +1441,17 @@
       }
     }
 
-    function statCard(label, value, className = "") {
-      return `
-        <div class="statCard ${className}">
-          <div class="statLabel">${escapeHtml(label)}</div>
-          <div class="statValue">${escapeHtml(value)}</div>
-        </div>
-      `;
-    }
+    function sortBySerialValue(a, b) {
+      const aNum = Number(a);
+      const bNum = Number(b);
 
-    function renderBowList(items, emptyText) {
-      if (!items.length) {
-        return `
-          <div class="emptyBox">
-            ${escapeHtml(emptyText)}
-          </div>
-        `;
+      if (Number.isFinite(aNum) && Number.isFinite(bNum)) {
+        return aNum - bNum;
       }
 
-      return `
-        <div class="list">
-          ${items.map(item => bowItem(item)).join("")}
-        </div>
-      `;
-    }
-
-    function bowItem(item) {
-      const serial = item.serial || "-";
-      const check = item.check || "-";
-
-      return `
-        <a class="item" href="/?id=${encodeURIComponent(serial)}">
-          <div class="repairItem">
-            <div class="repairTitle">
-              ${escapeHtml(serial)}번 활
-            </div>
-
-            <div class="repairCheck">
-              ${escapeHtml(check)}
-            </div>
-          </div>
-        </a>
-      `;
+      return String(a).localeCompare(String(b), "ko", {
+        numeric: true
+      });
     }
 
     function showError(message) {
@@ -1046,6 +1469,13 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+    }
+
+    function escapeJs(value) {
+      return String(value ?? "")
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'")
+        .replace(/"/g, "&quot;");
     }
   </script>
 </body>
