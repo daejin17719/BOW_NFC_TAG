@@ -278,6 +278,99 @@
       letter-spacing: -0.02em;
     }
 
+
+    .foldHeader {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: inherit;
+      box-shadow: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      text-align: left;
+    }
+
+    .foldHeader:active {
+      transform: none;
+    }
+
+    .foldTitleWrap {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+
+    .foldHeader .sectionTitle {
+      margin-bottom: 0;
+    }
+
+    .foldCount {
+      flex: 0 0 auto;
+      min-width: 28px;
+      height: 28px;
+      padding: 0 9px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #e2e8f0;
+      color: #0f172a;
+      font-size: 13px;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .foldChevron {
+      flex: 0 0 auto;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 16px;
+      font-weight: 950;
+      transition:
+        transform 0.18s ease,
+        background 0.18s ease;
+    }
+
+    .foldContent {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      margin-top: 0;
+      transition:
+        grid-template-rows 0.28s ease,
+        opacity 0.22s ease,
+        margin-top 0.22s ease;
+    }
+
+    .foldContentInner {
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .foldSection.isOpen .foldContent {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      margin-top: 14px;
+    }
+
+    .foldSection.isOpen .foldChevron {
+      transform: rotate(180deg);
+      background: #e2e8f0;
+    }
+
     .list {
       display: flex;
       flex-direction: column;
@@ -1104,6 +1197,21 @@
         color: #f8fafc;
       }
 
+
+      .foldCount {
+        background: #263449;
+        color: #f8fafc;
+      }
+
+      .foldChevron {
+        background: #172033;
+        color: #cbd5e1;
+      }
+
+      .foldSection.isOpen .foldChevron {
+        background: #263449;
+      }
+
       .item,
       .emptyBox,
       .arrowCategoryItem,
@@ -1213,6 +1321,8 @@
 
     let currentData = null;
     let arrowCategories = [];
+    let repairSectionOpen = false;
+    let borrowSectionOpen = false;
 
     init();
 
@@ -1399,14 +1509,36 @@
           ${renderMemoSection(memos)}
         </div>
 
-        <div class="section">
-          <div class="sectionTitle">수리 필요한 활</div>
-          ${renderRepairBowList(repairBows)}
+        <div class="section foldSection ${repairSectionOpen ? "isOpen" : ""}">
+          <button class="foldHeader" type="button" onclick="toggleFoldSection('repair')" aria-expanded="${repairSectionOpen ? "true" : "false"}">
+            <span class="foldTitleWrap">
+              <span class="sectionTitle">수리 필요한 활</span>
+              <span class="foldCount">${escapeHtml(repairBows.length || 0)}</span>
+            </span>
+            <span class="foldChevron">⌄</span>
+          </button>
+
+          <div class="foldContent">
+            <div class="foldContentInner">
+              ${renderRepairBowList(repairBows)}
+            </div>
+          </div>
         </div>
 
-        <div class="section">
-          <div class="sectionTitle">개인 반출 현황</div>
-          ${renderBorrowedBowList(borrowedBows)}
+        <div class="section foldSection ${borrowSectionOpen ? "isOpen" : ""}">
+          <button class="foldHeader" type="button" onclick="toggleFoldSection('borrow')" aria-expanded="${borrowSectionOpen ? "true" : "false"}">
+            <span class="foldTitleWrap">
+              <span class="sectionTitle">개인 반출 현황</span>
+              <span class="foldCount">${escapeHtml(borrowedBows.length || 0)}</span>
+            </span>
+            <span class="foldChevron">⌄</span>
+          </button>
+
+          <div class="foldContent">
+            <div class="foldContentInner">
+              ${renderBorrowedBowList(borrowedBows)}
+            </div>
+          </div>
         </div>
 
         <div class="section">
@@ -1444,6 +1576,20 @@
           Copyright © Seoul National University Korean Archery Club. All Rights Reserved.
         </div>
       `;
+    }
+
+    function toggleFoldSection(type) {
+      if (type === "repair") {
+        repairSectionOpen = !repairSectionOpen;
+      }
+
+      if (type === "borrow") {
+        borrowSectionOpen = !borrowSectionOpen;
+      }
+
+      if (currentData) {
+        renderDashboard(currentData);
+      }
     }
 
     function renderMemoSection(memos) {
