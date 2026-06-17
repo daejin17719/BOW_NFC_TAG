@@ -591,6 +591,27 @@
       }
     }
 
+    /* 사선 장비 띠 전용 애니메이션 */
+    @keyframes typeBadgePop {
+      0% {
+        opacity: 0;
+        transform: rotate(43deg) scale(0.96);
+        filter: brightness(0.96);
+      }
+
+      55% {
+        opacity: 1;
+        transform: rotate(43deg) scale(1.04);
+        filter: brightness(1.04);
+      }
+
+      100% {
+        opacity: 1;
+        transform: rotate(43deg) scale(1);
+        filter: brightness(1);
+      }
+    }
+
     /* 상세 화면 카드 등장 */
     .topCard,
     .section,
@@ -684,18 +705,22 @@
     /* 배지 표시 강조 */
     .badge,
     .repairNotice,
-    .borrowLockedBadge,
-    .typeBadge {
+    .borrowLockedBadge {
       animation: badgePop 0.36s ease both;
       transition:
         transform 0.16s ease,
         filter 0.16s ease;
     }
 
+    .typeBadge {
+      animation: typeBadgePop 0.36s ease both;
+      transition:
+        filter 0.16s ease;
+    }
+
     .badge:active,
     .repairNotice:active,
-    .borrowLockedBadge:active,
-    .typeBadge:active {
+    .borrowLockedBadge:active {
       transform: scale(0.96);
       filter: brightness(0.96);
     }
