@@ -559,6 +559,158 @@
       text-align: center;
     }
 
+
+    /* 화면 요소 등장 애니메이션 */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 배지 강조 애니메이션 */
+    @keyframes badgePop {
+      0% {
+        transform: scale(0.96);
+        filter: brightness(0.96);
+      }
+
+      55% {
+        transform: scale(1.04);
+        filter: brightness(1.04);
+      }
+
+      100% {
+        transform: scale(1);
+        filter: brightness(1);
+      }
+    }
+
+    /* 상세 화면 카드 등장 */
+    .topCard,
+    .section,
+    .systemBtn,
+    .hint,
+    .errorBox {
+      animation: fadeUp 0.38s ease both;
+    }
+
+    .topCard,
+    .errorBox {
+      animation-delay: 0s;
+    }
+
+    .section:nth-of-type(1) {
+      animation-delay: 0.04s;
+    }
+
+    .section:nth-of-type(2) {
+      animation-delay: 0.08s;
+    }
+
+    .section:nth-of-type(3) {
+      animation-delay: 0.12s;
+    }
+
+    .systemBtn,
+    .hint {
+      animation-delay: 0.16s;
+    }
+
+    .miniCard,
+    .fullItem,
+    .borrowLockedBox,
+    .borrowInputBox,
+    .repairBlockedBox,
+    textarea,
+    .result,
+    .borrowHelp {
+      animation: fadeUp 0.28s ease both;
+    }
+
+    .miniCard:nth-child(1) {
+      animation-delay: 0.04s;
+    }
+
+    .miniCard:nth-child(2) {
+      animation-delay: 0.06s;
+    }
+
+    .miniCard:nth-child(3) {
+      animation-delay: 0.08s;
+    }
+
+    .miniCard:nth-child(4) {
+      animation-delay: 0.10s;
+    }
+
+    .miniCard:nth-child(5) {
+      animation-delay: 0.12s;
+    }
+
+    .miniCard:nth-child(6) {
+      animation-delay: 0.14s;
+    }
+
+    .fullItem {
+      animation-delay: 0.16s;
+    }
+
+    /* 버튼 터치 반응 */
+    button,
+    .systemBtn,
+    .borrowSaveBtn,
+    .completeBtn {
+      transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        opacity 0.12s ease,
+        background 0.12s ease,
+        filter 0.12s ease;
+    }
+
+    button:active,
+    .systemBtn:active,
+    .borrowSaveBtn:active,
+    .completeBtn:active {
+      transform: scale(0.98);
+    }
+
+    /* 배지 표시 강조 */
+    .badge,
+    .repairNotice,
+    .borrowLockedBadge,
+    .typeBadge {
+      animation: badgePop 0.36s ease both;
+      transition:
+        transform 0.16s ease,
+        filter 0.16s ease;
+    }
+
+    .badge:active,
+    .repairNotice:active,
+    .borrowLockedBadge:active,
+    .typeBadge:active {
+      transform: scale(0.96);
+      filter: brightness(0.96);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
     @media (max-width: 420px) {
       body {
         padding: 10px;
