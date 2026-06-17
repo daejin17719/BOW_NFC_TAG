@@ -61,12 +61,13 @@ export async function onRequestPost({ env, request }) {
     }
 
     if (Array.isArray(body.categories) && !body.action) {
-      await updateArrowCategories(env, body.categories);
+      const result = await updateArrowCategories(env, body.categories);
       const data = await buildSummary(env);
 
       return json({
         ...data,
-        message: "화살 현황이 저장되었습니다."
+        message: "화살 현황이 저장되었습니다.",
+        logWarning: result?.logWarning || ""
       });
     }
 
@@ -81,12 +82,13 @@ export async function onRequestPost({ env, request }) {
         );
       }
 
-      await updateArrowCategories(env, body.categories);
+      const result = await updateArrowCategories(env, body.categories);
       const data = await buildSummary(env);
 
       return json({
         ...data,
-        message: "화살 현황이 저장되었습니다."
+        message: "화살 현황이 저장되었습니다.",
+        logWarning: result?.logWarning || ""
       });
     }
 
@@ -103,12 +105,13 @@ export async function onRequestPost({ env, request }) {
         );
       }
 
-      await completeBowRepair(env, serial);
+      const result = await completeBowRepair(env, serial);
       const data = await buildSummary(env);
 
       return json({
         ...data,
-        message: `${serial}번 활이 수리 완료 처리되었습니다.`
+        message: `${serial}번 활이 수리 완료 처리되었습니다.`,
+        logWarning: result?.logWarning || ""
       });
     }
 
@@ -125,12 +128,13 @@ export async function onRequestPost({ env, request }) {
         );
       }
 
-      await completeBowReturn(env, serial);
+      const result = await completeBowReturn(env, serial);
       const data = await buildSummary(env);
 
       return json({
         ...data,
-        message: `${serial}번 활이 반납 완료 처리되었습니다.`
+        message: `${serial}번 활이 반납 완료 처리되었습니다.`,
+        logWarning: result?.logWarning || ""
       });
     }
 
@@ -420,6 +424,13 @@ async function updateArrowCategories(env, postedCategories) {
 
   const quantityRange = `${sheetName}!K28:K${27 + values.length}`;
   await writeSheetValues(spreadsheetId, quantityRange, values, accessToken);
+
+  const changedLocation = `K28:K${27 + values.length}`;
+  const logWarning = await safeRecordEquipmentLog(env, accessToken, changedLocation);
+
+  return {
+    logWarning
+  };
 }
 
 async function completeBowRepair(env, serial) {
@@ -440,6 +451,12 @@ async function completeBowRepair(env, serial) {
     [["정상", bow.etc || "", date]],
     accessToken
   );
+
+  const logWarning = await safeRecordEquipmentLog(env, accessToken, `E${bow.rowNumber}`);
+
+  return {
+    logWarning
+  };
 }
 
 async function completeBowReturn(env, serial) {
@@ -459,6 +476,229 @@ async function completeBowReturn(env, serial) {
     [[""]],
     accessToken
   );
+
+  const logWarning = await safeRecordEquipmentLog(env, accessToken, `H${bow.rowNumber}`);
+
+  return {
+    logWarning
+  };
+}
+
+async function safeRecordEquipmentLog(env, accessToken, changedLocation) {
+  try {
+    await recordEquipmentLog(env, accessToken, changedLocation);
+    return "";
+  } catch (error) {
+    const message = `로그 기록 실패: ${error.message}`;
+    console.warn(message);
+    return message;
+  }
+}
+
+async function recordEquipmentLog(env, accessToken, changedLocation) {
+  const spreadsheetId = env.SPREADSHEET_ID;
+  const sheetName = env.BOW_SHEET_NAME || "장비";
+  const logSheetName = env.LOG_SHEET_NAME || "로그";
+
+  if (!spreadsheetId) {
+    throw new Error("SPREADSHEET_ID가 설정되지 않았습니다.");
+  }
+
+  const location = clean(changedLocation);
+
+  if (!location) {
+    return;
+  }
+
+  await ensureLogSheet(env, accessToken, logSheetName);
+
+  const batchValues = await readSheetValuesBatch(
+    spreadsheetId,
+    [
+      sheetRange(sheetName, "K56"),
+      sheetRange(sheetName, "K57"),
+      sheetRange(sheetName, "K43"),
+      sheetRange(logSheetName, "A:E")
+    ],
+    accessToken
+  );
+
+  const currentBows = clean(batchValues[0]?.[0]?.[0]);
+  const currentArrows = clean(batchValues[1]?.[0]?.[0]);
+  const currentRepair = clean(batchValues[2]?.[0]?.[0]);
+
+  const logRows = batchValues[3] || [];
+  const lastRowNumber = Math.max(logRows.length, 1);
+  const lastRow = logRows.length > 1 ? logRows[logRows.length - 1] : null;
+
+  const lastBows = lastRow ? clean(lastRow[1]) : "";
+  const lastArrows = lastRow ? clean(lastRow[2]) : "";
+  const lastRepair = lastRow ? clean(lastRow[3]) : "";
+
+  if (
+    currentBows === lastBows &&
+    currentArrows === lastArrows &&
+    currentRepair === lastRepair
+  ) {
+    return;
+  }
+
+  const now = new Date();
+  const todayStr = formatKstDate(now);
+  let targetRow = lastRowNumber + 1;
+  let finalLocation = location;
+
+  if (lastRow) {
+    const lastDateStr = extractDateString(lastRow[0]);
+
+    if (todayStr === lastDateStr) {
+      targetRow = lastRowNumber;
+      finalLocation = mergeLocations(lastRow[4], location);
+    }
+  }
+
+  await writeSheetValues(
+    spreadsheetId,
+    sheetRange(logSheetName, `A${targetRow}:E${targetRow}`),
+    [[
+      formatKstDateTime(now),
+      currentBows,
+      currentArrows,
+      currentRepair,
+      finalLocation
+    ]],
+    accessToken
+  );
+}
+
+async function ensureLogSheet(env, accessToken, logSheetName) {
+  const spreadsheetId = env.SPREADSHEET_ID;
+
+  const metadataUrl =
+    `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}` +
+    "?fields=sheets.properties.title";
+
+  const metadataResponse = await fetch(metadataUrl, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+
+  const metadata = await metadataResponse.json().catch(() => null);
+
+  if (!metadataResponse.ok) {
+    throw new Error(metadata?.error?.message || "스프레드시트 정보 확인 실패");
+  }
+
+  const sheets = metadata.sheets || [];
+  const exists = sheets.some((sheet) => sheet?.properties?.title === logSheetName);
+
+  if (!exists) {
+    const createUrl =
+      `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}:batchUpdate`;
+
+    const createResponse = await fetch(createUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        requests: [
+          {
+            addSheet: {
+              properties: {
+                title: logSheetName
+              }
+            }
+          }
+        ]
+      })
+    });
+
+    const createData = await createResponse.json().catch(() => null);
+
+    if (!createResponse.ok) {
+      throw new Error(createData?.error?.message || "로그 시트 생성 실패");
+    }
+  }
+
+  const headerRows = await readSheetValues(
+    spreadsheetId,
+    sheetRange(logSheetName, "A1:E1"),
+    accessToken
+  );
+
+  const hasHeader = headerRows?.[0]?.some((value) => clean(value));
+
+  if (!hasHeader) {
+    await writeSheetValues(
+      spreadsheetId,
+      sheetRange(logSheetName, "A1:E1"),
+      [["기록일시", "가용 활(K56)", "가용 화살(K57)", "수리 대기(K43)", "변경위치"]],
+      accessToken
+    );
+  }
+}
+
+function sheetRange(sheetName, a1Notation) {
+  return `'${escapeSheetName(sheetName)}'!${a1Notation}`;
+}
+
+function escapeSheetName(sheetName) {
+  return String(sheetName || "").replace(/'/g, "''");
+}
+
+function mergeLocations(oldLocation, newLocation) {
+  const locations = String(oldLocation || "")
+    .split(",")
+    .map((value) => clean(value))
+    .filter(Boolean);
+
+  const newLocations = String(newLocation || "")
+    .split(",")
+    .map((value) => clean(value))
+    .filter(Boolean);
+
+  const result = [...locations];
+
+  for (const location of newLocations) {
+    if (!result.includes(location)) {
+      result.push(location);
+    }
+  }
+
+  return result.join(", ");
+}
+
+function extractDateString(value) {
+  const text = clean(value);
+  const match = text.match(/\d{4}-\d{2}-\d{2}/);
+
+  if (match) {
+    return match[0];
+  }
+
+  const date = new Date(text);
+
+  if (!Number.isNaN(date.getTime())) {
+    return formatKstDate(date);
+  }
+
+  return "";
+}
+
+function formatKstDateTime(date) {
+  const kst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+
+  const yyyy = kst.getUTCFullYear();
+  const mm = String(kst.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(kst.getUTCDate()).padStart(2, "0");
+  const hh = String(kst.getUTCHours()).padStart(2, "0");
+  const mi = String(kst.getUTCMinutes()).padStart(2, "0");
+  const ss = String(kst.getUTCSeconds()).padStart(2, "0");
+
+  return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 }
 
 async function findBowBySerial(env, serial) {
