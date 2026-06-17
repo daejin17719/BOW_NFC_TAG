@@ -304,9 +304,31 @@ async function buildSummary(env) {
   }
 
   const accessToken = await getAccessToken(env);
+  const memoConfig = getMemoConfig(env);
 
   const bowRange = `${sheetName}!A${startRow}:H`;
-  const bowValues = await readSheetValues(spreadsheetId, bowRange, accessToken);
+  const topBowValueRange = `${sheetName}!L46`;
+  const arrowCategoryRange = `${sheetName}!J28:K33`;
+  const arrowBadgeRange = `${sheetName}!K69:K70`;
+  const memoRange = memoConfig.range;
+
+  const batchValues = await readSheetValuesBatch(
+    spreadsheetId,
+    [
+      bowRange,
+      topBowValueRange,
+      arrowCategoryRange,
+      arrowBadgeRange,
+      memoRange
+    ],
+    accessToken
+  );
+
+  const bowValues = batchValues[0] || [];
+  const topBowValueRows = batchValues[1] || [];
+  const arrowCategoryValues = batchValues[2] || [];
+  const arrowBadgeValues = batchValues[3] || [];
+  const memoRows = batchValues[4] || [];
 
   const bows = bowValues
     .map((row, index) => normalizeBow(row, startRow + index))
@@ -322,32 +344,23 @@ async function buildSummary(env) {
     .filter((item) => item.borrowedBy)
     .sort(sortBySerial);
 
-  const topBowValueRange = `${sheetName}!L46`;
-  const topBowValueRows = await readSheetValues(spreadsheetId, topBowValueRange, accessToken);
   const topBowValue = clean(topBowValueRows?.[0]?.[0]) || String(summary.total || 0);
 
-  const arrowCategoryRange = `${sheetName}!J28:K33`;
-  const arrowCategoryValues = await readSheetValues(
-    spreadsheetId,
-    arrowCategoryRange,
-    accessToken
-  );
-
   const arrowSummary = normalizeArrowSummary(arrowCategoryValues);
-
-  const arrowBadgeRange = `${sheetName}!K69:K70`;
-  const arrowBadgeValues = await readSheetValues(
-    spreadsheetId,
-    arrowBadgeRange,
-    accessToken
-  );
 
   const arrowBadges = {
     under65: toNumber(arrowBadgeValues?.[0]?.[0]),
     over7: toNumber(arrowBadgeValues?.[1]?.[0])
   };
 
-  const memos = await readMemos(env, accessToken);
+  const paddedMemoRows = padRows(memoRows, memoConfig.size);
+
+  const memos = paddedMemoRows
+    .map((row, index) => ({
+      index,
+      text: clean(row[0])
+    }))
+    .filter((item) => item.text);
 
   return {
     summary: {
@@ -704,6 +717,34 @@ async function readSheetValues(spreadsheetId, range, accessToken) {
   }
 
   return data.values || [];
+}
+
+async function readSheetValuesBatch(spreadsheetId, ranges, accessToken) {
+  const params = new URLSearchParams();
+
+  for (const range of ranges) {
+    params.append("ranges", range);
+  }
+
+  params.set("majorDimension", "ROWS");
+
+  const url =
+    `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}` +
+    `/values:batchGet?${params.toString()}`;
+
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(data?.error?.message || "Google Sheets batchGet 실패");
+  }
+
+  return (data.valueRanges || []).map((item) => item.values || []);
 }
 
 async function writeSheetValues(spreadsheetId, range, values, accessToken) {
