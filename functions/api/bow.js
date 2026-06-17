@@ -238,15 +238,18 @@ async function updateItemData(env, mode, key, status, check) {
   const url =
     `https://sheets.googleapis.com/v4/spreadsheets/${env.SPREADSHEET_ID}/values:batchUpdate`;
 
+  const statusCell = `${columnToLetter(config.statusColumn)}${rowNumber}`;
+  const checkCell = `${columnToLetter(config.checkColumn)}${rowNumber}`;
+
   const body = {
     valueInputOption: "USER_ENTERED",
     data: [
       {
-        range: `'${config.sheetName}'!${columnToLetter(config.statusColumn)}${rowNumber}`,
+        range: sheetRange(config.sheetName, statusCell),
         values: [[status]],
       },
       {
-        range: `'${config.sheetName}'!${columnToLetter(config.checkColumn)}${rowNumber}`,
+        range: sheetRange(config.sheetName, checkCell),
         values: [[check]],
       },
     ],
@@ -266,6 +269,17 @@ async function updateItemData(env, mode, key, status, check) {
     throw new Error(`Sheets 저장 실패: ${response.status} ${text}`);
   }
 
+  let logWarning = "";
+
+  if (config.mode === "bow") {
+    try {
+      await recordEquipmentLog(env, accessToken, statusCell);
+    } catch (error) {
+      logWarning = `로그 기록 실패: ${error.message}`;
+      console.warn(logWarning);
+    }
+  }
+
   return {
     message: "저장 완료",
     updatedAt: formatDateTime(new Date()),
@@ -274,6 +288,7 @@ async function updateItemData(env, mode, key, status, check) {
     key,
     status,
     check,
+    logWarning,
   };
 }
 
@@ -297,8 +312,9 @@ async function saveBorrowedBy(env, key, borrowedByValue) {
 
   const accessToken = await getAccessToken(env);
   const rowNumber = item.rowNumber;
+  const borrowCell = `${columnToLetter(config.borrowColumn)}${rowNumber}`;
 
-  const range = `'${config.sheetName}'!${columnToLetter(config.borrowColumn)}${rowNumber}`;
+  const range = sheetRange(config.sheetName, borrowCell);
 
   const url =
     `https://sheets.googleapis.com/v4/spreadsheets/${env.SPREADSHEET_ID}/values/` +
@@ -321,6 +337,15 @@ async function saveBorrowedBy(env, key, borrowedByValue) {
     throw new Error(`반출자 저장 실패: ${response.status} ${text}`);
   }
 
+  let logWarning = "";
+
+  try {
+    await recordEquipmentLog(env, accessToken, borrowCell);
+  } catch (error) {
+    logWarning = `로그 기록 실패: ${error.message}`;
+    console.warn(logWarning);
+  }
+
   return {
     message: "개인 반출이 등록되었습니다.",
     updatedAt: formatDateTime(new Date()),
@@ -328,7 +353,292 @@ async function saveBorrowedBy(env, key, borrowedByValue) {
     rowNumber,
     key,
     borrowedBy,
+    logWarning,
   };
+}
+
+async function recordEquipmentLog(env, accessToken, changedLocation) {
+  const spreadsheetId = env.SPREADSHEET_ID;
+  const sheetName = env.BOW_SHEET_NAME || env.SHEET_NAME || "장비";
+  const logSheetName = env.LOG_SHEET_NAME || "로그";
+
+  if (!spreadsheetId) {
+    throw new Error("SPREADSHEET_ID가 설정되지 않았습니다.");
+  }
+
+  const location = clean(changedLocation);
+
+  if (!location) {
+    return;
+  }
+
+  await ensureLogSheet(env, accessToken, logSheetName);
+
+  const batchValues = await readSheetValuesBatch(
+    spreadsheetId,
+    [
+      sheetRange(sheetName, "K56"),
+      sheetRange(sheetName, "K57"),
+      sheetRange(sheetName, "K43"),
+      sheetRange(logSheetName, "A:E"),
+    ],
+    accessToken
+  );
+
+  const currentBows = clean(batchValues[0]?.[0]?.[0]);
+  const currentArrows = clean(batchValues[1]?.[0]?.[0]);
+  const currentRepair = clean(batchValues[2]?.[0]?.[0]);
+
+  const logRows = batchValues[3] || [];
+  const lastRowNumber = Math.max(logRows.length, 1);
+  const lastRow = logRows.length > 1 ? logRows[logRows.length - 1] : null;
+
+  const lastBows = lastRow ? clean(lastRow[1]) : "";
+  const lastArrows = lastRow ? clean(lastRow[2]) : "";
+  const lastRepair = lastRow ? clean(lastRow[3]) : "";
+
+  if (
+    currentBows === lastBows &&
+    currentArrows === lastArrows &&
+    currentRepair === lastRepair
+  ) {
+    return;
+  }
+
+  const now = new Date();
+  const todayStr = formatKstDate(now);
+  let targetRow = lastRowNumber + 1;
+  let finalLocation = location;
+
+  if (lastRow) {
+    const lastDateStr = extractDateString(lastRow[0]);
+
+    if (todayStr === lastDateStr) {
+      targetRow = lastRowNumber;
+      finalLocation = mergeLocations(lastRow[4], location);
+    }
+  }
+
+  await writeSheetValues(
+    spreadsheetId,
+    sheetRange(logSheetName, `A${targetRow}:E${targetRow}`),
+    [[
+      formatKstDateTime(now),
+      currentBows,
+      currentArrows,
+      currentRepair,
+      finalLocation,
+    ]],
+    accessToken
+  );
+}
+
+async function ensureLogSheet(env, accessToken, logSheetName) {
+  const spreadsheetId = env.SPREADSHEET_ID;
+
+  const metadataUrl =
+    `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}` +
+    "?fields=sheets.properties.title";
+
+  const metadataResponse = await fetch(metadataUrl, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!metadataResponse.ok) {
+    const text = await metadataResponse.text();
+    throw new Error(`스프레드시트 정보 확인 실패: ${metadataResponse.status} ${text}`);
+  }
+
+  const metadata = await metadataResponse.json();
+  const sheets = metadata.sheets || [];
+  const exists = sheets.some((sheet) => sheet?.properties?.title === logSheetName);
+
+  if (!exists) {
+    const createUrl =
+      `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}:batchUpdate`;
+
+    const createResponse = await fetch(createUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        requests: [
+          {
+            addSheet: {
+              properties: {
+                title: logSheetName,
+              },
+            },
+          },
+        ],
+      }),
+    });
+
+    if (!createResponse.ok) {
+      const text = await createResponse.text();
+      throw new Error(`로그 시트 생성 실패: ${createResponse.status} ${text}`);
+    }
+  }
+
+  const headerRows = await readSheetValues(
+    spreadsheetId,
+    sheetRange(logSheetName, "A1:E1"),
+    accessToken
+  );
+
+  const hasHeader = headerRows?.[0]?.some((value) => clean(value));
+
+  if (!hasHeader) {
+    await writeSheetValues(
+      spreadsheetId,
+      sheetRange(logSheetName, "A1:E1"),
+      [["기록일시", "가용 활(K56)", "가용 화살(K57)", "수리 대기(K43)", "변경위치"]],
+      accessToken
+    );
+  }
+}
+
+async function readSheetValues(spreadsheetId, range, accessToken) {
+  const url =
+    `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}/values/` +
+    encodeURIComponent(range);
+
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(data?.error?.message || `${range} 값을 읽지 못했습니다.`);
+  }
+
+  return data.values || [];
+}
+
+async function readSheetValuesBatch(spreadsheetId, ranges, accessToken) {
+  const params = new URLSearchParams();
+
+  for (const range of ranges) {
+    params.append("ranges", range);
+  }
+
+  params.set("majorDimension", "ROWS");
+
+  const url =
+    `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}` +
+    `/values:batchGet?${params.toString()}`;
+
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(data?.error?.message || "Google Sheets batchGet 실패");
+  }
+
+  return (data.valueRanges || []).map((item) => item.values || []);
+}
+
+async function writeSheetValues(spreadsheetId, range, values, accessToken) {
+  const url =
+    `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}/values/` +
+    encodeURIComponent(range) +
+    "?valueInputOption=USER_ENTERED";
+
+  const response = await fetch(url, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      values,
+    }),
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(data?.error?.message || `${range} 값을 저장하지 못했습니다.`);
+  }
+
+  return data;
+}
+
+function sheetRange(sheetName, a1Notation) {
+  return `'${escapeSheetName(sheetName)}'!${a1Notation}`;
+}
+
+function escapeSheetName(sheetName) {
+  return String(sheetName || "").replace(/'/g, "''");
+}
+
+function mergeLocations(oldLocation, newLocation) {
+  const locations = String(oldLocation || "")
+    .split(",")
+    .map((value) => clean(value))
+    .filter(Boolean);
+
+  const newLocations = String(newLocation || "")
+    .split(",")
+    .map((value) => clean(value))
+    .filter(Boolean);
+
+  const result = [...locations];
+
+  for (const location of newLocations) {
+    if (!result.includes(location)) {
+      result.push(location);
+    }
+  }
+
+  return result.join(", ");
+}
+
+function extractDateString(value) {
+  const text = clean(value);
+  const match = text.match(/\d{4}-\d{2}-\d{2}/);
+
+  if (match) {
+    return match[0];
+  }
+
+  const date = new Date(text);
+
+  if (!Number.isNaN(date.getTime())) {
+    return formatKstDate(date);
+  }
+
+  return "";
+}
+
+function formatKstDate(date) {
+  const kst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+  return kst.toISOString().slice(0, 10);
+}
+
+function formatKstDateTime(date) {
+  const kst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+
+  const yyyy = kst.getUTCFullYear();
+  const mm = String(kst.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(kst.getUTCDate()).padStart(2, "0");
+  const hh = String(kst.getUTCHours()).padStart(2, "0");
+  const mi = String(kst.getUTCMinutes()).padStart(2, "0");
+  const ss = String(kst.getUTCSeconds()).padStart(2, "0");
+
+  return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 }
 
 /*
