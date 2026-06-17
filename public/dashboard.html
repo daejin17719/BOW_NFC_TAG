@@ -1375,6 +1375,54 @@
       }
     }
 
+
+    /* 접힘 섹션 모바일 터치 하이라이트 완전 제거 */
+    .foldHeader,
+    .foldHeader:hover,
+    .foldHeader:active,
+    .foldHeader:focus,
+    .foldHeader:focus-visible {
+      -webkit-tap-highlight-color: transparent !important;
+      -webkit-touch-callout: none;
+      user-select: none;
+      background: transparent !important;
+      color: inherit !important;
+      transform: none !important;
+      filter: none !important;
+      box-shadow: none !important;
+    }
+
+    .foldHeader * {
+      -webkit-tap-highlight-color: transparent !important;
+    }
+
+    .foldHeader:active .sectionTitle,
+    .foldHeader:active .foldTitleWrap,
+    .foldHeader:active .foldCount,
+    .foldHeader:active .foldChevron,
+    .foldHeader:focus .sectionTitle,
+    .foldHeader:focus .foldTitleWrap,
+    .foldHeader:focus .foldCount,
+    .foldHeader:focus .foldChevron {
+      background-color: inherit;
+      color: inherit;
+      filter: none !important;
+      box-shadow: none !important;
+    }
+
+    .foldHeader:active .foldChevron,
+    .foldHeader:focus .foldChevron,
+    .foldHeader:hover .foldChevron {
+      background: transparent !important;
+      color: #94a3b8 !important;
+    }
+
+    .foldSection.isOpen .foldHeader:active .foldChevron,
+    .foldSection.isOpen .foldHeader:focus .foldChevron,
+    .foldSection.isOpen .foldHeader:hover .foldChevron {
+      transform: rotate(180deg) !important;
+    }
+
   </style>
 </head>
 
