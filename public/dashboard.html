@@ -329,23 +329,26 @@
 
     .foldChevron {
       flex: 0 0 auto;
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
+      width: 22px;
+      height: 22px;
+      border-radius: 0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: #f1f5f9;
-      color: #475569;
+      background: transparent;
+      color: #94a3b8;
+      box-shadow: none;
+      transform: none;
       transition: transform 0.22s ease;
+      pointer-events: none;
     }
 
     .foldChevron::before {
       content: "";
-      width: 8px;
-      height: 8px;
-      border-right: 2.4px solid currentColor;
-      border-bottom: 2.4px solid currentColor;
+      width: 9px;
+      height: 9px;
+      border-right: 2.5px solid currentColor;
+      border-bottom: 2.5px solid currentColor;
       transform: translateY(-2px) rotate(45deg);
       transform-origin: center;
     }
@@ -1335,9 +1338,20 @@
 
     .foldHeader:active .foldChevron,
     .foldHeader:hover .foldChevron {
-      background: #f1f5f9 !important;
-      color: #475569 !important;
+      background: transparent !important;
+      color: #94a3b8 !important;
       filter: none !important;
+      box-shadow: none !important;
+    }
+
+    .foldHeader:active,
+    .foldHeader:active * {
+      transform: none !important;
+    }
+
+    .foldSection.isOpen .foldHeader:active .foldChevron,
+    .foldSection.isOpen .foldHeader:hover .foldChevron {
+      transform: rotate(180deg) !important;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -1350,8 +1364,14 @@
       .foldChevron,
       .foldHeader:active .foldChevron,
       .foldHeader:hover .foldChevron {
-        background: #1e293b !important;
+        background: transparent !important;
         color: #cbd5e1 !important;
+        box-shadow: none !important;
+      }
+
+      .foldSection.isOpen .foldHeader:active .foldChevron,
+      .foldSection.isOpen .foldHeader:hover .foldChevron {
+        transform: rotate(180deg) !important;
       }
     }
 
@@ -1857,7 +1877,7 @@
           <div class="borrowLineName">${escapeHtml(borrowedBy)}</div>
 
           <button class="borrowLineBtn" onclick="completeReturn('${escapeJs(serial)}')">
-            반납 처리
+            반납 완료
           </button>
         </div>
       `;
