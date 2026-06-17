@@ -2033,25 +2033,63 @@
     }
 
     function getLookupMatches(query) {
-      const q = String(query || "").trim().toLowerCase();
+      const q = normalizeSearchText(query);
       if (!q) return [];
 
       const bows = currentData?.bows || [];
 
-      return bows.filter((item) => {
-        const haystack = [
-          item.serial,
-          item.brand,
-          item.size,
-          item.pound,
-          item.status,
-          item.etc,
-          item.check,
-          item.borrowedBy
-        ].map((value) => String(value || "").toLowerCase()).join(" ");
+      return bows
+        .map((item) => ({
+          item,
+          score: getLookupScore(item, q)
+        }))
+        .filter((entry) => entry.score > 0)
+        .sort((a, b) => {
+          if (a.score !== b.score) {
+            return a.score - b.score;
+          }
 
-        return haystack.includes(q);
-      }).sort((a, b) => sortBySerialValue(a.serial, b.serial));
+          return sortBySerialValue(a.item.serial, b.item.serial);
+        })
+        .map((entry) => entry.item);
+    }
+
+    function getLookupScore(item, query) {
+      const serial = normalizeSearchText(item.serial);
+      const borrowedBy = normalizeSearchText(item.borrowedBy);
+      const pound = normalizeSearchText(item.pound);
+      const brand = normalizeSearchText(item.brand);
+      const size = normalizeSearchText(item.size);
+      const status = normalizeSearchText(item.status);
+      const etc = normalizeSearchText(item.etc);
+      const check = normalizeSearchText(item.check);
+
+      if (serial && serial === query) return 10;
+      if (serial && serial.startsWith(query)) return 20;
+      if (serial && serial.includes(query)) return 30;
+
+      if (borrowedBy && borrowedBy === query) return 40;
+      if (borrowedBy && borrowedBy.startsWith(query)) return 50;
+      if (borrowedBy && borrowedBy.includes(query)) return 60;
+
+      if (pound && pound === query) return 70;
+      if (pound && pound.startsWith(query)) return 80;
+      if (pound && pound.includes(query)) return 90;
+
+      if (brand && brand.includes(query)) return 100;
+      if (size && size.includes(query)) return 110;
+      if (status && status.includes(query)) return 120;
+      if (etc && etc.includes(query)) return 130;
+      if (check && check.includes(query)) return 140;
+
+      return 0;
+    }
+
+    function normalizeSearchText(value) {
+      return String(value ?? "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "");
     }
 
     function lookupSuggestionItem(item) {
