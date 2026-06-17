@@ -345,25 +345,30 @@
     }
 
     .foldContent {
-      display: grid;
-      grid-template-rows: 0fr;
+      max-height: 0;
       opacity: 0;
+      overflow: hidden;
       margin-top: 0;
       transition:
-        grid-template-rows 0.28s ease,
+        max-height 0.34s cubic-bezier(0.22, 1, 0.36, 1),
         opacity 0.22s ease,
         margin-top 0.22s ease;
+      will-change: max-height, opacity;
     }
 
     .foldContentInner {
-      min-height: 0;
       overflow: hidden;
+      transform: translateY(-6px);
+      transition: transform 0.28s ease;
     }
 
     .foldSection.isOpen .foldContent {
-      grid-template-rows: 1fr;
       opacity: 1;
       margin-top: 14px;
+    }
+
+    .foldSection.isOpen .foldContentInner {
+      transform: translateY(0);
     }
 
     .foldSection.isOpen .foldChevron {
@@ -1509,8 +1514,8 @@
           ${renderMemoSection(memos)}
         </div>
 
-        <div class="section foldSection ${repairSectionOpen ? "isOpen" : ""}">
-          <button class="foldHeader" type="button" onclick="toggleFoldSection('repair')" aria-expanded="${repairSectionOpen ? "true" : "false"}">
+        <div id="repairFoldSection" class="section foldSection ${repairSectionOpen ? "isOpen" : ""}">
+          <button id="repairFoldHeader" class="foldHeader" type="button" onclick="toggleFoldSection('repair')" aria-expanded="${repairSectionOpen ? "true" : "false"}">
             <span class="foldTitleWrap">
               <span class="sectionTitle">수리 필요한 활</span>
               <span class="foldCount">${escapeHtml(repairBows.length || 0)}</span>
@@ -1518,15 +1523,15 @@
             <span class="foldChevron">⌄</span>
           </button>
 
-          <div class="foldContent">
+          <div id="repairFoldContent" class="foldContent">
             <div class="foldContentInner">
               ${renderRepairBowList(repairBows)}
             </div>
           </div>
         </div>
 
-        <div class="section foldSection ${borrowSectionOpen ? "isOpen" : ""}">
-          <button class="foldHeader" type="button" onclick="toggleFoldSection('borrow')" aria-expanded="${borrowSectionOpen ? "true" : "false"}">
+        <div id="borrowFoldSection" class="section foldSection ${borrowSectionOpen ? "isOpen" : ""}">
+          <button id="borrowFoldHeader" class="foldHeader" type="button" onclick="toggleFoldSection('borrow')" aria-expanded="${borrowSectionOpen ? "true" : "false"}">
             <span class="foldTitleWrap">
               <span class="sectionTitle">개인 반출 현황</span>
               <span class="foldCount">${escapeHtml(borrowedBows.length || 0)}</span>
@@ -1534,7 +1539,7 @@
             <span class="foldChevron">⌄</span>
           </button>
 
-          <div class="foldContent">
+          <div id="borrowFoldContent" class="foldContent">
             <div class="foldContentInner">
               ${renderBorrowedBowList(borrowedBows)}
             </div>
@@ -1576,19 +1581,78 @@
           Copyright © Seoul National University Korean Archery Club. All Rights Reserved.
         </div>
       `;
+
+      requestAnimationFrame(syncFoldHeights);
     }
 
     function toggleFoldSection(type) {
+      const section = document.getElementById(`${type}FoldSection`);
+      const content = document.getElementById(`${type}FoldContent`);
+      const header = document.getElementById(`${type}FoldHeader`);
+
+      if (!section || !content) return;
+
+      const willOpen = !section.classList.contains("isOpen");
+
       if (type === "repair") {
-        repairSectionOpen = !repairSectionOpen;
+        repairSectionOpen = willOpen;
       }
 
       if (type === "borrow") {
-        borrowSectionOpen = !borrowSectionOpen;
+        borrowSectionOpen = willOpen;
       }
 
-      if (currentData) {
-        renderDashboard(currentData);
+      header?.setAttribute("aria-expanded", willOpen ? "true" : "false");
+      animateFoldContent(section, content, willOpen);
+    }
+
+    function animateFoldContent(section, content, open) {
+      content.style.overflow = "hidden";
+
+      if (open) {
+        section.classList.add("isOpen");
+        content.style.maxHeight = "0px";
+
+        requestAnimationFrame(() => {
+          content.style.maxHeight = content.scrollHeight + "px";
+        });
+
+        window.setTimeout(() => {
+          if (section.classList.contains("isOpen")) {
+            content.style.maxHeight = "none";
+          }
+        }, 360);
+
+        return;
+      }
+
+      content.style.maxHeight = content.scrollHeight + "px";
+
+      requestAnimationFrame(() => {
+        section.classList.remove("isOpen");
+        content.style.maxHeight = "0px";
+      });
+    }
+
+    function syncFoldHeights() {
+      const sections = [
+        ["repair", repairSectionOpen],
+        ["borrow", borrowSectionOpen]
+      ];
+
+      for (const [type, isOpen] of sections) {
+        const section = document.getElementById(`${type}FoldSection`);
+        const content = document.getElementById(`${type}FoldContent`);
+
+        if (!section || !content) continue;
+
+        if (isOpen) {
+          section.classList.add("isOpen");
+          content.style.maxHeight = "none";
+        } else {
+          section.classList.remove("isOpen");
+          content.style.maxHeight = "0px";
+        }
       }
     }
 
