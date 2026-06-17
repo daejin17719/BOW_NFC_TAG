@@ -735,6 +735,158 @@
       white-space: pre-line;
     }
 
+
+    /* 화면 요소 등장 애니메이션 */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 로그인 카드 등장 애니메이션 */
+    @keyframes loginPop {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* 배지 강조 애니메이션 */
+    @keyframes badgePop {
+      0% {
+        transform: scale(0.96);
+        filter: brightness(0.96);
+      }
+
+      55% {
+        transform: scale(1.04);
+        filter: brightness(1.04);
+      }
+
+      100% {
+        transform: scale(1);
+        filter: brightness(1);
+      }
+    }
+
+    /* 대시보드 카드 등장 */
+    .topCard,
+    .section,
+    .systemBtn,
+    .hint,
+    .versionText {
+      animation: fadeUp 0.38s ease both;
+    }
+
+    .topCard {
+      animation-delay: 0s;
+    }
+
+    .section:nth-of-type(1) {
+      animation-delay: 0.04s;
+    }
+
+    .section:nth-of-type(2) {
+      animation-delay: 0.08s;
+    }
+
+    .section:nth-of-type(3) {
+      animation-delay: 0.12s;
+    }
+
+    .section:nth-of-type(4) {
+      animation-delay: 0.16s;
+    }
+
+    .section:nth-of-type(5) {
+      animation-delay: 0.20s;
+    }
+
+    .systemBtn,
+    .hint,
+    .versionText {
+      animation-delay: 0.22s;
+    }
+
+    /* 로그인 화면 */
+    .loginBox {
+      animation: loginPop 0.32s ease both;
+    }
+
+    /* 버튼 터치 반응 */
+    button,
+    .systemBtn,
+    .lookupSuggestion,
+    .miniActionBtn,
+    .borrowLineBtn,
+    .memoDeleteBtn,
+    .memoAddBtn,
+    .lookupBtn,
+    .saveBtn,
+    .loginBtn,
+    .arrowControlBtn {
+      transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        opacity 0.12s ease,
+        background 0.12s ease,
+        filter 0.12s ease;
+    }
+
+    button:active,
+    .systemBtn:active,
+    .lookupSuggestion:active,
+    .miniActionBtn:active,
+    .borrowLineBtn:active,
+    .memoDeleteBtn:active,
+    .memoAddBtn:active,
+    .lookupBtn:active,
+    .saveBtn:active,
+    .loginBtn:active,
+    .arrowControlBtn:active {
+      transform: scale(0.98);
+    }
+
+    /* 배지 표시 강조 */
+    .badge {
+      animation: badgePop 0.36s ease both;
+      transition:
+        transform 0.16s ease,
+        filter 0.16s ease;
+    }
+
+    .badge:active {
+      transform: scale(0.96);
+      filter: brightness(0.96);
+    }
+
+    /* 검색 결과 등장 */
+    .lookupSuggestion {
+      animation: fadeUp 0.22s ease both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
     @media (max-width: 420px) {
       body {
         padding: 10px;
